@@ -31,6 +31,8 @@ rms_mean, rms_sig = my_xs.run_noise_sims(10) #these rms's are arrays of 14 eleme
 
 my_xs.make_h5()
 
-my_xs.plot_xs(k[0], xs[0], rms_sig[0], rms_mean[0])
+#plot all cross-spectra that have been calculated
+for i in range(len(calculated_xs)):
+   my_xs.plot_xs(k, xs, rms_sig, rms_mean, i)
 
 

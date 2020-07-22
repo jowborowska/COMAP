@@ -12,6 +12,7 @@
 # maybe try to return the index of a given xs, so that we always know which maps were taken and can use it in plot
 # then download a third map and check if everything works fine
 # remember that these error bars come from random simulations, so they will be a bit different each time
+# add names of maps in plotting method and the "save" option
 
 #Questions:-----------------------------------------------------------------------------------------------
 # Is "feed-averaged" map a one that has feed=None in map_cosmo ? (I think so)
@@ -26,6 +27,7 @@ import matplotlib.pyplot as plt
 
 class CrossSpectrum_nmaps():
     def __init__(self, list_of_n_map_names):
+        self.names = list_of_n_map_names
         self.maps = []
         for map_name in list_of_n_map_names:
            my_map = map_cosmo.MapCosmo(map_name) 
@@ -103,7 +105,7 @@ class CrossSpectrum_nmaps():
                  rms_xs = np.zeros((len(self.k_bin_edges) - 1, n_sims))
                  for g in range(n_sims):
                      randmap = [np.zeros(self.maps[i].rms.shape), np.zeros(self.maps[i].rms.shape)]
-                     for l in range(len(self.maps)):
+                     for l in range(2):
                          if seed is not None:
                              np.random.seed(seed * (g + 1) * (l + 1) * feeds[l])
                          randmap[l] = np.random.randn(*self.maps[l].rms.shape) * self.maps[l].rms
@@ -150,10 +152,16 @@ class CrossSpectrum_nmaps():
                  f1.close()
 
     #PLOT XS (previously in the script code)
-    def plot_xs(self, k, xs, rms_sig, rms_mean):
+    def plot_xs(self, k_array, xs_array, rms_sig_array, rms_mean_array, index):
+       
+       k = k_array[index]
+       xs = xs_array[index]
+       rms_sig = rms_sig_array[index]
+       rms_mean = rms_mean_array[index]
+
        lim = np.mean(np.abs(xs[4:])) * 4
        fig = plt.figure()
-
+       plt.title('xs of ' + self.get_information(self.names)[index][1] + ' and ' + self.get_information(self.names)[index][2], loc='right' )
        ax1 = fig.add_subplot(211)
        ax1.errorbar(k, xs, rms_sig, fmt='o', label=r'$\tilde{C}_{data}(k)$')
        ax1.plot(k, 0 * rms_mean, 'k', label=r'$\tilde{C}_{noise}(k)$', alpha=0.4)
@@ -174,7 +182,7 @@ class CrossSpectrum_nmaps():
        ax2.set_xscale('log')
        ax2.grid()
        plt.legend()
-
+      
        #plt.savefig('xs' + my_map.save_string + my_map2.save_string + '.png', bbox_inches='tight')
 
        plt.show()
