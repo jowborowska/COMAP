@@ -1,23 +1,23 @@
 #Developing a class, which takes in a list of n maps (n map names, since we call map_cosmo inside this class)
 
 # Methods to write:----------------------------------------------------------------------------------------
-# one that computes all the cross spectra between the n feed-averaged maps
+# one that computes all the cross spectra between the n feed-averaged maps - DONE
 # what is done in xs_feeds and xs_mean added as methods
 # method like calculate_feed_xs or something like that for the cross spectra of all combinaitons of feeds, so like xs_feeds (?)
-# maybe add a plotting method, such as the plotting from xs_script
+# maybe add a plotting method, such as the plotting from xs_script - DONE
 
 #Comments:-------------------------------------------------------------------------------------------------
-# we probably want to call the map_cosmo class from within the new cross spectrum class, since we do not neccesarily want to store all the maps in memory at once
+# we probably want to call the map_cosmo class from within the new cross spectrum class, since we do not neccesarily want to store all the maps in memory at once - DONE
 # when writing method calculate_feed_xs, change calling map_cosmo to have an option with specified feed or feed=None
-# maybe try to return the index of a given xs, so that we always know which maps were taken and can use it in plot
-# then download a third map and check if everything works fine
-# remember that these error bars come from random simulations, so they will be a bit different each time
-# add names of maps in plotting method and the "save" option
+# maybe try to return the index of a given xs, so that we always know which maps were taken and can use it in plot - DONE
+# then download a third map and check if everything works fine - DONE
+# remember that these error bars come from random simulations, so they will be a bit different each time (?)
+# add names of maps in plotting method and the "save" option - DONE
+# check h5 creating method (the current version is not tested and changed very much from Havard's one)
 
 #Questions:-----------------------------------------------------------------------------------------------
 # Is "feed-averaged" map a one that has feed=None in map_cosmo ? (I think so)
-# Should I design make_h5 and run_noise_sims simulations work also for every combo of maps at once or take the pairs I want it for as an argument ? Or to have an option: all or given pairs
-#should I normalize weights differently depending on with which other map we calculate xs ? So basically call it inside i j for loop in calculate_xs - I think so
+#should I normalize weights differently depending on with which other map we calculate xs ? So basically call it inside i j for loop in calculate_xs (I think so)
 
 import numpy as np
 import h5py
@@ -152,7 +152,7 @@ class CrossSpectrum_nmaps():
                  f1.close()
 
     #PLOT XS (previously in the script code)
-    def plot_xs(self, k_array, xs_array, rms_sig_array, rms_mean_array, index):
+    def plot_xs(self, k_array, xs_array, rms_sig_array, rms_mean_array, index, save=False):
        
        k = k_array[index]
        xs = xs_array[index]
@@ -182,8 +182,8 @@ class CrossSpectrum_nmaps():
        ax2.set_xscale('log')
        ax2.grid()
        plt.legend()
-      
-       #plt.savefig('xs' + my_map.save_string + my_map2.save_string + '.png', bbox_inches='tight')
+       if save==True:
+          plt.savefig('xs' + self.get_information(self.names)[index][1] +  self.get_information(self.names)[index][2] + '.png', bbox_inches='tight')
 
        plt.show()
 

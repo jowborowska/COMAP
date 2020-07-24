@@ -33,6 +33,6 @@ my_xs.make_h5()
 
 #plot all cross-spectra that have been calculated
 for i in range(len(calculated_xs)):
-   my_xs.plot_xs(k, xs, rms_sig, rms_mean, i)
+   my_xs.plot_xs(k, xs, rms_sig, rms_mean, i, save=False)
 
 
