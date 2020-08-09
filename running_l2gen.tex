@@ -1,0 +1,87 @@
+"Running l2gen" by Jowita & Jonas
+
+*jowitab is the user here
+**jonas is the name of the directory where the compiled version is (we were not able to compile it)
+***we run it for co2 field here
+
+1) >>ssh -Y jowitab@login.astro.uio.no
+2) >>git clone https://github.com/ingunnkw/comap.git
+3) >>cd comap
+   >>ls
+   config Makefile README.md src
+4) here comes couple of things we did to be able to compile:
+   >>ssh owl22 
+   >>export QUIET=ita_intel
+   >>module load Intel_parallel_studio/2018/3.051
+   >>export PATH=$PATH:~hke/local/bin
+   >>export LD_LIBRARY_PATH=/mn/stornext/u3/hke/owl/local/lib:/mn/stornext/u3/sigurd\
+kn/local/lib:$LD_LIBRARY_PATH
+5) >>make libquiet l2gen <- to compile, BUT THIS DIDN'T WORK ANYWAYS, so we used an existing one
+6) >>cd /mn/stornext/d16/cmbco/comap/jonas/comap/ <- and you're in jonas' comap directory
+   >>ls src/f90/l2gen/
+   l2gen l2gen.f90 l2gen.o Makefile  <- l2gen is the actual compiled program
+7 a) Make a parameter file:
+  - go two directories up (cd .. twice) and you are in comap
+  >> cd protodir
+  >> nano param_default_co2.txt <- this one can be used, but instead we copy and rename it to change it:
+  >> cp param_default_co2.txt param_jowita_co2.txt
+  >> nano param_jowita_co2.txt <- here turn "VERBOSE_PRINT" to .true. (then it prints more stuff); put "RETURN_DIAG_L2_FILES = .false." below this <-Ctrl O to save, Enter, Ctrl X to exit
+   
+7 b) move from protodir:
+   >> cd ..
+   >> cd jonas
+   >> screen <- the program that allows you to run something and log out without aborting the run
+   RUN:
+   >> export OMP_NUM_THREADS=16;time mpirun -env I_MPI_FABRICS ofi -machine machinefile.txt -n 24 comap/src/f90/l2gen/l2gen /mn/stornext/d16/cmbco/comap/protodir/param_jowita_co2.txt 2>&1| tee /mn/stornext/d16/cmbco/comap/jonas/l2gen_co2_log.txt
+   RUN WITHOUT MACHINE FILE (only on the machine you're currently logged into):
+   >> export OMP_NUM_THREADS=16;time mpirun -n 4 comap/src/f90/l2gen/l2gen /mn/stornext/d16/cmbco/comap/protodir/param_jowita_co2.txt 2>&1| tee /mn/stornext/d16/cmbco/comap/jonas/l2gen_co2_log.txt
+ 
+8 a) this did not work - these are the things we did for 7 b) to work:
+   >> nano ~/.bashrc <- this should look like this:
+   # Denne filen blir utf|rt ved oppstart av alle nye shell (bash),
+   # ogs} de som ikke er interaktive.# Utf|r f|rst den globale bashrc-filen.  IKKE kopier inn den filen, da er
+   # du n{rmest garantert at ting vil slutte } virke n}r det er n|dvendig }
+   # gj|re endringer.  Du kan gj|re egne ting etter at den globale bashrc er
+   # utf|rt.
+   source /local/lib/setupfiles/bashrc# Her kan du definere egne alias'er og sette bash-spesifikke variable.module load python
+   module load Intel_parallel_studio/2018/3.051
+   alias lxtxt="~hke/local/bin/lxtxt"
+   export PATH=$PATH:~hke/local/bin
+   export LD_LIBRARY_PATH=/mn/stornext/u3/hke/owl/local/lib:/mn/stornext/u3/sigurd\
+   kn/local/lib:$LD_LIBRARY_PATH
+   export QUIET=ita_intel 
+   export PATH=$PATH:/uio/hume/student-u71/jowitab/.local/bin <- you need to find the proper number and user, go back and type: >> pwd
+   >> Ctrl O, Enter, Ctrl X                                              
+   >>nano ~/.bash_profile <-paste this (to ask it to look in the other file):
+   if [ -f ~/.bashrc ]; then
+   . ~/.bashrc
+   fi
+   >> Ctrl X
+   >> source ~/.bashrc
+8 b) These are the things we did to be able to run on several machines (check: https://folk.uio.no/tiago/teaching/unix2017/ITA_system.pdf):
+   >> exit <- to exit owl
+   >>ssh-keygen -t rsa
+   >>ssh-copy-id -i ~/.ssh/id_rsa.pub jowitab@login.astro.uio.no
+9) to check during the run (first it de-compresses and then it should use all specified cores):
+   a)
+   >> htop <- change owl to check this one (?)
+   >> Q <- to exit
+   b) to check at which ObsID it stopped:
+   >> grep "obsid" l2gen_co2_log.txt (also check this log file to find the error)
+   c) check the load on owls - will drop to zero if it crashes: 
+   http://owl.uio.no/
+   d) screen stuff: <- do this on the same owl as it was started
+   >>screen -ls <- to check which screens are open
+   >>screen -r 7026 <- to open 7026.pts-0.owl22
+   >>exit  <- shut up the screen
+   >>Ctrl + A, then still hold Ctrl, but press D instead of A <- detach from the screen
+
+Some comments and useful things:
+!!!  modify only param_default.txt when we add a new parameter (or want to change one of the defaults)
+to give access: go to (protodir) and write: chgrp -R astcomap *
+Ctrl C aborts stuff
+cd .. <- to go back one level
+cd - <- go back
+rm file.txt <- to delete this file
+3)* cd comap/src/f90 <- here we have l2gen, but we are compiling from the main directory:
+7 a)* param is connected to the runlist - by default it takes all files, but if the program crashes it should be modified to not restart from the beginning  
