@@ -1,4 +1,4 @@
-#Check the structure of map h5 file - both for a real map and then my generated map_file
+#Check the structure of map h5 file - both for a real map and then my generated map
 #things needed in map_cosmo: x, y, map, rms, map_beam, rms_beam
 
 import h5py
