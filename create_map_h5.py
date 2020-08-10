@@ -3,7 +3,7 @@
 # for a real map: x (120,) float64; y (120,) float64; map (19, 4, 64, 120, 120) float32; rms (19, 4, 64, 120, 120) float32; map_beam (4, 64, 120, 120) float32; rms_beam (4, 64, 120, 120) float32
 
 #Comments:
-# maybe make an option of generaring x,y,freq without a real map available ?
+# maybe make an option of generaring x,y,freq without a real map available or for different fields ?
 # ask about details of create_output_map(x,y,z)
 
 import numpy as np
@@ -73,12 +73,15 @@ def PS_function(k_array):
 #simulate signal and noise
 def create_output_map(x,y,z): 
    signal_map = create_map_3d(PS_function, x, y, z)
-   x_ind, y_ind, z_ind = np.indices(signal_map.shape)
-   r = np.hypot(x[x_ind] - 2, y[y_ind] - 2, z[z_ind] - 2)
-   rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
+   #x_ind, y_ind, z_ind = np.indices(signal_map.shape)
+   #r = np.hypot(x[x_ind] - 2, y[y_ind] - 2, z[z_ind] - 2)
+   #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
+   rms_map = np.random.uniform(0.0, 50., (120, 120, 256)) #a uniform rms of 50 muK
    w = np.mean(rms_map.flatten() ** 2) / rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
    output_map = signal_map + noise_map
+   #microK2K = 1e-6
+   #return output_map.transpose(2, 0, 1), rms_map.transpose(2, 0, 1)*microK2K, signal_map.transpose(2, 0, 1)*microK2K, w.transpose(2, 0, 1)
    return output_map, rms_map, signal_map, w
 
 #create an output file
@@ -100,9 +103,8 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name):
       rms_map[i] = rms_map_single_feed
       w_sum += weights_single_feed
       data_beam_map += weights_single_feed*output_map_single_feed
-      rms_beam_map += weights_single_feed*rms_map_single_feed
    data_beam_map = data_beam_map/w_sum
-   rms_beam_map = rms_beam_map/w_sum
+   rms_beam_map = w_sum**(-0.5)
    f = h5py.File(output_name, 'w')
    f.create_dataset('rms', data=rms_map)
    f.create_dataset('map', data=data_map)
@@ -115,6 +117,5 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name):
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
 x,y,z = x_y_freq_to_Mpc(x_deg,y_deg,freq)
-create_h5(x,y,z,x_deg,y_deg,freq,'my_map.h5')
-
+create_h5(x,y,z,x_deg,y_deg,freq,'my_map_2new.h5')
 
