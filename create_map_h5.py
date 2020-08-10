@@ -77,7 +77,7 @@ def create_output_map(x,y,z):
    #r = np.hypot(x[x_ind] - 2, y[y_ind] - 2, z[z_ind] - 2)
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    rms_map = np.random.uniform(0.0, 50., (120, 120, 256)) #a uniform rms of 50 muK
-   w = np.mean(rms_map.flatten() ** 2) / rms_map ** 2
+   w = np.ones(rms_map)/rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
    output_map = signal_map + noise_map
    #microK2K = 1e-6
