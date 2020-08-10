@@ -80,8 +80,6 @@ def create_output_map(x,y,z):
    w = 1./rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
    output_map = signal_map + noise_map
-   #microK2K = 1e-6
-   #return output_map.transpose(2, 0, 1), rms_map.transpose(2, 0, 1)*microK2K, signal_map.transpose(2, 0, 1)*microK2K, w.transpose(2, 0, 1)
    return output_map, rms_map, signal_map, w
 
 #create an output file
