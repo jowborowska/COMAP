@@ -74,6 +74,10 @@ def PS_function(k_array):
 def create_output_map(x,y,z): 
    signal_map = create_map_3d(PS_function, x, y, z)
    muK2K = 1e-6 #micro Kelvins to Kelvins
+   #x_ind, y_ind, z_ind = np.indices(signal_map.shape)
+   #r = np.hypot(x[x_ind] - 2, y[y_ind] - 2, z[z_ind] - 2)
+   #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
+   #rms_map = rms_map*muK2K
    rms_map = np.random.uniform(0.0, 50.*muK2K, (120, 120, 256)) #a uniform rms of 50 muK, the standard deviation of the noise in each voxel
    w = 1./rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
@@ -114,6 +118,5 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name):
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
 x,y,z = x_y_freq_to_Mpc(x_deg,y_deg,freq)
-create_h5(x,y,z,x_deg,y_deg,freq,'my_map_1new.h5')
-
+create_h5(x,y,z,x_deg,y_deg,freq,'my_map_2new.h5')
 
