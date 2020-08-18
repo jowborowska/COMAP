@@ -52,7 +52,7 @@ def create_map_3d(power_spectrum_function, x, y, z):
                        + fft.fftfreq(n_y, d=dy)[None, :, None]**2
                        + fft.fftfreq(n_z, d=dz)[None, None, :]**2))
     )
-
+    np.random.seed(1) #to get the same signal every time
     field = np.random.randn(n_x, n_y, n_z, 2)
     fftfield[:] = n_x * n_y * n_z * (field[:, :, :, 0] + 1j * field[:, :, :, 1])*np.sqrt(z/V)
     return np.real(np.fft.ifftn(fftfield))
@@ -96,6 +96,7 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name):
    rms_beam_map = np.zeros(map_beam_shape) #sum of weights*rms_map of each feed divided by w_sum
    w_sum = np.zeros(map_beam_shape) #sum of weights of each feed
    for i in range(no_of_feeds):
+      
       output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z)
       output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
       rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
@@ -118,5 +119,11 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name):
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
 x,y,z = x_y_freq_to_Mpc(x_deg,y_deg,freq)
-create_h5(x,y,z,x_deg,y_deg,freq,'my_map_2new.h5')
+N = 3 #number of maps
+names = []
+for i in range(N):
+   output_name = 'my_map_%stest.h5' %(i+1)
+   create_h5(x,y,z,x_deg,y_deg,freq,output_name)
+   names.append(output_name)
 
+print 'produced maps: ', names #print this to have ready argument for my_script
