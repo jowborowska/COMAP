@@ -10,6 +10,7 @@ import numpy as np
 import numpy.fft as fft
 import h5py
 import tools
+import sys
 
 #x and y are bin centers from mapmaker - these are different for different fields - read them and frequency from a real map
 def read_from_a_real_map(mapname): #examples of mapnames I have on my computer: 'co7_011989_good_map.h5', 'co6_013836_200601_map.h5'
@@ -119,7 +120,13 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name):
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
 x,y,z = x_y_freq_to_Mpc(x_deg,y_deg,freq)
-N = 3 #number of maps
+
+n = len(sys.argv)
+if n < 2:
+    print('Missing number of maps to generate')
+    print('Example: python create_map_h5_new.py 3') #to create 3 maps
+    sys.exit(1)
+N = int(sys.argv[1]) #number of maps
 names = []
 for i in range(N):
    output_name = 'my_map_%stest.h5' %(i+1)
