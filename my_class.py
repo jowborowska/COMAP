@@ -14,7 +14,6 @@
 # add names of maps in plotting method and the "save" option - DONE
 # check h5 creating method (the current version is not tested and changed very much from Havard's one)
 
-#Questions:---------------------------------------------------------------
 
 import numpy as np
 import h5py
