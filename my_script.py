@@ -9,20 +9,25 @@ import tools
 import map_cosmo
 import my_class
 
-n = len(sys.argv) - 1 #number of maps
+n = len(sys.argv) - 3 #number of maps
 list_of_n_map_names = []
+
+
+if len(sys.argv) < 4 :
+    print('Provide at least one file name (for xs between half splits) or two file names (for xs between whole maps)!')
+    print('Then specify the feed (or None for coadded feeds) and True/False for the half split!')
+    print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/None True/False')
+    sys.exit(1)
 
 for i in range(n):
     list_of_n_map_names.append(sys.argv[i+1])
-if n < 2:
-    print('Missing filenames!')
-    print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n') #python my_script.py co6_013836_200601_map.h5 co6_013855_200602_map.h5
-    sys.exit(1)
 
+feed = int(sys.argv[-2]) #if None, takes the coadded feeds
+half_split = bool(sys.argv[-1]) #if False, takes the map made out of entire data set
 
-my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names)
+my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names, half_split, feed)
 
-calculated_xs = my_xs.get_information(list_of_n_map_names) 
+calculated_xs = my_xs.get_information()
 print calculated_xs #gives the xs, k, rms_sig, rms_mean index with corresponding map-pair
 
 xs, k, nmodes = my_xs.calculate_xs()

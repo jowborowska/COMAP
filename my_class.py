@@ -26,12 +26,29 @@ import map_cosmo
 import matplotlib.pyplot as plt
 
 class CrossSpectrum_nmaps():
-    def __init__(self, list_of_n_map_names):
-        self.names = list_of_n_map_names
+    def __init__(self, list_of_n_map_names, half_split=False, feed=None):
+        if feed == None:
+           self.feed_name = '_coadded'
+        else:
+           self.feed_name = '_feed' + str(feed)
+        self.names_of_maps = list_of_n_map_names #the names schould indicate which map is that (or half_map) and which feed is that
+        self.names = []
+        for name in self.names_of_maps:
+           if half_split == False:
+              self.names.append(name + self.feed_name)
+           if half_split == True:
+              self.names.append(name + '_1st_half' + self.feed_name)
+              self.names.append(name + '_2nd_half' + self.feed_name)
         self.maps = []
         for map_name in list_of_n_map_names:
-           my_map = map_cosmo.MapCosmo(map_name) 
-           self.maps.append(my_map)
+           if half_split == True:
+              my_map_first_half = map_cosmo.MapCosmo(map_name, feed, first_half_split=True)
+              my_map_second_half = map_cosmo.MapCosmo(map_name, feed, second_half_split=True)
+              self.maps.append(my_map_first_half)
+              self.maps.append(my_map_second_half)
+           else:
+              my_map = map_cosmo.MapCosmo(map_name) 
+              self.maps.append(my_map)
         #self.weights_are_normalized = False
    
     #NORMALIZE WEIGHTS FOR A GIVEN PAIR OF MAPS
@@ -47,14 +64,14 @@ class CrossSpectrum_nmaps():
         self.maps[j].w = self.maps[j].w*norm
 
     #INFORM WHICH XS INDEX CORRESPONDS TO WHICH MAP-PAIR
-    def get_information(self, list_of_n_map_names):
+    def get_information(self):
         indexes_xs = []
         index = -1 
         for i in range(len(self.maps)):
           for j in range(i,len(self.maps)): 
              if i != j: 
                 index += 1
-                indexes_xs.append([index,list_of_n_map_names[i],list_of_n_map_names[j]])
+                indexes_xs.append([index,self.names[i],self.names[j]])
         return indexes_xs
              
     #COMPUTE ALL THE XS BETWEEN THE n FEED-AVERAGED MAPS
@@ -161,7 +178,7 @@ class CrossSpectrum_nmaps():
 
        lim = np.mean(np.abs(xs[4:])) * 4
        fig = plt.figure()
-       plt.title('xs of ' + self.get_information(self.names)[index][1] + ' and ' + self.get_information(self.names)[index][2], loc='right' )
+       plt.title('xs of ' + self.get_information()[index][1] + ' and ' + self.get_information()[index][2], loc='right' )
        ax1 = fig.add_subplot(211)
        ax1.errorbar(k, xs, rms_sig, fmt='o', label=r'$\tilde{C}_{data}(k)$')
        ax1.plot(k, 0 * rms_mean, 'k', label=r'$\tilde{C}_{noise}(k)$', alpha=0.4)
@@ -183,7 +200,7 @@ class CrossSpectrum_nmaps():
        ax2.grid()
        plt.legend()
        if save==True:
-          plt.savefig('xs' + self.get_information(self.names)[index][1] +  self.get_information(self.names)[index][2] + '.png', bbox_inches='tight')
+          plt.savefig('xs' + self.get_information()[index][1] +  self.get_information()[index][2] + '.png', bbox_inches='tight')
 
        plt.show()
 

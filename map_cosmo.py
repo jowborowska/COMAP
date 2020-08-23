@@ -1,0 +1,95 @@
+#maybe add a possibility of having half_splits for map_coadd as well - use the statistics properties :)
+
+import numpy as np
+import h5py
+import tools
+import sys
+
+#CONVERTS TO RECTANGULAR GRID IN COMOVING COORDINATES, get units right, store info about the map, pointings to 3D grid, build around one voxel in the middle
+class MapCosmo(): 
+    def __init__(self, mappath, feed = None, first_half_split = False, second_half_split = False):
+        self.feed = feed
+        self.interpret_mapname(mappath)
+        
+        with h5py.File(mappath, mode="r") as my_file:
+            self.x = np.array(my_file['x'][:]) #these x, y are are bin centers from mapmaker
+            self.y = np.array(my_file['y'][:])
+            if feed is not None:
+                if first_half_split==True:
+                   self.map = np.array(my_file['/jackknives/map_half'][0,feed-1])
+                   self.rms = np.array(my_file['/jackknives/rms_half'][0,feed-1])
+                if second_half_split==True:
+                   self.map = np.array(my_file['/jackknives/map_half'][1,feed-1])
+                   self.rms = np.array(my_file['/jackknives/rms_half'][1,feed-1])
+                if first_half_split == False and second_half_split == False:
+                   self.map = np.array(my_file['map'][feed-1])
+                   self.rms = np.array(my_file['rms'][feed-1])
+                
+            else:
+                if first_half_split==True or second_half_split==True:
+                   print 'No available half_splits for coadded feeds. Specify the feed!'
+                   sys.exit()
+
+                self.map = np.array(my_file['map_coadd'][:]) #map_beam - all the feeds added together
+                self.rms = np.array(my_file['rms_coadd'][:])
+        
+        h = 0.7
+        deg2mpc = 76.22 / h  # at redshift 2.9
+        dz2mpc = 699.62 / h # redshift 2.4 to 3.4
+        K2muK = 1e6
+        z_mid = 2.9
+        dnu = 32.2e-3  # GHz
+        nu_rest = 115  # GHz
+        dz = (1 + z_mid) ** 2 * dnu / nu_rest  # conversion 
+        n_f = 256  # 64 * 4
+        redshift = np.linspace(z_mid - n_f/2*dz, z_mid + n_f/2*dz, n_f + 1)
+
+
+        self.map = self.map.transpose(3, 2, 0, 1) * K2muK
+        self.rms = self.rms.transpose(3, 2, 0, 1) * K2muK
+
+        sh = self.map.shape
+        self.map = self.map.reshape((sh[0], sh[1], sh[2] * sh[3])) #go from 4 sidebands to 1 frequency axis
+        self.rms = self.rms.reshape((sh[0], sh[1], sh[2] * sh[3]))
+        self.mask = np.zeros_like(self.rms)
+        self.mask[(self.rms != 0.0)] = 1.0
+        where = (self.mask == 1.0) #mask is 1 when we have something
+        self.w = np.zeros_like(self.rms)
+        self.w[where] = 1 / self.rms[where] ** 2 #weight noise (->pseudo PS), weights outside mask are 0
+
+        meandec = np.mean(self.y)
+        self.x = self.x * deg2mpc * np.cos(meandec * np.pi / 180) #account for the effect that 'circles of latitude' around poles are smaller than equator
+        self.y = self.y * deg2mpc 
+        self.z = tools.edge2cent(redshift * dz2mpc)
+        
+        self.nz = len(self.z)
+        self.nx = len(self.x)
+        self.ny = len(self.y)
+        
+        self.dx = self.x[1] - self.x[0]
+        self.dy = self.y[1] - self.y[0]
+        self.dz = self.z[1] - self.z[0]
+        
+        self.voxel_volume = self.dx * self.dy * self.dz  # voxel volume in (Mpc/h)^3
+
+    def interpret_mapname(self, mappath):
+        self.mappath = mappath
+        mapname = mappath.rpartition('/')[-1]
+        mapname = ''.join(mapname.rpartition('.')[:-2])
+
+        parts = mapname.rpartition('_')
+        try:
+            self.field = parts[0]
+            self.map_string = ''.join(parts[2:])
+            if not self.field == '':
+                self.save_string = '_' + self.field + '_' + self.map_string
+            else:
+                self.save_string = '_' + self.map_string
+        except:
+            print('Unable to find field or map_string')
+            self.field = ''
+            self.map_string = ''
+            self.save_string = ''
+        
+        if self.feed is not None:
+            self.save_string = self.save_string + '_%02i' % self.feed
