@@ -2,8 +2,8 @@
 
 # Methods to write:----------------------------------------------------------------------------------------
 # one that computes all the cross spectra between the n feed-averaged maps - DONE
-# what is done in xs_feeds and xs_mean added as methods
-# method like calculate_feed_xs or something like that for the cross spectra of all combinaitons of feeds, so like xs_feeds (?)
+# what is done in xs_mean added as method
+# method like calculate_feed_xs or something like that for the cross spectra of all combinaitons of feeds (xs_feeds_
 # maybe add a plotting method, such as the plotting from xs_script - DONE
 
 #Comments:-------------------------------------------------------------------------------------------------
@@ -15,9 +15,7 @@
 # add names of maps in plotting method and the "save" option - DONE
 # check h5 creating method (the current version is not tested and changed very much from Havard's one)
 
-#Questions:-----------------------------------------------------------------------------------------------
-# Is "feed-averaged" map a one that has feed=None in map_cosmo ? (I think so)
-#should I normalize weights differently depending on with which other map we calculate xs ? So basically call it inside i j for loop in calculate_xs (I think so)
+#Questions:---------------------------------------------------------------
 
 import numpy as np
 import h5py
