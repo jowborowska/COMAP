@@ -12,7 +12,6 @@ import my_class
 n = len(sys.argv) - 3 #number of maps
 list_of_n_map_names = []
 
-
 if len(sys.argv) < 4 :
     print('Provide at least one file name (for xs between half splits) or two file names (for xs between whole maps)!')
     print('Then specify the feed (or write: coadded) and True/False for the half split!')
@@ -26,7 +25,7 @@ if sys.argv[-2] == 'coadded':
    feed = None
 else:
    feed = int(sys.argv[-2]) #if None, takes the coadded feeds
-print 'feed', feed
+
 half_split = bool(sys.argv[-1]) #if False, takes the map made out of entire data set
 
 my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names, half_split, feed)
