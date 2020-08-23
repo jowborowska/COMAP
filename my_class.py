@@ -8,7 +8,6 @@
 
 #Comments:-------------------------------------------------------------------------------------------------
 # we probably want to call the map_cosmo class from within the new cross spectrum class, since we do not neccesarily want to store all the maps in memory at once - DONE
-# when writing method calculate_feed_xs, change calling map_cosmo to have an option with specified feed or feed=None
 # maybe try to return the index of a given xs, so that we always know which maps were taken and can use it in plot - DONE
 # then download a third map and check if everything works fine - DONE
 # remember that these error bars come from random simulations, so they will be a bit different each time (?)
