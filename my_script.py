@@ -17,18 +17,25 @@ if len(sys.argv) < 4 :
     print('Then specify the feed number or make xs for all feeds or for coadded feeds; then True/False for the half split!')
     print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/coadded/all True/False')
     sys.exit(1)
+if len(sys.argv) == 4 and sys.argv[-1] == 'False':
+    print('Only one file name specified, with no half split - unable to create xs!')
+    sys.exit(1)
 
 for i in range(n):
     list_of_n_map_names.append(sys.argv[i+1])
 
-if sys.argv[-2] == 'coadded':
+feed_name = sys.argv[-2]
+if feed_name == 'coadded':
    feed = None
-if sys.argv[-2] == 'all':
+if feed_name == 'all':
    feeds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-else:
-   feed = int(sys.argv[-2]) #if None, takes the coadded feeds
+if feed_name != 'coadded' and feed_name != 'all':
+   feed = int(sys.argv[-2])
 
-half_split = bool(sys.argv[-1]) #if False, takes the map made out of entire data set
+if sys.argv[-1] == 'False':
+   half_split = False #if False, takes the map made out of entire data set
+if sys.argv[-1] == 'True':
+   half_split = True
 
 
 def run_all_methods():

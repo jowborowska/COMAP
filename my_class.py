@@ -45,7 +45,7 @@ class CrossSpectrum_nmaps():
               self.maps.append(my_map_first_half)
               self.maps.append(my_map_second_half)
            else:
-              my_map = map_cosmo.MapCosmo(map_name) 
+              my_map = map_cosmo.MapCosmo(map_name, feed) 
               self.maps.append(my_map)
         #self.weights_are_normalized = False
    
