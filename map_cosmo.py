@@ -24,7 +24,7 @@ class MapCosmo():
                    self.map = np.array(my_file['map'][feed-1])
                    self.rms = np.array(my_file['rms'][feed-1])
                 
-            else:
+            else: #create or read map_coadd - all the feeds 'added' together
                 if first_half_split==True:
                    print 'Creating coadded feed map for the first half split.'
                    self.map, self.rms = self.coadd_feed_maps(my_file,0)
@@ -32,7 +32,7 @@ class MapCosmo():
                    print 'Creating coadded feed map for the second half split.'
                    self.map, self.rms = self.coadd_feed_maps(my_file,1)
                 if first_half_split == False and second_half_split == False: 
-                   self.map = np.array(my_file['map_coadd'][:]) #map_coadd - all the feeds added together
+                   self.map = np.array(my_file['map_coadd'][:]) 
                    self.rms = np.array(my_file['rms_coadd'][:])
         
         h = 0.7
