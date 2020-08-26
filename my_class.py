@@ -174,7 +174,7 @@ class CrossSpectrum_nmaps():
 
        lim = np.mean(np.abs(xs[4:])) * 4
        fig = plt.figure()
-       fig.suptitle('xs of ' + self.get_information()[index][1] + ' and ' + self.get_information()[index][2] )
+       fig.suptitle('xs of ' + self.get_information()[index][1] + ' and ' + self.get_information()[index][2])
        ax1 = fig.add_subplot(211)
        ax1.errorbar(k, xs, rms_sig, fmt='o', label=r'$\tilde{C}_{data}(k)$')
        ax1.plot(k, 0 * rms_mean, 'k', label=r'$\tilde{C}_{noise}(k)$', alpha=0.4)
@@ -196,7 +196,9 @@ class CrossSpectrum_nmaps():
        ax2.grid()
        plt.legend()
        if save==True:
-          plt.savefig('xs' + self.get_information()[index][1] +  self.get_information()[index][2] + '.png', bbox_inches='tight')
+          name_for_figure = 'xs' + self.get_information()[index][1] + '_and_'+ self.get_information()[index][2] + '.png'
+          plt.savefig(name_for_figure, bbox_inches='tight')
+          print 'Figure saved as', name_for_figure
 
        plt.show()
 
