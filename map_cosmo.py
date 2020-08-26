@@ -1,4 +1,3 @@
-#maybe add a possibility of having half_splits for map_coadd as well - use the statistics properties :)
 
 import numpy as np
 import h5py
@@ -26,12 +25,15 @@ class MapCosmo():
                    self.rms = np.array(my_file['rms'][feed-1])
                 
             else:
-                if first_half_split==True or second_half_split==True:
-                   print 'No available half_splits for coadded feeds. Specify the feed!'
-                   sys.exit()
-
-                self.map = np.array(my_file['map_coadd'][:]) #map_beam - all the feeds added together
-                self.rms = np.array(my_file['rms_coadd'][:])
+                if first_half_split==True:
+                   print 'Creating coadded feed map for the first half split.'
+                   self.map, self.rms = self.coadd_feed_maps(my_file,0)
+                if second_half_split==True:
+                   print 'Creating coadded feed map for the second half split.'
+                   self.map, self.rms = self.coadd_feed_maps(my_file,1)
+                if first_half_split == False and second_half_split == False: 
+                   self.map = np.array(my_file['map_coadd'][:]) #map_coadd - all the feeds added together
+                   self.rms = np.array(my_file['rms_coadd'][:])
         
         h = 0.7
         deg2mpc = 76.22 / h  # at redshift 2.9
@@ -72,6 +74,28 @@ class MapCosmo():
         
         self.voxel_volume = self.dx * self.dy * self.dz  # voxel volume in (Mpc/h)^3
 
+    def coadd_feed_maps(self,map_file, which_half_split): #0 for the first one, 1 for the second one
+        map_single_feed = np.array(map_file['/jackknives/map_half'][which_half_split,0])
+        my_map = np.zeros_like(map_single_feed)
+        my_rms = np.zeros_like(map_single_feed)
+        weight_sum = np.zeros_like(map_single_feed)
+        for i in range(19):
+            map_single_feed = np.array(map_file['/jackknives/map_half'][which_half_split,i])
+            rms_single_feed = np.array(map_file['/jackknives/rms_half'][which_half_split,i])
+            mask = np.zeros_like(rms_single_feed)
+            mask[(rms_single_feed != 0.0)] = 1.0
+            where = (mask == 1.0) 
+            weight_single_feed = np.zeros_like(rms_single_feed)
+            weight_single_feed[where] = 1 / rms_single_feed[where] ** 2 
+            my_map += map_single_feed*weight_single_feed
+            weight_sum += weight_single_feed
+        mask2 =  np.zeros_like(weight_sum)
+        mask2[(weight_sum != 0.0)] = 1.0
+        where2 = (mask2 == 1.0)
+        my_map[where2] = my_map[where2]/weight_sum[where2]
+        my_rms[where2] = weight_sum[where2]**(-0.5)
+        return my_map, my_rms
+
     def interpret_mapname(self, mappath):
         self.mappath = mappath
         mapname = mappath.rpartition('/')[-1]
@@ -92,4 +116,4 @@ class MapCosmo():
             self.save_string = ''
         
         if self.feed is not None:
-            self.save_string = self.save_string + '_%02i' % self.feed
+            self.save_string = self.save_string + '_%02i' % self.feedwhich_half_split0
