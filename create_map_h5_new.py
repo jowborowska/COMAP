@@ -55,6 +55,7 @@ def create_map_3d(power_spectrum_function, x, y, z):
     )
     np.random.seed(1) #to get the same signal every time
     field = np.random.randn(n_x, n_y, n_z, 2)
+    seed = None
     fftfield[:] = n_x * n_y * n_z * (field[:, :, :, 0] + 1j * field[:, :, :, 1])*np.sqrt(z/V)
     return np.real(np.fft.ifftn(fftfield))
 
@@ -72,27 +73,23 @@ def PS_function(k_array):
    return PS_array
 
 #simulate signal and noise
-def create_output_map(x,y,z, which_map, signal_map_single_feed):
-   if which_map == 0:
-      signal_map = create_map_3d(PS_function, x, y, z)
-   else:
-      signal_map = signal_map_single_feed
+def create_output_map(x,y,z): 
+   signal_map = create_map_3d(PS_function, x, y, z)
    muK2K = 1e-6 #micro Kelvins to Kelvins
    #x_ind, y_ind, z_ind = np.indices(signal_map.shape)
    #r = np.hypot(x[x_ind] - 2, y[y_ind] - 2, z[z_ind] - 2)
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
-   np.random.seed()
    rms_map = np.random.uniform(0.0, 50.*muK2K, (120, 120, 256)) #a uniform rms of 50 muK, the standard deviation of the noise in each voxel
    w = 1./rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
    output_map = signal_map*muK2K + noise_map
    #output_map = noise_map
-   return output_map.transpose(2, 0, 1), rms_map.transpose(2, 0, 1), signal_map, w.transpose(2, 0, 1)
+   return output_map.transpose(2, 0, 1), rms_map.transpose(2, 0, 1), signal_map.transpose(2, 0, 1)*muK2K, w.transpose(2, 0, 1)
    #return output_map, rms_map, signal_map, w
 
 #create an output file
-def create_h5(x,y,z, x_deg, y_deg, freq, output_name, which_map):
+def create_h5(x,y,z, x_deg, y_deg, freq, output_name):
    no_of_feeds = 19
    map_shape = (19, 4, 64, 120, 120)
    map_beam_shape = (4, 64, 120, 120)
@@ -101,10 +98,9 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, which_map):
    rms_map = np.zeros(map_shape)
    rms_beam_map = np.zeros(map_beam_shape) #sum of weights*rms_map of each feed divided by w_sum
    w_sum = np.zeros(map_beam_shape) #sum of weights of each feed
-   signal_map_single_feed = np.zeros(map_beam_shape) 
    for i in range(no_of_feeds):
       
-      output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, which_map, signal_map_single_feed)
+      output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z)
       output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
       rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
       weights_single_feed = np.reshape(weights_single_feed, map_beam_shape)
@@ -123,7 +119,6 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, which_map):
    f.create_dataset('y', data=y_deg)
    f.create_dataset('freq', data=freq)
    f.close()
-   
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
 x,y,z = x_y_freq_to_Mpc(x_deg,y_deg,freq)
@@ -136,8 +131,8 @@ if n < 2:
 N = int(sys.argv[1]) #number of maps
 names = []
 for i in range(N):
-   output_name = '3rd_noise_signal_%stest.h5' %(i+1)
-   create_h5(x,y,z,x_deg,y_deg,freq,output_name, i)
+   output_name = '4th_noise_signal_%stest.h5' %(i+1)
+   create_h5(x,y,z,x_deg,y_deg,freq,output_name)
    names.append(output_name)
 
 print 'produced maps: ', names #print this to have ready argument for my_script
