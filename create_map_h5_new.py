@@ -72,15 +72,15 @@ def PS_function(k_array):
    PS_array = np.reshape(PS_array,shape)
    return PS_array
 
-#simulate signal and noise
+#simulate noise and create the map (signal + noise)
 def create_output_map(x,y,z, signal_map): 
-   #muK2K = 1e-6 #micro Kelvins to Kelvins
-   muK2K = 1. #keep everything in micro Kelvins
+   muK2K = 1e-6 #micro Kelvins to Kelvins
+   #muK2K = 1. #keep everything in micro Kelvins
    #x_ind, y_ind, z_ind = np.indices(signal_map.shape)
    #r = np.hypot(x[x_ind] - 2, y[y_ind] - 2, z[z_ind] - 2)
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
-   rms_map = np.random.uniform(0.0, 50.*muK2K, (120, 120, 256)) #a uniform rms of 50 muK, the standard deviation of the noise in each voxel
+   rms_map = np.random.uniform(0.0, 50.*muK2K*1e7, (120, 120, 256)) #a uniform rms of 50 muK, the standard deviation of the noise in each voxel
    w = 1./rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
    output_map = signal_map*muK2K + noise_map
@@ -121,7 +121,7 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map):
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
 x,y,z = x_y_freq_to_Mpc(x_deg,y_deg,freq)
-signal_map = create_map_3d(PS_function, x, y, z) #do this only once to have the same singal for each map
+signal_map = 50.*create_map_3d(PS_function, x, y, z) #do this only once to have the same singal for each map
 
 n = len(sys.argv)
 if n < 2:
