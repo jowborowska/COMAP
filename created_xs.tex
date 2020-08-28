@@ -1,0 +1,76 @@
+The list of simulated maps:
+
+1) rms_map = np.random.uniform(0.0, 50.*muK2K, (120, 120, 256))
+   signal_map = create_map_3d(PS_function, x, y, z)
+   produced maps:  ['1st_1test.h5', '1st_2test.h5']
+   Figure saved as xs1st_1test.h5_coadded_and_1st_2test.h5_coadded.png
+
+2) rms_map = np.random.uniform(0.0, 50.*muK2K*1e6, (120, 120, 256))
+   signal_map = create_map_3d(PS_function, x, y, z)
+   produced maps:  ['2nd_1test.h5', '2nd_2test.h5']
+   Figure saved as xs2nd_1test.h5_coadded_and_2nd_2test.h5_coadded.png
+
+3) rms_map = np.random.uniform(0.0, 50.*muK2K*1e9, (120, 120, 256))
+   signal_map = create_map_3d(PS_function, x, y, z)
+   produced maps:  ['3rd_1test.h5', '3rd_2test.h5']
+   Figure saved as xs3rd_1test.h5_coadded_and_3rd_2test.h5_coadded.png
+
+4) rms_map = np.random.uniform(0.0, 50.*muK2K*1e4, (120, 120, 256))
+   signal_map = create_map_3d(PS_function, x, y, z)*0.5
+   produced maps:  ['4th_1test.h5', '4th_2test.h5']
+   Figure saved as xs4th_1test.h5_coadded_and_4th_2test.h5_coadded.png
+
+5) rms_map = np.random.uniform(0.0, 50.*muK2K*1e4, (120, 120, 256))
+   signal_map = create_map_3d(PS_function, x, y, z)*0.8
+   produced maps:  ['5th_1test.h5', '5th_2test.h5']
+   Figure saved as xs5th_1test.h5_coadded_and_5th_2test.h5_coadded.png
+   Figure saved as xs5th_1test.h5_feed8_and_5th_2test.h5_feed8.png
+
+6) rms_map = np.random.uniform(0.0, 50.*muK2K*1e4, (120, 120, 256))
+   signal_map = create_map_3d(PS_function, x, y, z)*1.2
+   produced maps:  ['6th_1test.h5', '6th_2test.h5']
+   Figure saved as xs6th_1test.h5_coadded_and_6th_2test.h5_coadded.png
+
+7) rms_map = np.random.uniform(0.0, 50.*muK2K*1e4, (120, 120, 256))
+   NO SIGNAL: output_map = noise_map  
+   produced maps:  ['7th_1test.h5', '7th_2test.h5']
+   Figure saved as xs7th_1test.h5_coadded_and_7th_2test.h5_coadded.png
+
+8) signal_map = create_map_3d(PS_function, x, y, z)
+   x_ind, y_ind, z_ind = np.indices(signal_map.shape)
+   r = np.hypot(x[x_ind] - 2, y[y_ind] - 2, z[z_ind] - 2)
+   rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
+   rms_map = rms_map*muK2K
+   produced maps:  ['8th_1test.h5', '8th_2test.h5']
+   Figure saved as xs8th_1test.h5_coadded_and_8th_2test.h5_coadded.png
+
+9) signal_map = create_map_3d(PS_function, x, y, z)
+   rms_map = np.random.uniform(0.0, 50.*muK2K*1e-2, (120, 120, 256))
+   produced maps:  ['9th_1test.h5', '9th_2test.h5']
+   Figure saved as xs9th_1test.h5_coadded_and_9th_2test.h5_coadded.png
+
+10) 1st configuration but with np.random.seed(), not np.random.seed(1)  
+    produced maps:  ['noise_signal_1test.h5', 'noise_signal_2test.h5']
+    Figure saved as xsnoise_signal_1test.h5_coadded_and_noise_signal_2test.h5_coadded.png
+
+11) now we will try np.random.seed(1) before producing the signal and np.random.seed() before producing the rms
+    produced maps:  ['2nd_noise_signal_1test.h5', '2nd_noise_signal_2test.h5']
+    Figure saved as xs2nd_noise_signal_1test.h5_coadded_and_2nd_noise_signal_2test.h5_coadded.png
+
+12) more changes - didn't work
+
+13) seed=None after generating signal
+    produced maps:  ['4th_noise_signal_1test.h5', '4th_noise_signal_2test.h5']
+    Figure saved as xs4th_noise_signal_1test.h5_coadded_and_4th_noise_signal_2test.h5_coadded.png
+
+14) Creating the signal map only once
+    produced maps:  ['5th_noise_signal_1test.h5', '5th_noise_signal_2test.h5']
+
+-I'll repeat cases 1-7,9, now with creating the signal map only once with names '1onesignal_1test.h5' '1onesignal_2test.h5' and so on
+  
+
+  
+
+
+
+
