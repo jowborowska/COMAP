@@ -11,6 +11,7 @@ import numpy.fft as fft
 import h5py
 import tools
 import sys
+import PS_function
 
 #x and y are bin centers from mapmaker - these are different for different fields - read them and frequency from a real map
 def read_from_a_real_map(mapname): #examples of mapnames I have on my computer: 'co7_011989_good_map.h5', 'co6_013836_200601_map.h5'
@@ -46,19 +47,19 @@ def create_map_3d(power_spectrum_function, x, y, z):
     dx = x[1] - x[0]
     dy = y[1] - y[0]
     dz = z[1] - z[0]
-    V = ((x[-1] - x[0]) * (y[-1] - y[0]) * (z[-1] - z[0]))  # voxel volume in (Mpc/h)^3
+    V = ((x[-1] - x[0]) * (y[-1] - y[0]) * (z[-1] - z[0]))  # whole volume in Mpc^3
     fftfield = np.zeros((n_x, n_y, n_z), dtype=complex)
     z = power_spectrum_function(
-        np.abs(np.sqrt(fft.fftfreq(n_x, d=dx)[:, None, None]**2
-                       + fft.fftfreq(n_y, d=dy)[None, :, None]**2
-                       + fft.fftfreq(n_z, d=dz)[None, None, :]**2))
+        np.abs(np.sqrt(2.*np.pi*fft.fftfreq(n_x, d=dx)[:, None, None]**2
+                       + 2.*np.pi*fft.fftfreq(n_y, d=dy)[None, :, None]**2
+                       + 2.*np.pi*fft.fftfreq(n_z, d=dz)[None, None, :]**2))
     )
     #np.random.seed(1) #to get the same signal every time
     field = np.random.randn(n_x, n_y, n_z, 2)
     #seed = None
     fftfield[:] = n_x * n_y * n_z * (field[:, :, :, 0] + 1j * field[:, :, :, 1])*np.sqrt(z/V)
-    return np.real(np.fft.ifftn(fftfield))
-
+    return np.real(np.fft.ifftn(fftfield)), dx*dy*dz
+'''
 #P(k) = k**-3, This one can be modified - P(k) defines the distribution, a temperature map is one realization from this distribution
 def PS_function(k_array):
    shape = k_array.shape
@@ -71,7 +72,7 @@ def PS_function(k_array):
          PS_array[i] = 0.
    PS_array = np.reshape(PS_array,shape)
    return PS_array
-
+'''
 #simulate noise and create the map (signal + noise)
 def create_output_map(x,y,z, signal_map): 
    muK2K = 1e-6 #micro Kelvins to Kelvins
@@ -80,7 +81,10 @@ def create_output_map(x,y,z, signal_map):
    #r = np.hypot(x[x_ind] - 2, y[y_ind] - 2, z[z_ind] - 2)
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
-   rms_map = np.random.uniform(0.0, 50.*muK2K*1e7, (120, 120, 256)) #a uniform rms of 50 muK, the standard deviation of the noise in each voxel
+   #np.random.seed(1)
+   rms_map = np.random.uniform(0.0, 50.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 50 muK, the standard deviation of the noise in each voxel
+   rms_map = np.zeros_like(rms_map)+5.*muK2K
+   #np.random.seed() #keep the same rms all the time
    w = 1./rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
    output_map = signal_map*muK2K + noise_map
@@ -100,6 +104,8 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map):
    w_sum = np.zeros(map_beam_shape) #sum of weights of each feed
    for i in range(no_of_feeds):
       output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
+      
+      
       output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
       rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
       weights_single_feed = np.reshape(weights_single_feed, map_beam_shape)
@@ -121,8 +127,13 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map):
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
 x,y,z = x_y_freq_to_Mpc(x_deg,y_deg,freq)
-signal_map = 50.*create_map_3d(PS_function, x, y, z) #do this only once to have the same singal for each map
+signal_map, Voxel_volume = create_map_3d(PS_function.PS_f, x, y, z) #do this only once to have the same singal for each map
+#print x,y,z
+#print signal_map.flatten().std()**2*Voxel_volume #3688010.7646109615
 
+#sys.exit()
+
+#signal_map = np.zeros_like(signal_map)
 n = len(sys.argv)
 if n < 2:
     print('Missing number of maps to generate')
@@ -132,7 +143,7 @@ N = int(sys.argv[1]) #number of maps
 names = []
 
 for i in range(N):
-   output_name = '1stunits_%stest.h5' %(i+1)
+   output_name = '1sept_%stest.h5' %(i+1)
    create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map)
    names.append(output_name)
 

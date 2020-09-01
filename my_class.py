@@ -13,13 +13,15 @@
 # remember that these error bars come from random simulations, so they will be a bit different each time (?)
 # add names of maps in plotting method and the "save" option - DONE
 # check h5 creating method (the current version is not tested and changed very much from Havard's one)
-
+# try to plot kC(k) instead of C(k) - look in "xs_mean.py" for an example
 
 import numpy as np
 import h5py
 import tools
 import map_cosmo
 import matplotlib.pyplot as plt
+import PS_function
+#import create_map_h5_new.PS_function as PS_f #<-- this didn't work, wanted the same command arguments as create_map_h5_new.py
 
 class CrossSpectrum_nmaps():
     def __init__(self, list_of_n_map_names, half_split=False, feed=None):
@@ -84,7 +86,8 @@ class CrossSpectrum_nmaps():
               if i != j: #ensure that we compute xs, not auto spectrum
                  
                  self.normalize_weights(i,j) #normalize weights for given xs pair of maps
-
+                 
+                 
                  my_xs, my_k, my_nmodes = tools.compute_cross_spec3d(
                  (self.maps[i].map * self.maps[i].w, self.maps[j].map * self.maps[j].w),
                  self.k_bin_edges, dx=self.maps[i].dx, dy=self.maps[i].dy, dz=self.maps[i].dz)
@@ -163,22 +166,38 @@ class CrossSpectrum_nmaps():
                      pass
                  
                  f1.close()
-
+    '''
+    #P(k) = k**-3, This one can be modified - P(k) defines the distribution, a temperature map is one realization from this distribution
+    #make sure that this function matches the one from create_map_h5_new
+    def PS_function(self,k_array):
+        shape = k_array.shape
+        k_array = k_array.flatten()
+        PS_array = np.zeros(len(k_array))
+        for i in range(len(k_array)):
+           if k_array[i] != 0.: 
+               PS_array[i] = k_array[i]**(-3.)
+           else:
+               PS_array[i] = 0.
+        PS_array = np.reshape(PS_array,shape)
+        return PS_array
+   '''
     #PLOT XS (previously in the script code)
     def plot_xs(self, k_array, xs_array, rms_sig_array, rms_mean_array, index, save=False):
        
        k = k_array[index]
+       print k
        xs = xs_array[index]
        rms_sig = rms_sig_array[index]
        rms_mean = rms_mean_array[index]
 
        lim = np.mean(np.abs(xs[4:])) * 4
+       #lim = 200.
        fig = plt.figure()
        fig.suptitle('xs of ' + self.get_information()[index][1] + ' and ' + self.get_information()[index][2])
        ax1 = fig.add_subplot(211)
-       ax1.errorbar(k, xs, rms_sig, fmt='o', label=r'$\tilde{C}_{data}(k)$')
+       ax1.errorbar(k, k*xs, k*rms_sig, fmt='o', label=r'$k\tilde{C}_{data}(k)$') #added k*
        ax1.plot(k, 0 * rms_mean, 'k', label=r'$\tilde{C}_{noise}(k)$', alpha=0.4)
-
+       ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
        ax1.set_ylabel(r'$\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^3$]')
        ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
 
