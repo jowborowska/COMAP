@@ -50,9 +50,9 @@ def create_map_3d(power_spectrum_function, x, y, z):
     V = ((x[-1] - x[0]) * (y[-1] - y[0]) * (z[-1] - z[0]))  # whole volume in Mpc^3
     fftfield = np.zeros((n_x, n_y, n_z), dtype=complex)
     z = power_spectrum_function(
-        np.abs(np.sqrt(2.*np.pi*fft.fftfreq(n_x, d=dx)[:, None, None]**2
-                       + 2.*np.pi*fft.fftfreq(n_y, d=dy)[None, :, None]**2
-                       + 2.*np.pi*fft.fftfreq(n_z, d=dz)[None, None, :]**2))
+        np.abs(2.*np.pi*np.sqrt(fft.fftfreq(n_x, d=dx)[:, None, None]**2
+                       + fft.fftfreq(n_y, d=dy)[None, :, None]**2
+                       + fft.fftfreq(n_z, d=dz)[None, None, :]**2))
     )
     #np.random.seed(1) #to get the same signal every time
     field = np.random.randn(n_x, n_y, n_z, 2)
