@@ -72,7 +72,7 @@ class MapCosmo():
         self.dy = self.y[1] - self.y[0]
         self.dz = self.z[1] - self.z[0]
         
-        self.voxel_volume = self.dx * self.dy * self.dz  # voxel volume in (Mpc/h)^3
+        self.voxel_volume = self.dx * self.dy * self.dz  # voxel volume in Mpc^3
 
     def coadd_feed_maps(self,map_file, which_half_split): #0 for the first one, 1 for the second one
         map_single_feed = np.array(map_file['/jackknives/map_half'][which_half_split,0])
@@ -116,4 +116,4 @@ class MapCosmo():
             self.save_string = ''
         
         if self.feed is not None:
-            self.save_string = self.save_string + '_%02i' % self.feedwhich_half_split0
+            self.save_string = self.save_string + '_%02i' % self.feed
