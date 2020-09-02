@@ -59,20 +59,7 @@ def create_map_3d(power_spectrum_function, x, y, z):
     #seed = None
     fftfield[:] = n_x * n_y * n_z * (field[:, :, :, 0] + 1j * field[:, :, :, 1])*np.sqrt(z/V)
     return np.real(np.fft.ifftn(fftfield)), dx*dy*dz
-'''
-#P(k) = k**-3, This one can be modified - P(k) defines the distribution, a temperature map is one realization from this distribution
-def PS_function(k_array):
-   shape = k_array.shape
-   k_array = k_array.flatten()
-   PS_array = np.zeros(len(k_array))
-   for i in range(len(k_array)):
-      if k_array[i] != 0.: 
-          PS_array[i] = k_array[i]**(-3.)
-      else:
-         PS_array[i] = 0.
-   PS_array = np.reshape(PS_array,shape)
-   return PS_array
-'''
+
 #simulate noise and create the map (signal + noise)
 def create_output_map(x,y,z, signal_map): 
    muK2K = 1e-6 #micro Kelvins to Kelvins

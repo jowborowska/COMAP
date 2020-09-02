@@ -20,7 +20,7 @@ import h5py
 import tools
 import map_cosmo
 import matplotlib.pyplot as plt
-import PS_function
+import PS_function #P(k) = k**-3
 #import create_map_h5_new.PS_function as PS_f #<-- this didn't work, wanted the same command arguments as create_map_h5_new.py
 
 class CrossSpectrum_nmaps():
@@ -166,21 +166,7 @@ class CrossSpectrum_nmaps():
                      pass
                  
                  f1.close()
-    '''
-    #P(k) = k**-3, This one can be modified - P(k) defines the distribution, a temperature map is one realization from this distribution
-    #make sure that this function matches the one from create_map_h5_new
-    def PS_function(self,k_array):
-        shape = k_array.shape
-        k_array = k_array.flatten()
-        PS_array = np.zeros(len(k_array))
-        for i in range(len(k_array)):
-           if k_array[i] != 0.: 
-               PS_array[i] = k_array[i]**(-3.)
-           else:
-               PS_array[i] = 0.
-        PS_array = np.reshape(PS_array,shape)
-        return PS_array
-   '''
+
     #PLOT XS (previously in the script code)
     def plot_xs(self, k_array, xs_array, rms_sig_array, rms_mean_array, index, save=False):
        
