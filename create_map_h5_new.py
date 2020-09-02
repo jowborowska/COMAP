@@ -69,8 +69,8 @@ def create_output_map(x,y,z, signal_map):
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
    #np.random.seed(1)
-   rms_map = np.random.uniform(0.0, 50.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 50 muK, the standard deviation of the noise in each voxel
-   rms_map = np.zeros_like(rms_map)+5.*muK2K
+   rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 50 muK, the standard deviation of the noise in each voxel
+   #rms_map = np.zeros_like(rms_map)+5.*muK2K
    #np.random.seed() #keep the same rms all the time
    w = 1./rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map

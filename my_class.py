@@ -89,7 +89,7 @@ class CrossSpectrum_nmaps():
                  
                  
                  my_xs, my_k, my_nmodes = tools.compute_cross_spec3d(
-                 (self.maps[i].map * self.maps[i].w, self.maps[j].map * self.maps[j].w),
+                 (self.maps[i].map * np.sqrt(self.maps[i].w*self.maps[j].w), self.maps[j].map * np.sqrt(self.maps[i].w*self.maps[j].w)),
                  self.k_bin_edges, dx=self.maps[i].dx, dy=self.maps[i].dy, dz=self.maps[i].dz)
 
                  self.reverse_normalization(i,j) #go back to the previous state to normalize again with a different map-pair
@@ -171,7 +171,6 @@ class CrossSpectrum_nmaps():
     def plot_xs(self, k_array, xs_array, rms_sig_array, rms_mean_array, index, save=False):
        
        k = k_array[index]
-       print k
        xs = xs_array[index]
        rms_sig = rms_sig_array[index]
        rms_mean = rms_mean_array[index]
