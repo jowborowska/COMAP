@@ -60,18 +60,19 @@ def run_all_methods(feed,feed1,feed2):
       my_xs.plot_xs(k, xs, rms_sig, rms_mean, i, save=True)
 
 def all_feed_combo_xs(p):
-    i = p // 19 + 1
-    j = p % 19 + 1
-    if i == 4 or i == 6 or i == 7:
+    i = p // 19 + 1 #floor division, divides and returns the integer value of the quotient (it dumps the digits after the decimal)
+    j = p % 19 + 1 #modulus, divides and returns the value of the remainder
+    
+    if i == 4 or i == 6 or i == 7: #avoid these feeds
         return p
-    if j == 4 or j == 6 or j == 7:
+    if j == 4 or j == 6 or j == 7: #avoid these feeds
         return p
     run_all_methods(None, feed1=i,feed2=j)
     return p
 
 if sys.argv[-2] == 'all': #'all' makes xs for all feed-combinations, either give it one map name or one map name with half split = True !
-   nums = list(range(19 * 19))
-   pool = multiprocessing.Pool(64)
+   nums = list(range(19*19))
+   pool = multiprocessing.Pool(4) #here number of cores
    np.array(pool.map(all_feed_combo_xs, nums))
 else:
    run_all_methods(feed, None, None)
