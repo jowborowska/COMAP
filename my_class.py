@@ -127,7 +127,7 @@ class CrossSpectrum_nmaps():
                          randmap[l] = np.random.randn(*self.maps[l].rms.shape) * self.maps[l].rms
 
                      rms_xs[:, g] = tools.compute_cross_spec3d(
-                         (randmap[0] * self.maps[i].w, randmap[1] * self.maps[j].w),
+                         (randmap[0] * np.sqrt(self.maps[i].w*self.maps[j].w), randmap[1] * np.sqrt(self.maps[i].w*self.maps[j].w)),
                          self.k_bin_edges, dx=self.maps[i].dx, dy=self.maps[i].dy, dz=self.maps[i].dz)[0]
                  
                  self.reverse_normalization(i,j) #go back to the previous state to normalize again with a different map-pair
