@@ -8,6 +8,7 @@ import sys
 import tools
 import map_cosmo
 import my_class
+import multiprocessing
 
 n = len(sys.argv) - 3 #number of maps
 list_of_n_map_names = []
@@ -17,8 +18,8 @@ if len(sys.argv) < 4 :
     print('Then specify the feed number or make xs for all feeds or for coadded feeds; then True/False for the half split!')
     print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/coadded/all True/False')
     sys.exit(1)
-if len(sys.argv) == 4 and sys.argv[-1] == 'False':
-    print('Only one file name specified, with no half split - unable to create xs!')
+if len(sys.argv) == 4 and sys.argv[-1] == 'False' and sys.argv[-2] != 'all':
+    print('Only one file name specified, with no half split - unable to create xs! Try for all feed-combo or give more maps/splits.')
     sys.exit(1)
 
 for i in range(n):
@@ -26,11 +27,13 @@ for i in range(n):
 
 feed_name = sys.argv[-2]
 if feed_name == 'coadded':
-   feed = None
+   feed = 30 #a random number meaning that we take the coadded feed-maps
 if feed_name == 'all':
-   feeds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+   #feeds = [1, 2, 3, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+   feeds = [1,2,3]
 if feed_name != 'coadded' and feed_name != 'all':
    feed = int(sys.argv[-2])
+
 
 if sys.argv[-1] == 'False':
    half_split = False #if False, takes the map made out of entire data set
@@ -38,12 +41,14 @@ if sys.argv[-1] == 'True':
    half_split = True
 
 
-def run_all_methods():
-   my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names, half_split, feed)
+def run_all_methods(feed,feed1,feed2):
+   my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names, half_split, feed, feed1, feed2)
 
    calculated_xs = my_xs.get_information()
-   print calculated_xs #gives the xs, k, rms_sig, rms_mean index with corresponding map-pair
-
+   if feed1!=None and feed2!=None:
+      print "Created xs between", calculated_xs[0][1], "and", calculated_xs[0][2] #gives the xs, k, rms_sig, rms_mean index with corresponding map-pair
+   else:
+      print calculated_xs
    xs, k, nmodes = my_xs.calculate_xs()
 
    rms_mean, rms_sig = my_xs.run_noise_sims(10) #these rms's are arrays of 14 elements, that give error bars (number of bin edges minus 1)
@@ -52,11 +57,21 @@ def run_all_methods():
 
    #plot all cross-spectra that have been calculated
    for i in range(len(calculated_xs)):
-      my_xs.plot_xs(k, xs, rms_sig, rms_mean, i, save=False)
+      my_xs.plot_xs(k, xs, rms_sig, rms_mean, i, save=True)
 
+def all_feed_combo_xs(p):
+    i = p // 19 + 1
+    j = p % 19 + 1
+    if i == 4 or i == 6 or i == 7:
+        return p
+    if j == 4 or j == 6 or j == 7:
+        return p
+    run_all_methods(None, feed1=i,feed2=j)
+    return p
 
-if sys.argv[-2] == 'all': #'all' makes xs for all feeds, not for all feed-combinations !
-   for feed in feeds:
-      run_all_methods()
+if sys.argv[-2] == 'all': #'all' makes xs for all feed-combinations, either give it one map name or one map name with half split = True !
+   nums = list(range(19 * 19))
+   pool = multiprocessing.Pool(64)
+   np.array(pool.map(all_feed_combo_xs, nums))
 else:
-   run_all_methods()
+   run_all_methods(feed, None, None)

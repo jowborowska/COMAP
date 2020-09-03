@@ -24,29 +24,53 @@ import PS_function #P(k) = k**-3
 #import create_map_h5_new.PS_function as PS_f #<-- this didn't work, wanted the same command arguments as create_map_h5_new.py
 
 class CrossSpectrum_nmaps():
-    def __init__(self, list_of_n_map_names, half_split=False, feed=None):
-        if feed == None:
+    def __init__(self, list_of_n_map_names, half_split=False, feed=None, feed1=None, feed2=None):
+        if feed == 30:
+           feed = None
            self.feed_name = '_coadded'
-        else:
+        if feed != 30 and feed is not None:
            self.feed_name = '_feed' + str(feed)
+        else:
+           self.feed_name1 = '_feed' + str(feed1)
+           self.feed_name2 = '_feed' + str(feed2)
         self.names_of_maps = list_of_n_map_names #the names schould indicate which map is that (or half_map) and which feed is that
         self.names = []
         for name in self.names_of_maps:
            if half_split == False:
-              self.names.append(name + self.feed_name)
+              if feed1 == None and feed2 == None:
+                 self.names.append(name + self.feed_name)
+              else:
+                 self.names.append(name + self.feed_name1)
+                 self.names.append(name + self.feed_name2)
            if half_split == True:
-              self.names.append(name + '_1st_half' + self.feed_name)
-              self.names.append(name + '_2nd_half' + self.feed_name)
+              if feed1 == None and feed2 == None:
+                 self.names.append(name + '_1st_half' + self.feed_name)
+                 self.names.append(name + '_2nd_half' + self.feed_name)
+              else:
+                 self.names.append(name + '_1st_half' + self.feed_name1)
+                 self.names.append(name + '_2nd_half' + self.feed_name2)
         self.maps = []
         for map_name in list_of_n_map_names:
            if half_split == True:
-              my_map_first_half = map_cosmo.MapCosmo(map_name, feed, first_half_split=True)
-              my_map_second_half = map_cosmo.MapCosmo(map_name, feed, second_half_split=True)
-              self.maps.append(my_map_first_half)
-              self.maps.append(my_map_second_half)
+              if feed1==None and feed2==None:
+                 my_map_first_half = map_cosmo.MapCosmo(map_name, feed, first_half_split=True)
+                 my_map_second_half = map_cosmo.MapCosmo(map_name, feed, second_half_split=True)
+                 self.maps.append(my_map_first_half)
+                 self.maps.append(my_map_second_half)
+              else:
+                 my_map_first_half = map_cosmo.MapCosmo(map_name, feed1, first_half_split=True)
+                 my_map_second_half = map_cosmo.MapCosmo(map_name, feed2, second_half_split=True)
+                 self.maps.append(my_map_first_half)
+                 self.maps.append(my_map_second_half)
            else:
-              my_map = map_cosmo.MapCosmo(map_name, feed) 
-              self.maps.append(my_map)
+              if feed1==None and feed2==None:
+                 my_map = map_cosmo.MapCosmo(map_name, feed) 
+                 self.maps.append(my_map)
+              else:
+                 my_map1 = map_cosmo.MapCosmo(map_name, feed1) 
+                 my_map2 = map_cosmo.MapCosmo(map_name, feed2)
+                 self.maps.append(my_map1)
+                 self.maps.append(my_map2)
         #self.weights_are_normalized = False
    
     #NORMALIZE WEIGHTS FOR A GIVEN PAIR OF MAPS
