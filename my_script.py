@@ -56,8 +56,11 @@ def run_all_methods(feed,feed1,feed2):
    my_xs.make_h5()
 
    #plot all cross-spectra that have been calculated
-   for i in range(len(calculated_xs)):
-      my_xs.plot_xs(k, xs, rms_sig, rms_mean, i, save=True)
+   if feed1!=None and feed2!=None:
+      my_xs.plot_xs(k, xs, rms_sig, rms_mean, 0, save=True)
+   else:
+      for i in range(len(calculated_xs)):
+         my_xs.plot_xs(k, xs, rms_sig, rms_mean, i, save=True)
 
 def all_feed_combo_xs(p):
     i = p // 19 + 1 #floor division, divides and returns the integer value of the quotient (it dumps the digits after the decimal)
