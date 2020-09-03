@@ -63,16 +63,16 @@ def all_feed_combo_xs(p):
     i = p // 19 + 1 #floor division, divides and returns the integer value of the quotient (it dumps the digits after the decimal)
     j = p % 19 + 1 #modulus, divides and returns the value of the remainder
     
-    if i == 4 or i == 6 or i == 7: #avoid these feeds
+    if i == 4 or i == 6 or i == 7: #avoid these feeds (were turned off for most of the mission)
         return p
-    if j == 4 or j == 6 or j == 7: #avoid these feeds
+    if j == 4 or j == 6 or j == 7: #avoid these feeds (were turned off for most of the mission)
         return p
     run_all_methods(None, feed1=i,feed2=j)
     return p
 
 if sys.argv[-2] == 'all': #'all' makes xs for all feed-combinations, either give it one map name or one map name with half split = True !
-   nums = list(range(19*19))
+   feed_combos = list(range(19*19)) #number of combinations between feeds
    pool = multiprocessing.Pool(4) #here number of cores
-   np.array(pool.map(all_feed_combo_xs, nums))
+   np.array(pool.map(all_feed_combo_xs, feed_combos))
 else:
    run_all_methods(feed, None, None)
