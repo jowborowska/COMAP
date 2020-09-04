@@ -10,7 +10,7 @@ import tools
 import map_cosmo
 import my_class
 
-def xs_feed_feed_grid(path_to_xs):
+def xs_feed_feed_grid(path_to_xs, figure_name):
    n_sim = 100
    n_k = 14
    n_feed = 19
@@ -56,7 +56,7 @@ def xs_feed_feed_grid(path_to_xs):
    plt.ylabel('Feed')
    cbar = plt.colorbar()
    cbar.set_label(r'$|\chi^2| \times$ sign($\chi^3$)')
-   plt.savefig('xs_grid_par_co2_full.png', bbox_inches='tight')
+   plt.savefig(figure_name, bbox_inches='tight')
    plt.show()
 
-xs_feed_feed_grid('spectra/xsco2_map_complete.h5_1st_half_feed%01i_and_co2_map_complete.h5_2nd_half_feed%01i.h5')
+xs_feed_feed_grid('spectra/xsco2_map_complete.h5_1st_half_feed%01i_and_co2_map_complete.h5_2nd_half_feed%01i.h5', 'xs_grid_halfs_co2.png')
