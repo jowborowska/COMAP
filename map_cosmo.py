@@ -6,7 +6,7 @@ import sys
 
 #CONVERTS TO RECTANGULAR GRID IN COMOVING COORDINATES, get units right, store info about the map, pointings to 3D grid, build around one voxel in the middle
 class MapCosmo(): 
-    def __init__(self, mappath, feed = None, first_half_split = False, second_half_split = False):
+    def __init__(self, mappath, feed = None, jk=None, first_split = False, second_split = False):
         self.feed = feed
         self.interpret_mapname(mappath)
         
@@ -14,24 +14,32 @@ class MapCosmo():
             self.x = np.array(my_file['x'][:]) #these x, y are are bin centers from mapmaker
             self.y = np.array(my_file['y'][:])
             if feed is not None:
-                if first_half_split==True:
-                   self.map = np.array(my_file['/jackknives/map_half'][0,feed-1])
-                   self.rms = np.array(my_file['/jackknives/rms_half'][0,feed-1])
-                if second_half_split==True:
-                   self.map = np.array(my_file['/jackknives/map_half'][1,feed-1])
-                   self.rms = np.array(my_file['/jackknives/rms_half'][1,feed-1])
-                if first_half_split == False and second_half_split == False:
+                if first_split==True:
+                   self.map = np.array(my_file['/jackknives/map_' + jk][0,feed-1])
+                   self.rms = np.array(my_file['/jackknives/rms_' + jk][0,feed-1])
+                if second_split==True:
+                   self.map = np.array(my_file['/jackknives/map_' + jk][1,feed-1])
+                   self.rms = np.array(my_file['/jackknives/rms_' + jk][1,feed-1])
+                if first_split == False and second_split == False:
                    self.map = np.array(my_file['map'][feed-1])
                    self.rms = np.array(my_file['rms'][feed-1])
                 
             else: #create or read map_coadd - all the feeds 'added' together
-                if first_half_split==True:
-                   print 'Creating coadded feed map for the first half split.'
-                   self.map, self.rms = self.coadd_feed_maps(my_file,0)
-                if second_half_split==True:
-                   print 'Creating coadded feed map for the second half split.'
-                   self.map, self.rms = self.coadd_feed_maps(my_file,1)
-                if first_half_split == False and second_half_split == False: 
+                if first_split==True:
+                   if jk == 'dayn' or jk == 'half':
+                      print 'Creating coadded feed map for the first split.'
+                      self.map, self.rms = self.coadd_feed_maps(my_file,0,jk)
+                   else:
+                      self.map = np.array(my_file['/jackknives/map_' + jk][0]) 
+                      self.rms = np.array(my_file['/jackknives/map_' + jk][0])   
+                if second_split==True:
+                   if jk == 'dayn' or jk == 'half':
+                      print 'Creating coadded feed map for the second split.'
+                      self.map, self.rms = self.coadd_feed_maps(my_file,1,jk)
+                   else:
+                      self.map = np.array(my_file['/jackknives/map_' + jk][1]) 
+                      self.rms = np.array(my_file['/jackknives/map_' + jk][1])  
+                if first_split == False and second_split == False: 
                    self.map = np.array(my_file['map_coadd'][:]) 
                    self.rms = np.array(my_file['rms_coadd'][:])
         
@@ -74,14 +82,14 @@ class MapCosmo():
         
         self.voxel_volume = self.dx * self.dy * self.dz  # voxel volume in Mpc^3
 
-    def coadd_feed_maps(self,map_file, which_half_split): #0 for the first one, 1 for the second one
-        map_single_feed = np.array(map_file['/jackknives/map_half'][which_half_split,0])
+    def coadd_feed_maps(self,map_file, which_split,jk): #0 for the first one, 1 for the second one
+        map_single_feed = np.array(map_file['/jackknives/map_' + jk][which_split,0])
         my_map = np.zeros_like(map_single_feed)
         my_rms = np.zeros_like(map_single_feed)
         weight_sum = np.zeros_like(map_single_feed)
         for i in range(19):
-            map_single_feed = np.array(map_file['/jackknives/map_half'][which_half_split,i])
-            rms_single_feed = np.array(map_file['/jackknives/rms_half'][which_half_split,i])
+            map_single_feed = np.array(map_file['/jackknives/map_'+jk][which_split,i])
+            rms_single_feed = np.array(map_file['/jackknives/rms_'+jk][which_split,i])
             mask = np.zeros_like(rms_single_feed)
             mask[(rms_single_feed != 0.0)] = 1.0
             where = (mask == 1.0) 
