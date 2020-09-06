@@ -15,11 +15,11 @@ list_of_n_map_names = []
 
 if len(sys.argv) < 4 :
     print('Provide at least one file name (for xs between half splits) or two file names (for xs between whole maps)!')
-    print('Then specify the feed number or make xs for all feeds or for coadded feeds; then True/False for the half split!')
-    print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/coadded/all True/False')
+    print('Then specify the feed number or make xs for all feeds or for coadded feeds; then the name of the jk or False (for entire map)!') 
+    print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/coadded/all dayn/half/odde/sdlb/False') #odde and sdlb work only with 'coadded'
     sys.exit(1)
 if len(sys.argv) == 4 and sys.argv[-1] == 'False' and sys.argv[-2] != 'all':
-    print('Only one file name specified, with no half split - unable to create xs! Try for all feed-combo or give more maps/splits.')
+    print('Only one file name specified, with no split - unable to create xs! Try for all feed-combo or give more maps/splits.')
     sys.exit(1)
 
 for i in range(n):
@@ -36,13 +36,18 @@ if feed_name != 'coadded' and feed_name != 'all':
 
 
 if sys.argv[-1] == 'False':
-   half_split = False #if False, takes the map made out of entire data set
-if sys.argv[-1] == 'True':
-   half_split = True
-
+   jk = False #if False, takes the map made out of entire data set
+if sys.argv[-1] == 'dayn':
+   jk = 'dayn'
+if sys.argv[-1] == 'half':
+   jk = 'half'
+if sys.argv[-1] == 'odde':
+   jk = 'odde'
+if sys.argv[-1] == 'sdlb':
+   jk = 'sdlb'
 
 def run_all_methods(feed,feed1,feed2):
-   my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names, half_split, feed, feed1, feed2)
+   my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names,jk, feed, feed1, feed2)
 
    calculated_xs = my_xs.get_information()
    if feed1!=None and feed2!=None:
@@ -75,7 +80,7 @@ def all_feed_combo_xs(p):
 
 if sys.argv[-2] == 'all': #'all' makes xs for all feed-combinations, either give it one map name or one map name with half split = True !
    feed_combos = list(range(19*19)) #number of combinations between feeds
-   pool = multiprocessing.Pool(4) #here number of cores
+   pool = multiprocessing.Pool(10) #here number of cores
    np.array(pool.map(all_feed_combo_xs, feed_combos))
 else:
    run_all_methods(feed, None, None)

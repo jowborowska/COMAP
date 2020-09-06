@@ -24,7 +24,7 @@ import PS_function #P(k) = k**-3
 #import create_map_h5_new.PS_function as PS_f #<-- this didn't work, wanted the same command arguments as create_map_h5_new.py
 
 class CrossSpectrum_nmaps():
-    def __init__(self, list_of_n_map_names, half_split=False, feed=None, feed1=None, feed2=None):
+    def __init__(self, list_of_n_map_names, jk=False, feed=None, feed1=None, feed2=None):
         if feed == 30:
            feed = None
            self.feed_name = '_coadded'
@@ -36,32 +36,32 @@ class CrossSpectrum_nmaps():
         self.names_of_maps = list_of_n_map_names #the names schould indicate which map is that (or half_map) and which feed is that
         self.names = []
         for name in self.names_of_maps:
-           if half_split == False:
+           if jk == False:
               if feed1 == None and feed2 == None:
                  self.names.append(name + self.feed_name)
               else:
                  self.names.append(name + self.feed_name1)
                  self.names.append(name + self.feed_name2)
-           if half_split == True:
+           if jk != False:
               if feed1 == None and feed2 == None:
-                 self.names.append(name + '_1st_half' + self.feed_name)
-                 self.names.append(name + '_2nd_half' + self.feed_name)
+                 self.names.append(name + '_1st_' + jk + self.feed_name)
+                 self.names.append(name + '_2nd_'+ jk + self.feed_name)
               else:
-                 self.names.append(name + '_1st_half' + self.feed_name1)
-                 self.names.append(name + '_2nd_half' + self.feed_name2)
+                 self.names.append(name + '_1st_' + jk + self.feed_name1)
+                 self.names.append(name + '_2nd_' + jk + self.feed_name2)
         self.maps = []
         for map_name in list_of_n_map_names:
-           if half_split == True:
+           if jk != False:
               if feed1==None and feed2==None:
-                 my_map_first_half = map_cosmo.MapCosmo(map_name, feed, first_half_split=True)
-                 my_map_second_half = map_cosmo.MapCosmo(map_name, feed, second_half_split=True)
-                 self.maps.append(my_map_first_half)
-                 self.maps.append(my_map_second_half)
+                 my_map_first = map_cosmo.MapCosmo(map_name, feed, jk, first_split=True)
+                 my_map_second= map_cosmo.MapCosmo(map_name, feed, jk, second_split=True)
+                 self.maps.append(my_map_first)
+                 self.maps.append(my_map_second)
               else:
-                 my_map_first_half = map_cosmo.MapCosmo(map_name, feed1, first_half_split=True)
-                 my_map_second_half = map_cosmo.MapCosmo(map_name, feed2, second_half_split=True)
-                 self.maps.append(my_map_first_half)
-                 self.maps.append(my_map_second_half)
+                 my_map_first = map_cosmo.MapCosmo(map_name, feed1, jk, first_split=True)
+                 my_map_second = map_cosmo.MapCosmo(map_name, feed2, jk, second_split=True)
+                 self.maps.append(my_map_first)
+                 self.maps.append(my_map_second)
            else:
               if feed1==None and feed2==None:
                  my_map = map_cosmo.MapCosmo(map_name, feed) 
@@ -229,6 +229,6 @@ class CrossSpectrum_nmaps():
           plt.savefig(name_for_figure, bbox_inches='tight')
           print 'Figure saved as', name_for_figure
 
-       #plt.show()
+       plt.show()
 
 
