@@ -10,42 +10,6 @@ import map_cosmo
 import my_class
 import multiprocessing
 
-n = len(sys.argv) - 3 #number of maps
-list_of_n_map_names = []
-
-if len(sys.argv) < 4 :
-    print('Provide at least one file name (for xs between half splits) or two file names (for xs between whole maps)!')
-    print('Then specify the feed number or make xs for all feeds or for coadded feeds; then the name of the jk or False (for entire map)!') 
-    print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/coadded/all dayn/half/odde/sdlb/False') #odde and sdlb work only with 'coadded'
-    sys.exit(1)
-if len(sys.argv) == 4 and sys.argv[-1] == 'False' and sys.argv[-2] != 'all':
-    print('Only one file name specified, with no split - unable to create xs! Try for all feed-combo or give more maps/splits.')
-    sys.exit(1)
-
-for i in range(n):
-    list_of_n_map_names.append(sys.argv[i+1])
-
-feed_name = sys.argv[-2]
-if feed_name == 'coadded':
-   feed = 30 #a random number meaning that we take the coadded feed-maps
-if feed_name == 'all':
-   #feeds = [1, 2, 3, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-   feeds = [1,2,3]
-if feed_name != 'coadded' and feed_name != 'all':
-   feed = int(sys.argv[-2])
-
-
-if sys.argv[-1] == 'False':
-   jk = False #if False, takes the map made out of entire data set
-if sys.argv[-1] == 'dayn':
-   jk = 'dayn'
-if sys.argv[-1] == 'half':
-   jk = 'half'
-if sys.argv[-1] == 'odde':
-   jk = 'odde'
-if sys.argv[-1] == 'sdlb':
-   jk = 'sdlb'
-
 def run_all_methods(feed,feed1,feed2):
    my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names,jk, feed, feed1, feed2)
 
@@ -78,9 +42,40 @@ def all_feed_combo_xs(p):
     run_all_methods(None, feed1=i,feed2=j)
     return p
 
-if sys.argv[-2] == 'all': #'all' makes xs for all feed-combinations, either give it one map name or one map name with half split = True !
+n = len(sys.argv) - 3 #number of maps
+list_of_n_map_names = []
+
+if len(sys.argv) < 4 :
+    print('Provide at least one file name (for xs between half splits) or two file names (for xs between whole maps)!')
+    print('Then specify the feed number or make xs for all feeds or for coadded feeds; then the name of the jk or False (for entire map)!') 
+    print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/coadded/all dayn/half/odde/sdlb/False') #odde and sdlb work only with 'coadded'
+    sys.exit(1)
+if len(sys.argv) == 4 and sys.argv[-1] == 'False' and sys.argv[-2] != 'all':
+    print('Only one file name specified, with no split - unable to create xs! Try for all feed-combo or give more maps/splits.')
+    sys.exit(1)
+
+for i in range(n):
+    list_of_n_map_names.append(sys.argv[i+1])
+
+if sys.argv[-1] == 'False':
+   jk = False #if False, takes the map made out of entire data set
+if sys.argv[-1] == 'dayn':
+   jk = 'dayn'
+if sys.argv[-1] == 'half':
+   jk = 'half'
+if sys.argv[-1] == 'odde':
+   jk = 'odde'
+if sys.argv[-1] == 'sdlb':
+   jk = 'sdlb'
+
+feed_name = sys.argv[-2]
+if feed_name == 'coadded':
+   feed = 30 #a random number meaning that we take the coadded feed-maps
+if feed_name != 'coadded' and feed_name != 'all':
+   feed = int(sys.argv[-2])
+if feed_name == 'all': #'all' makes xs for all feed-combinations, either give it one map name or one map name with half split = True !
    feed_combos = list(range(19*19)) #number of combinations between feeds
    pool = multiprocessing.Pool(10) #here number of cores
    np.array(pool.map(all_feed_combo_xs, feed_combos))
-else:
+if feed_name != 'all':
    run_all_methods(feed, None, None)

@@ -53,13 +53,13 @@ class CrossSpectrum_nmaps():
         for map_name in list_of_n_map_names:
            if jk != False:
               if feed1==None and feed2==None:
-                 my_map_first = map_cosmo.MapCosmo(map_name, feed, jk, first_split=True)
-                 my_map_second= map_cosmo.MapCosmo(map_name, feed, jk, second_split=True)
-                 self.maps.append(my_map_first)
-                 self.maps.append(my_map_second)
+                 for split_no in range(2): #here update the number of splits from mapmaker, 2 so far
+                    my_map_split = map_cosmo.MapCosmo(map_name, feed, jk, split_no)
+                    self.maps.append(my_map_split)
+                    
               else:
-                 my_map_first = map_cosmo.MapCosmo(map_name, feed1, jk, first_split=True)
-                 my_map_second = map_cosmo.MapCosmo(map_name, feed2, jk, second_split=True)
+                 my_map_first = map_cosmo.MapCosmo(map_name, feed1, jk, 0)
+                 my_map_second = map_cosmo.MapCosmo(map_name, feed2, jk, 1)
                  self.maps.append(my_map_first)
                  self.maps.append(my_map_second)
            else:

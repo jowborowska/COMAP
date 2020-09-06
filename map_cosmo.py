@@ -6,7 +6,7 @@ import sys
 
 #CONVERTS TO RECTANGULAR GRID IN COMOVING COORDINATES, get units right, store info about the map, pointings to 3D grid, build around one voxel in the middle
 class MapCosmo(): 
-    def __init__(self, mappath, feed = None, jk=None, first_split = False, second_split = False):
+    def __init__(self, mappath, feed = None, jk = None, split_no = None):
         self.feed = feed
         self.interpret_mapname(mappath)
         
@@ -14,32 +14,22 @@ class MapCosmo():
             self.x = np.array(my_file['x'][:]) #these x, y are are bin centers from mapmaker
             self.y = np.array(my_file['y'][:])
             if feed is not None:
-                if first_split==True:
-                   self.map = np.array(my_file['/jackknives/map_' + jk][0,feed-1])
-                   self.rms = np.array(my_file['/jackknives/rms_' + jk][0,feed-1])
-                if second_split==True:
-                   self.map = np.array(my_file['/jackknives/map_' + jk][1,feed-1])
-                   self.rms = np.array(my_file['/jackknives/rms_' + jk][1,feed-1])
-                if first_split == False and second_split == False:
+                if split_no is not None:
+                   self.map = np.array(my_file['/jackknives/map_' + jk][split_no,feed-1])
+                   self.rms = np.array(my_file['/jackknives/rms_' + jk][split_no,feed-1])
+                if split_no==None:
                    self.map = np.array(my_file['map'][feed-1])
                    self.rms = np.array(my_file['rms'][feed-1])
                 
             else: #create or read map_coadd - all the feeds 'added' together
-                if first_split==True:
-                   if jk == 'dayn' or jk == 'half':
-                      print 'Creating coadded feed map for the first split.'
-                      self.map, self.rms = self.coadd_feed_maps(my_file,0,jk)
-                   else:
-                      self.map = np.array(my_file['/jackknives/map_' + jk][0]) 
-                      self.rms = np.array(my_file['/jackknives/map_' + jk][0])   
-                if second_split==True:
-                   if jk == 'dayn' or jk == 'half':
-                      print 'Creating coadded feed map for the second split.'
-                      self.map, self.rms = self.coadd_feed_maps(my_file,1,jk)
-                   else:
-                      self.map = np.array(my_file['/jackknives/map_' + jk][1]) 
-                      self.rms = np.array(my_file['/jackknives/map_' + jk][1])  
-                if first_split == False and second_split == False: 
+                
+                if jk == 'dayn' or jk == 'half':
+                   print 'Creating coadded feed map for the split.'
+                   self.map, self.rms = self.coadd_feed_maps(my_file,split_no,jk)
+                if jk == 'odde' or jk == 'sdlb':
+                   self.map = np.array(my_file['/jackknives/map_' + jk][split_no]) 
+                   self.rms = np.array(my_file['/jackknives/map_' + jk][split_no])   
+                if jk == None: 
                    self.map = np.array(my_file['map_coadd'][:]) 
                    self.rms = np.array(my_file['rms_coadd'][:])
         
