@@ -57,15 +57,15 @@ if len(sys.argv) == 4 and sys.argv[-1] == 'False' and sys.argv[-2] != 'all':
 for i in range(n):
     list_of_n_map_names.append(sys.argv[i+1])
 
-if sys.argv[-1] == 'False':
-   jk = False #if False, takes the map made out of entire data set
-if sys.argv[-1] == 'dayn':
+if sys.argv[-1] == 'False': #if False, takes the map made out of entire data set
+   jk = False 
+if sys.argv[-1] == 'dayn': #day/night split
    jk = 'dayn'
-if sys.argv[-1] == 'half':
+if sys.argv[-1] == 'half': #half mission splits
    jk = 'half'
-if sys.argv[-1] == 'odde':
+if sys.argv[-1] == 'odde': #splits odd/even numbered obsIDs
    jk = 'odde'
-if sys.argv[-1] == 'sdlb':
+if sys.argv[-1] == 'sdlb': #splits the four saddlebags
    jk = 'sdlb'
 
 feed_name = sys.argv[-2]
