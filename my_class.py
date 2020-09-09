@@ -1,6 +1,6 @@
 #Developing a class, which takes in a list of n maps (n map names, since we call map_cosmo inside this class)
 
-# Methods to write:----------------------------------------------------------------------------------------
+#Methods to write:----------------------------------------------------------------------------------------
 # one that computes all the cross spectra between the n feed-averaged maps - DONE
 # what is done in xs_mean added as method
 # method like calculate_feed_xs or something like that for the cross spectra of all combinaitons of feeds (xs_feeds_
