@@ -99,5 +99,5 @@ ps_th_nobeam = np.load('psn.npy') #instrumental beam, less sensitive to small sc
 ps_copps = 8.746e3 * ps_th / ps_th_nobeam #shot noise level
 ps_copps_nobeam = 8.7e3
 
-k, xs_mean, xs_sigma = xs_feed_feed_grid('spectra/xsco2_map_complete.h5_1st_half_feed%01i_and_co2_map_complete.h5_2nd_half_feed%01i.h5', 'xs_grid_halfs_co2.png')
-xs_with_model('xs_mean_full.png', k_th, ps_th, ps_th_nobeam, ps_copps, ps_copps_nobeam)
+k, xs_mean, xs_sigma = xs_feed_feed_grid('spectra/xs_co2_map_complete_1st_half_feed%01i_and_co2_map_complete_2nd_half_feed%01i.h5', 'xs_grid_halfs_co2.png')
+xs_with_model('xs_mean_full_co2.png', k_th, ps_th, ps_th_nobeam, ps_copps, ps_copps_nobeam)
