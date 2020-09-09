@@ -29,7 +29,7 @@ class CrossSpectrum_nmaps():
         self.names_of_maps = list_of_n_map_names #the names schould indicate which map is that (or half_map) and which feed is that and we have to get rid of the path to the file
         self.names = []
         for name in self.names_of_maps:
-           name = name.rpartition('/')[-1] #get rid of the path, leave opnly the name of the map
+           name = name.rpartition('/')[-1] #get rid of the path, leave only the name of the map
            name = name.rpartition('.')[0] #get rid of the ".h5" part
            if jk == False:
               if feed1 == None and feed2 == None:
