@@ -1,19 +1,12 @@
 #Developing a class, which takes in a list of n maps (n map names, since we call map_cosmo inside this class)
 
-#Methods to write:----------------------------------------------------------------------------------------
-# one that computes all the cross spectra between the n feed-averaged maps - DONE
-# what is done in xs_mean added as method
-# method like calculate_feed_xs or something like that for the cross spectra of all combinaitons of feeds (xs_feeds_
-# maybe add a plotting method, such as the plotting from xs_script - DONE
-
 #Comments:-------------------------------------------------------------------------------------------------
 # we probably want to call the map_cosmo class from within the new cross spectrum class, since we do not neccesarily want to store all the maps in memory at once - DONE
 # maybe try to return the index of a given xs, so that we always know which maps were taken and can use it in plot - DONE
 # then download a third map and check if everything works fine - DONE
-# remember that these error bars come from random simulations, so they will be a bit different each time (?)
+# remember that these error bars come from random simulations, so they will be a bit different each time 
 # add names of maps in plotting method and the "save" option - DONE
-# check h5 creating method (the current version is not tested and changed very much from Havard's one)
-# try to plot kC(k) instead of C(k) - look in "xs_mean.py" for an example
+# check h5 creating method (the current version is not tested and changed very much from Havard's one) - DONE
 
 import numpy as np
 import h5py
@@ -33,9 +26,11 @@ class CrossSpectrum_nmaps():
         else:
            self.feed_name1 = '_feed' + str(feed1)
            self.feed_name2 = '_feed' + str(feed2)
-        self.names_of_maps = list_of_n_map_names #the names schould indicate which map is that (or half_map) and which feed is that
+        self.names_of_maps = list_of_n_map_names #the names schould indicate which map is that (or half_map) and which feed is that and we have to get rid of the path to the file
         self.names = []
         for name in self.names_of_maps:
+           name = name.rpartition('/')[-1] #get rid of the path, leave opnly the name of the map
+           name = name.rpartition('.')[0] #get rid of the ".h5" part
            if jk == False:
               if feed1 == None and feed2 == None:
                  self.names.append(name + self.feed_name)
@@ -225,7 +220,8 @@ class CrossSpectrum_nmaps():
        ax2.grid()
        plt.legend()
        if save==True:
-          name_for_figure = 'xs' + self.get_information()[index][1] + '_and_'+ self.get_information()[index][2] + '.png'
+          tools.ensure_dir_exists('figures')
+          name_for_figure = 'figures/xs_' + self.get_information()[index][1] + '_and_'+ self.get_information()[index][2] + '.png'
           plt.savefig(name_for_figure, bbox_inches='tight')
           print 'Figure saved as', name_for_figure
 
