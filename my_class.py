@@ -222,7 +222,7 @@ class CrossSpectrum_nmaps():
           tools.ensure_dir_exists('figures')
           name_for_figure = 'figures/xs_' + self.get_information()[index][1] + '_and_'+ self.get_information()[index][2] + '.png'
           plt.savefig(name_for_figure, bbox_inches='tight')
-          print 'Figure saved as', name_for_figure
+          print ('Figure saved as', name_for_figure)
 
        plt.show()
 
