@@ -75,7 +75,7 @@ if feed_name != 'coadded' and feed_name != 'all':
    feed = int(sys.argv[-2])
 if feed_name == 'all': #'all' makes xs for all feed-combinations, either give it one map name or one map name with half split = True !
    feed_combos = list(range(19*19)) #number of combinations between feeds
-   pool = multiprocessing.Pool(10) #here number of cores
+   pool = multiprocessing.Pool(24) #here number of cores
    np.array(pool.map(all_feed_combo_xs, feed_combos))
 if feed_name != 'all':
    run_all_methods(feed, None, None)
