@@ -60,7 +60,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name):
    plt.show()
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
-def xs_with_model(figure_name, k_th, ps_th, ps_th_nobeam, ps_copps, ps_copps_nobeam):
+def xs_with_model(figure_name, k, xs_mean, xs_sigma):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
@@ -99,5 +99,14 @@ ps_th_nobeam = np.load('psn.npy') #instrumental beam, less sensitive to small sc
 ps_copps = 8.746e3 * ps_th / ps_th_nobeam #shot noise level
 ps_copps_nobeam = 8.7e3
 
-k, xs_mean, xs_sigma = xs_feed_feed_grid('spectra/xs_co2_map_complete_1st_half_feed%01i_and_co2_map_complete_2nd_half_feed%01i.h5', 'xs_grid_halfs_co2.png')
-xs_with_model('xs_mean_full_co2.png', k_th, ps_th, ps_th_nobeam, ps_copps, ps_copps_nobeam)
+k_co2, xs_mean_co2, xs_sigma_co2 = xs_feed_feed_grid('spectra/xs_co2_map_complete_1st_half_feed%01i_and_co2_map_complete_2nd_half_feed%01i.h5', 'xs_grid_halfs_co2.png')
+xs_with_model('xs_mean_full_co2.png', k_co2, xs_mean_co2, xs_sigma_co2)
+
+k_co6, xs_mean_co6, xs_sigma_co6 = xs_feed_feed_grid('spectra/xs_co6_map_complete_1st_half_feed%01i_and_co6_map_complete_2nd_half_feed%01i.h5', 'xs_grid_halfs_co6.png')
+xs_with_model('xs_mean_full_co6.png', k_co6, xs_mean_co6, xs_sigma_co6)
+
+k_co7, xs_mean_co7, xs_sigma_co7 = xs_feed_feed_grid('spectra/xs_co7_map_complete_1st_half_feed%01i_and_co7_map_complete_2nd_half_feed%01i.h5', 'xs_grid_halfs_co7.png')
+xs_with_model('xs_mean_full_co7.png', k_co7, xs_mean_co7, xs_sigma_co7)
+
+
+
