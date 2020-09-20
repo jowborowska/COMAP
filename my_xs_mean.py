@@ -9,6 +9,9 @@ import scipy.interpolate
 import tools
 import map_cosmo
 import my_class
+import PS_function
+
+
 
 def xs_feed_feed_grid(path_to_xs, figure_name):
    n_sim = 100
@@ -40,8 +43,10 @@ def xs_feed_feed_grid(path_to_xs, figure_name):
            chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
 
            chi2[i, j] = np.sign(chi3) * (np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k) #chi2 gives magnitude - how far it is from the white noise
-           if abs(chi2[i,j]) < 5.0 and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal
+           print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
+           if abs(chi2[i,j]) < 500. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal
                xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
+               print ("if test worked")
                xs_div += 1 / rms_xs_std[i,j] ** 2
                n_sum += 1
 
@@ -58,6 +63,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name):
    cbar.set_label(r'$|\chi^2| \times$ sign($\chi^3$)')
    plt.savefig(figure_name, bbox_inches='tight')
    plt.show()
+   print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
 def xs_with_model(figure_name, k, xs_mean, xs_sigma):
@@ -67,9 +73,12 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
-   ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$')
+   #ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$')
+   ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
-   ax1.plot(k_th, k_th * ps_th_nobeam * 10, 'r--', label=r'$10 \times kP_{Theory}(k)$')
+   #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
+   ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
+   #ax1.plot(k_th, k_th * ps_th_nobeam * 10, 'r--', label=r'$10 \times kP_{Theory}(k)$')
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
    ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
@@ -99,6 +108,11 @@ ps_th_nobeam = np.load('psn.npy') #instrumental beam, less sensitive to small sc
 ps_copps = 8.746e3 * ps_th / ps_th_nobeam #shot noise level
 ps_copps_nobeam = 8.7e3
 
+k_test, xs_mean_test, xs_sigma_test = xs_feed_feed_grid('spectra/xs_17sept_1test_feed%01i_and_17sept_1test_feed%01i.h5', 'xs_grid_test.png')
+print ("xs mean: ", xs_mean_test)
+xs_with_model('xs_mean_test.png', k_test, xs_mean_test, xs_sigma_test)
+
+'''
 k_co2, xs_mean_co2, xs_sigma_co2 = xs_feed_feed_grid('spectra/xs_co2_map_complete_1st_half_feed%01i_and_co2_map_complete_2nd_half_feed%01i.h5', 'xs_grid_halfs_co2.png')
 xs_with_model('xs_mean_full_co2.png', k_co2, xs_mean_co2, xs_sigma_co2)
 
@@ -107,6 +121,6 @@ xs_with_model('xs_mean_full_co6.png', k_co6, xs_mean_co6, xs_sigma_co6)
 
 k_co7, xs_mean_co7, xs_sigma_co7 = xs_feed_feed_grid('spectra/xs_co7_map_complete_1st_half_feed%01i_and_co7_map_complete_2nd_half_feed%01i.h5', 'xs_grid_halfs_co7.png')
 xs_with_model('xs_mean_full_co7.png', k_co7, xs_mean_co7, xs_sigma_co7)
-
+'''
 
 
