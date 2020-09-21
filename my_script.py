@@ -15,9 +15,9 @@ def run_all_methods(feed,feed1,feed2):
 
    calculated_xs = my_xs.get_information()
    if feed1!=None and feed2!=None:
-      print ("Created xs between", calculated_xs[0][1], "and", calculated_xs[0][2]) #gives the xs, k, rms_sig, rms_mean index with corresponding map-pair
+      print ('Creating xs between '+ calculated_xs[0][1]+ ' and '+ calculated_xs[0][2]+ '.') 
    else:
-      print (calculated_xs)
+      print (calculated_xs) #gives the xs, k, rms_sig, rms_mean index with corresponding map-pair
    xs, k, nmodes = my_xs.calculate_xs()
 
    rms_mean, rms_sig = my_xs.run_noise_sims(10) #these rms's are arrays of 14 elements, that give error bars (number of bin edges minus 1)
@@ -44,6 +44,7 @@ def all_feed_combo_xs(p):
 
 n = len(sys.argv) - 3 #number of maps
 list_of_n_map_names = []
+
 
 if len(sys.argv) < 4 :
     print('Provide at least one file name (for xs between half splits) or two file names (for xs between whole maps)!')
@@ -75,7 +76,7 @@ if feed_name != 'coadded' and feed_name != 'all':
    feed = int(sys.argv[-2])
 if feed_name == 'all': #makes xs for all feed-combinations, either give it one map name or one map name with split
    feed_combos = list(range(19*19)) #number of combinations between feeds
-   pool = multiprocessing.Pool(24) #here number of cores
+   pool = multiprocessing.Pool(8) #here number of cores
    np.array(pool.map(all_feed_combo_xs, feed_combos))
 if feed_name != 'all':
    run_all_methods(feed, None, None)
