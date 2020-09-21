@@ -69,7 +69,7 @@ def create_output_map(x,y,z, signal_map):
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
    #np.random.seed(1)
-   rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 50 muK, the standard deviation of the noise in each voxel
+   rms_map = 10.*muK2K + 70.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 10 muK, the standard deviation of the noise in each voxel
    #rms_map = np.zeros_like(rms_map)+5.*muK2K
    #np.random.seed() #keep the same rms all the time
    w = 1./rms_map ** 2
@@ -130,7 +130,7 @@ N = int(sys.argv[1]) #number of maps
 names = []
 
 for i in range(N):
-   output_name = '1sept_%stest.h5' %(i+1)
+   output_name = '20sept_%stest.h5' %(i+1) #I am trying with higher rms instead of rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256))
    create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map)
    names.append(output_name)
 
