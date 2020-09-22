@@ -101,12 +101,17 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map):
       
       
       output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
+      signal_map_single_feed = np.reshape(signal_map_single_feed,map_beam_shape)
       with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
         rms_map_single_feed = np.array(my_file['rms'][i])
- 
+      noise_map_single_feed = np.random.randn(*rms_map_single_feed.shape) * rms_map_single_feed
+
       rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
       weights_single_feed = np.reshape(weights_single_feed, map_beam_shape)
-      data_map[i] = output_map_single_feed
+      weights_single_feed = 1./rms_map_single_feed ** 2
+      #data_map[i] = output_map_single_feed
+      output_map_single_feed = signal_map_single_feed + noise_map_single_feed
+      data_map[i] = signal_map_single_feed + noise_map_single_feed
       rms_map[i] = rms_map_single_feed
       w_sum += weights_single_feed
       data_beam_map += weights_single_feed*output_map_single_feed
