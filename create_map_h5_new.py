@@ -69,6 +69,13 @@ def create_output_map(x,y,z, signal_map):
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
    #np.random.seed(1)
+   '''
+   with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
+     rms_map = np.array(my_file['rms'][3])
+     rms_map = rms_map.reshape((256,120,120))
+     rms_map = rms_map.transpose(1,2,0)
+     
+   '''
    rms_map = 10.*muK2K + 70.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 10 muK, the standard deviation of the noise in each voxel
    #rms_map = np.zeros_like(rms_map)+5.*muK2K
    #np.random.seed() #keep the same rms all the time
@@ -94,6 +101,9 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map):
       
       
       output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
+      with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
+        rms_map_single_feed = np.array(my_file['rms'][i])
+ 
       rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
       weights_single_feed = np.reshape(weights_single_feed, map_beam_shape)
       data_map[i] = output_map_single_feed
@@ -101,7 +111,9 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map):
       w_sum += weights_single_feed
       data_beam_map += weights_single_feed*output_map_single_feed
    data_beam_map = data_beam_map/w_sum
-   rms_beam_map = w_sum**(-0.5)
+   #rms_beam_map = w_sum**(-0.5)
+   with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
+      rms_beam_map = np.array(my_file['rms_beam'][:])
    f = h5py.File(output_name, 'w')
    f.create_dataset('rms', data=rms_map)
    f.create_dataset('map', data=data_map)
@@ -130,8 +142,8 @@ N = int(sys.argv[1]) #number of maps
 names = []
 
 for i in range(N):
-   output_name = '20sept_%stest.h5' %(i+1) #I am trying with higher rms instead of rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256))
+   output_name = '22sept_%stest.h5' %(i+1) #I am trying with higher rms instead of rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256))
    create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map)
    names.append(output_name)
 
-print 'produced maps: ', names #print this to have ready argument for my_script
+print ('produced maps: ', names) #print this to have ready argument for my_script
