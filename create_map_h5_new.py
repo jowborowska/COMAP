@@ -108,8 +108,7 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False
          weights_single_feed = np.zeros_like(rms_map_single_feed)
          weights_single_feed[where] = 1./rms_map_single_feed[where] ** 2
          output_map_single_feed = signal_map_single_feed + noise_map_single_feed
-         with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
-            rms_beam_map = np.array(my_file['rms_beam'][:])
+        
       data_map[i] = output_map_single_feed
       rms_map[i] = rms_map_single_feed
       w_sum += weights_single_feed
@@ -117,7 +116,9 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False
    data_beam_map = data_beam_map/w_sum
    if real_rms == False:
       rms_beam_map = w_sum**(-0.5)
-   
+   if real_rms == True:
+      with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
+         rms_beam_map = np.array(my_file['rms_beam'][:])
    f = h5py.File(output_name, 'w')
    f.create_dataset('rms', data=rms_map)
    f.create_dataset('map', data=data_map)
