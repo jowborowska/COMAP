@@ -193,8 +193,9 @@ class CrossSpectrum_nmaps():
        xs = xs_array[index]
        rms_sig = rms_sig_array[index]
        rms_mean = rms_mean_array[index]
-
-       lim = np.mean(np.abs(xs[4:])) * 4
+       
+       
+       
        #lim = 200.
        fig = plt.figure()
        fig.suptitle('xs of ' + self.get_information()[index][1] + ' and ' + self.get_information()[index][2])
@@ -203,7 +204,10 @@ class CrossSpectrum_nmaps():
        ax1.plot(k, 0 * rms_mean, 'k', label=r'$\tilde{C}_{noise}(k)$', alpha=0.4)
        ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
        ax1.set_ylabel(r'$\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^3$]')
-       ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
+       
+       lim = np.mean(np.abs(xs[4:])) * 4
+       if not np.isnan(lim):
+          ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
 
        ax1.set_xscale('log')
        ax1.grid()
@@ -224,6 +228,6 @@ class CrossSpectrum_nmaps():
           plt.savefig(name_for_figure, bbox_inches='tight')
           print ('Figure saved as', name_for_figure)
 
-       plt.show()
+       #plt.show()
 
 
