@@ -69,13 +69,6 @@ def create_output_map(x,y,z, signal_map):
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
    #np.random.seed(1)
-   '''
-   with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
-     rms_map = np.array(my_file['rms'][3])
-     rms_map = rms_map.reshape((256,120,120))
-     rms_map = rms_map.transpose(1,2,0)
-     
-   '''
    rms_map = 10.*muK2K + 70.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 10 muK, the standard deviation of the noise in each voxel
    #rms_map = np.zeros_like(rms_map)+5.*muK2K
    #np.random.seed() #keep the same rms all the time
@@ -87,7 +80,7 @@ def create_output_map(x,y,z, signal_map):
    #return output_map, rms_map, signal_map, w
 
 #create an output file
-def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map):
+def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False):
    no_of_feeds = 19
    map_shape = (19, 4, 64, 120, 120)
    map_beam_shape = (4, 64, 120, 120)
@@ -97,28 +90,34 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map):
    rms_beam_map = np.zeros(map_beam_shape) #sum of weights*rms_map of each feed divided by w_sum
    w_sum = np.zeros(map_beam_shape) #sum of weights of each feed
    for i in range(no_of_feeds):
-      output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
-      
-      
-      output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
-      signal_map_single_feed = np.reshape(signal_map_single_feed,map_beam_shape)
-      with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
-        rms_map_single_feed = np.array(my_file['rms'][i])
-      noise_map_single_feed = np.random.randn(*rms_map_single_feed.shape) * rms_map_single_feed
-
-      rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
-      weights_single_feed = np.reshape(weights_single_feed, map_beam_shape)
-      weights_single_feed = 1./rms_map_single_feed ** 2
-      #data_map[i] = output_map_single_feed
-      output_map_single_feed = signal_map_single_feed + noise_map_single_feed
-      data_map[i] = signal_map_single_feed + noise_map_single_feed
+      if real_rms == False:
+         output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
+         output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
+         rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
+         weights_single_feed = np.reshape(weights_single_feed, map_beam_shape)
+      if real_rms == True:
+         muK2K = 1e-6 #micro Kelvins to Kelvins
+         signal_map_single_feed = signal_map.transpose(2, 0, 1)*muK2K
+         signal_map_single_feed = np.reshape(signal_map_single_feed,map_beam_shape)
+         with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
+           rms_map_single_feed = np.array(my_file['rms'][i])
+         noise_map_single_feed = np.random.randn(*rms_map_single_feed.shape) * rms_map_single_feed
+         mask = np.zeros_like(rms_map_single_feed)
+         mask[(rms_map_single_feed != 0.0)] = 1.0
+         where = (mask == 1.0) #mask is 1 when we have something
+         weights_single_feed = np.zeros_like(rms_map_single_feed)
+         weights_single_feed[where] = 1./rms_map_single_feed[where] ** 2
+         output_map_single_feed = signal_map_single_feed + noise_map_single_feed
+         with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
+            rms_beam_map = np.array(my_file['rms_beam'][:])
+      data_map[i] = output_map_single_feed
       rms_map[i] = rms_map_single_feed
       w_sum += weights_single_feed
       data_beam_map += weights_single_feed*output_map_single_feed
    data_beam_map = data_beam_map/w_sum
-   #rms_beam_map = w_sum**(-0.5)
-   with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
-      rms_beam_map = np.array(my_file['rms_beam'][:])
+   if real_rms == False:
+      rms_beam_map = w_sum**(-0.5)
+   
    f = h5py.File(output_name, 'w')
    f.create_dataset('rms', data=rms_map)
    f.create_dataset('map', data=data_map)
@@ -147,8 +146,8 @@ N = int(sys.argv[1]) #number of maps
 names = []
 
 for i in range(N):
-   output_name = '22sept_%stest.h5' %(i+1) #I am trying with higher rms instead of rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256))
-   create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map)
+   output_name = '24bsept_%stest.h5' %(i+1) 
+   create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, real_rms=True)
    names.append(output_name)
 
 print ('produced maps: ', names) #print this to have ready argument for my_script
