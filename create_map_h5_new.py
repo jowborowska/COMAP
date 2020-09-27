@@ -164,21 +164,30 @@ if n < 2:
 if sys.argv[1] == 'test':
    N = 1
    #n_splits_collection = np.array([2,3,5,8,10,12,15,20])
-   n_splits_collection = np.array([2,5,8])
+   n_splits_collection = np.array([1])
 else:
    N = int(sys.argv[1]) #number of maps
    n_splits = int(sys.argv[2]) 
 
 names = []
 
+date = '27sept'
 for i in range(N):
    if sys.argv[1] != 'test':
-      output_name = '27sept_%stest_%ssplits.h5' %(i+1, n_splits) 
+      if n_splits == 1:
+         output_name = date + '_%stest.h5' %(i+1) 
+      else:
+         output_name = date + '_%stest_%ssplits.h5' %(i+1, n_splits) 
+      print ('Creating the map ' + output_name)
       create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, False, n_splits)
       names.append(output_name)
    else:
       for n_splits in n_splits_collection:
-         output_name = '27sept_%stest_%ssplits.h5' %(i+1, n_splits) 
+         if n_splits == 1:
+            output_name = date + '_%stest.h5' %(i+1) 
+         else:
+            output_name = date + '_%stest_%ssplits.h5' %(i+1, n_splits) 
+         print ('Creating the map ' + output_name)
          create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, False, n_splits)
          names.append(output_name)
          
