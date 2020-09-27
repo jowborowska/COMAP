@@ -11,7 +11,10 @@ import my_class
 import multiprocessing
 
 def run_all_methods(feed,feed1,feed2):
-   my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names,jk, feed, feed1, feed2)
+   if jk == 'sim':
+      my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names,jk, feed, feed1, feed2, n_of_splits)
+   else:
+      my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names,jk, feed, feed1, feed2)
 
    calculated_xs = my_xs.get_information()
    if feed1!=None and feed2!=None:
@@ -49,7 +52,7 @@ list_of_n_map_names = []
 if len(sys.argv) < 4 :
     print('Provide at least one file name (for xs between half splits) or two file names (for xs between whole maps)!')
     print('Then specify the feed number or make xs for all feeds or for coadded feeds; then the name of the jk or False (for entire map)!') 
-    print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/coadded/all dayn/half/odde/sdlb/False') #odde and sdlb work only with 'coadded'
+    print('Usage: python my_script.py mapname_1 mapname_2 ... mapname_n feed_number/coadded/all dayn/half/odde/sdlb/sim/False') #odde and sdlb work only with 'coadded'
     sys.exit(1)
 if len(sys.argv) == 4 and sys.argv[-1] == 'False' and sys.argv[-2] != 'all':
     print('Only one file name specified, with no split - unable to create xs! Try for all feed-combo or give more maps/splits.')
@@ -68,6 +71,9 @@ if sys.argv[-1] == 'odde': #splits odd/even numbered obsIDs
    jk = 'odde'
 if sys.argv[-1] == 'sdlb': #splits the four saddlebags
    jk = 'sdlb'
+if sys.argv[-1] == 'sim': #takes the simulated maps with splits
+   jk = 'sim'
+   n_of_splits = 5 #<----------remember to change this manually or create a param file later :)
 
 feed_name = sys.argv[-2]
 if feed_name == 'coadded':

@@ -17,7 +17,7 @@ import PS_function #P(k) = k**-3
 #import create_map_h5_new.PS_function as PS_f #<-- this didn't work, wanted the same command arguments as create_map_h5_new.py
 
 class CrossSpectrum_nmaps():
-    def __init__(self, list_of_n_map_names, jk=False, feed=None, feed1=None, feed2=None):
+    def __init__(self, list_of_n_map_names, jk=False, feed=None, feed1=None, feed2=None, n_of_splits=2):
         if feed == 30:
            feed = None
            self.feed_name = '_coadded'
@@ -26,7 +26,7 @@ class CrossSpectrum_nmaps():
         else:
            self.feed_name1 = '_feed' + str(feed1)
            self.feed_name2 = '_feed' + str(feed2)
-        self.names_of_maps = list_of_n_map_names #the names schould indicate which map is that (or half_map) and which feed is that and we have to get rid of the path to the file
+        self.names_of_maps = list_of_n_map_names #the names schould indicate which map and feed we take
         self.names = []
         for name in self.names_of_maps:
            name = name.rpartition('/')[-1] #get rid of the path, leave only the name of the map
@@ -37,18 +37,26 @@ class CrossSpectrum_nmaps():
               else:
                  self.names.append(name + self.feed_name1)
                  self.names.append(name + self.feed_name2)
-           if jk != False:
+           if jk != False and jk != 'sim':
               if feed1 == None and feed2 == None:
                  self.names.append(name + '_1st_' + jk + self.feed_name)
                  self.names.append(name + '_2nd_'+ jk + self.feed_name)
               else:
                  self.names.append(name + '_1st_' + jk + self.feed_name1)
                  self.names.append(name + '_2nd_' + jk + self.feed_name2)
+           if jk != False and jk == 'sim':
+              for g in range(n_of_splits):
+                 map_split_number = g + 1
+                 map_split_name ='split%01i_' %(map_split_number) + name + jk + self.feed_name 
+                 print (map_split_name)
+                 self.names.append(map_split_name)
+                 
+
         self.maps = []
         for map_name in list_of_n_map_names:
            if jk != False:
               if feed1==None and feed2==None:
-                 for split_no in range(2): #here update the number of splits from mapmaker, 2 so far
+                 for split_no in range(n_of_splits): #there are two splits from mapmaker so far, can be more from simulations
                     my_map_split = map_cosmo.MapCosmo(map_name, feed, jk, split_no)
                     self.maps.append(my_map_split)
                     

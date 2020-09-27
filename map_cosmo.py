@@ -23,7 +23,7 @@ class MapCosmo():
                 
             else: #create or read map_coadd - all the feeds 'added' together
                 
-                if jk == 'dayn' or jk == 'half':
+                if jk == 'dayn' or jk == 'half' or jk == 'sim':
                    print ('Creating coadded feed map for the split.')
                    self.map, self.rms = self.coadd_feed_maps(my_file,split_no,jk)
                 if jk == 'odde' or jk == 'sdlb':
@@ -72,7 +72,7 @@ class MapCosmo():
         
         self.voxel_volume = self.dx * self.dy * self.dz  # voxel volume in Mpc^3
 
-    def coadd_feed_maps(self,map_file, which_split,jk): #0 for the first one, 1 for the second one
+    def coadd_feed_maps(self,map_file, which_split,jk): 
         map_single_feed = np.array(map_file['/jackknives/map_' + jk][which_split,0])
         my_map = np.zeros_like(map_single_feed)
         my_rms = np.zeros_like(map_single_feed)
