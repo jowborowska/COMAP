@@ -69,7 +69,7 @@ def create_output_map(x,y,z, signal_map):
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
    #np.random.seed(1)
-   rms_map = 10.*muK2K + 70.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 10 muK, the standard deviation of the noise in each voxel
+   rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 10 muK, the standard deviation of the noise in each voxel
    #rms_map = np.zeros_like(rms_map)+5.*muK2K
    #np.random.seed() #keep the same rms all the time
    w = 1./rms_map ** 2
@@ -80,7 +80,7 @@ def create_output_map(x,y,z, signal_map):
    #return output_map, rms_map, signal_map, w
 
 #create an output file
-def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False):
+def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False, n_splits=1):
    no_of_feeds = 19
    map_shape = (19, 4, 64, 120, 120)
    map_beam_shape = (4, 64, 120, 120)
@@ -89,6 +89,10 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False
    rms_map = np.zeros(map_shape)
    rms_beam_map = np.zeros(map_beam_shape) #sum of weights*rms_map of each feed divided by w_sum
    w_sum = np.zeros(map_beam_shape) #sum of weights of each feed
+   map_split_shape = (n_splits,19, 4, 64, 120, 120)
+   map_split = np.zeros(map_split_shape)
+   rms_split = np.zeros(map_split_shape)
+   
    for i in range(no_of_feeds):
       if real_rms == False:
          output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
@@ -119,6 +123,14 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False
    if real_rms == True:
       with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
          rms_beam_map = np.array(my_file['rms_beam'][:])
+   if n_splits != 1:
+      for g in range(n_splits):
+         for i in range(no_of_feeds):
+            output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
+            output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
+            rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
+            map_split[g,i] = output_map_single_feed 
+            rms_split[g,i] = rms_map_single_feed
    f = h5py.File(output_name, 'w')
    f.create_dataset('rms', data=rms_map)
    f.create_dataset('map', data=data_map)
@@ -127,6 +139,9 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False
    f.create_dataset('x', data=x_deg)
    f.create_dataset('y', data=y_deg)
    f.create_dataset('freq', data=freq)
+   if n_splits != 1:
+      f.create_dataset('/jackknives/map_sim', data=map_split)
+      f.create_dataset('/jackknives/rms_sim', data=rms_split)
    f.close()
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
@@ -140,15 +155,33 @@ signal_map, Voxel_volume = create_map_3d(PS_function.PS_f, x, y, z) #do this onl
 #signal_map = np.zeros_like(signal_map)
 n = len(sys.argv)
 if n < 2:
-    print('Missing number of maps to generate')
-    print('Example: python create_map_h5_new.py 3') #to create 3 maps
+    print('Missing number of maps to generate or/and number of splits!')
+    print('Example: python create_map_h5_new.py 1 2 <- to create 1 map with 2 splits')
+    print('For 8 maps with different split numbers: python create_map_h5_new.py test')
     sys.exit(1)
-N = int(sys.argv[1]) #number of maps
+
+#if we want to have maps with different number of splits, but the same signal, we will go for:
+if sys.argv[1] == 'test':
+   N = 1
+   #n_splits_collection = np.array([2,3,5,8,10,12,15,20])
+   n_splits_collection = np.array([2,5,8])
+else:
+   N = int(sys.argv[1]) #number of maps
+   n_splits = int(sys.argv[2]) 
+
 names = []
 
 for i in range(N):
-   output_name = '24bsept_%stest.h5' %(i+1) 
-   create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, real_rms=True)
-   names.append(output_name)
+   if sys.argv[1] != 'test':
+      output_name = '27sept_%stest_%ssplits.h5' %(i+1, n_splits) 
+      create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, False, n_splits)
+      names.append(output_name)
+   else:
+      for n_splits in n_splits_collection:
+         output_name = '27sept_%stest_%ssplits.h5' %(i+1, n_splits) 
+         create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, False, n_splits)
+         names.append(output_name)
+         
+        
 
 print ('produced maps: ', names) #print this to have ready argument for my_script
