@@ -114,6 +114,7 @@ def xs_split_split_grid(path_to_xs, figure_name, n_splits):
    xs_sum = np.zeros(n_k)
    rms_xs_sum = np.zeros((n_k, n_sim))
    xs_div = np.zeros(n_k)
+   vmax = 0.
    for i in range(n_splits):
        for j in range(n_splits):
            try:
@@ -131,7 +132,10 @@ def xs_split_split_grid(path_to_xs, figure_name, n_splits):
            chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
 
            chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
+           if chi2[i,j] > vmax and not np.isnan(chi2[i,j]):
+              vmax = chi2[i,j]
            print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
+ 
            #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
            if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
                xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
@@ -141,7 +145,8 @@ def xs_split_split_grid(path_to_xs, figure_name, n_splits):
 
 
    plt.figure()
-   vmax = 15
+   
+   print (vmax)
    plt.imshow(chi2, interpolation='none', vmin=-vmax, vmax=vmax, extent=(0.5, n_splits + 0.5, n_splits + 0.5, 0.5))
    new_tick_locations = np.array(range(n_splits)) + 1
    plt.xticks(new_tick_locations)
@@ -155,10 +160,39 @@ def xs_split_split_grid(path_to_xs, figure_name, n_splits):
    print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
+def xs_mean_from_splits(figure_name, k, xs_mean, xs_sigma):
+  
+  
+   lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
+
+   fig = plt.figure()
+   ax1 = fig.add_subplot(211)
+   ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
+   ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
+   ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
+   ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
+   ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
+   ax1.set_xscale('log')
+   ax1.grid()
+   plt.legend()
+
+   ax2 = fig.add_subplot(212)
+   ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma / xs_sigma, fmt='o', label=r'$\tilde{C}_{data}(k)$')
+   ax2.plot(k, 0 * xs_mean, 'k', alpha=0.4)
+   ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
+   ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]')
+   ax2.set_ylim(-12, 12)
+   ax2.set_xscale('log')
+   ax2.grid()
+   plt.tight_layout()
+   plt.legend()
+   plt.savefig(figure_name, bbox_inches='tight')
+   plt.show()
+
 date = '27sept'
 splits = '5'
 k_split, xs_mean_split, xs_sigma_split = xs_split_split_grid('spectra/xs_split%01i_' + date +'_1test_' + splits + 'splits_and_split%01i_' + date + '_1test_' + splits +'splits.h5', date + '_xs_grid_' + splits + 'splits.png', int(splits))
-#xs_with_model('xs_mean_test.png', k_test, xs_mean_test, xs_sigma_test)
+xs_mean_from_splits(date + '_xs_mean_' + splits + 'splits.png', k_split, xs_mean_split, xs_sigma_split)
 
 #theory spectrum
 k_th = np.load('k.npy')
