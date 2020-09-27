@@ -25,14 +25,16 @@ def run_all_methods(feed,feed1,feed2):
 
    rms_mean, rms_sig = my_xs.run_noise_sims(10) #these rms's are arrays of 14 elements, that give error bars (number of bin edges minus 1)
 
-   my_xs.make_h5()
+   #my_xs.make_h5()
 
    #plot all cross-spectra that have been calculated
    if feed1!=None and feed2!=None:
       my_xs.plot_xs(k, xs, rms_sig, rms_mean, 0, save=True)
+      my_xs.make_h5(0)
    else:
       for i in range(len(calculated_xs)):
          my_xs.plot_xs(k, xs, rms_sig, rms_mean, i, save=True)
+         my_xs.make_h5(i)
 
 def all_feed_combo_xs(p):
     i = p // 19 + 1 #floor division, divides and returns the integer value of the quotient (it dumps the digits after the decimal)
@@ -72,7 +74,7 @@ if sys.argv[-1] == 'odde': #splits odd/even numbered obsIDs
 if sys.argv[-1] == 'sdlb': #splits the four saddlebags
    jk = 'sdlb'
 if sys.argv[-1] == 'sim': #takes the simulated maps with splits
-   jk = 'sim'
+   jk = 'sim' #run this in combination with 'coadded' for now :)
    n_of_splits = 5 #<----------remember to change this manually or create a param file later :)
 
 feed_name = sys.argv[-2]

@@ -164,12 +164,13 @@ class CrossSpectrum_nmaps():
         return self.rms_xs_mean, self.rms_xs_std
     
     #MAKE SEPARATE H5 FILE FOR EACH XS
-    def make_h5(self, outname=None):
-        index = -1 
+    def make_h5(self,index=0, outname=None):
+        
+        #index = -1
         for i in range(len(self.maps)):
            for j in range(i,len(self.maps)): #ensure that we don't take the same pairs of maps twice 
               if i != j: #only for xs, not auto spectra
-                 index += 1 #find a correct xs, etc.
+                 #index += 1 #find a correct xs, etc.
 
                  if outname is None:
                      tools.ensure_dir_exists('spectra')
