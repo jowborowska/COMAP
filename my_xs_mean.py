@@ -217,12 +217,13 @@ plt.show()
 
 sums_of_errors = []
 for g in range(len(splits_array)):
-   sums_of_errors.append(sum(errorbars[g]))
-sums_of_errors = np.array(sums_of_errors)
+   sum_of_sigmas = 1. / np.sqrt(sum( 1./errorbars[g]**2.))
+   sums_of_errors.append(sum_of_sigmas)
+
 plt.figure()
 plt.scatter(splits_array, sums_of_errors)
 plt.xlabel('number of splits')
-plt.ylabel('sum of errors across all k')
+plt.ylabel(r'sum of errors across all k, $\left( \sqrt{\sum \frac{1}{\sigma^2}} \right)^{-1}$ ')
 plt.show()
 
 #theory spectrum
