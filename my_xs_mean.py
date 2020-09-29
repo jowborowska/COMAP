@@ -194,32 +194,20 @@ def xs_mean_from_splits(figure_name, k, xs_mean, xs_sigma):
    #plt.show()
 
 def xs_mean_autoPS(filename):
-   n_sim = 100
-   n_k = 14
-   n_sum = 0
-   xs_sum = np.zeros(n_k)
-   rms_xs_sum = np.zeros((n_k, n_sim))
-   xs_div = np.zeros(n_k)
-   
+  
    with h5py.File(filename, mode="r") as my_file:
-      xs = np.array(my_file['xs'][:])
-      rms_xs_std = np.array(my_file['rms_xs_std'][:])
+      xs = np.array(my_file['ps'][:])
+      rms_xs_std = np.array(my_file['rms_ps_std'][:])
       k = np.array(my_file['k'][:])
  
-   w = np.sum(1 / rms_xs_std)
-   noise = 1 / np.sqrt(w)
-   chi3 = np.sum((xs / rms_xs_std) ** 3) 
-
-   chi2 = np.sign(chi3) * abs((np.sum((xs / rms_xs_std) ** 2) - n_k) / np.sqrt(2 * n_k)) 
-   xs_sum += xs/ rms_xs_std ** 2
-   xs_div += 1 / rms_xs_std ** 2
-   n_sum += 1
+   xs_sum = xs/ rms_xs_std ** 2
+   xs_div = 1 / rms_xs_std ** 2
    xs_mean_auto = xs_sum / xs_div
    xs_sigma_auto = 1. / np.sqrt(xs_div)
    return k, xs_mean_auto, xs_sigma_auto
 
-k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_28asept_1test_2splits_coadded_and_28asept_1test_2splits_coadded.h5')
-
+#k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_28asept_1test_2splits_coadded_and_28asept_1test_2splits_coadded.h5')
+k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectraps_28asept_1test_2splits.h5')
 
 
 date = '28asept'
@@ -237,6 +225,7 @@ for splits in splits_collection:
    xs_mean_from_splits(figure2, k_split, xs_mean_split, xs_sigma_split)
    errorbars.append(xs_sigma_split)
 errorbars = np.array(errorbars)
+
 plt.figure()
 for g in range(len(splits_array)):
    plt.plot(k_split,errorbars[g], label='%01i splits' %(splits_array[g]))
