@@ -10,6 +10,8 @@ import tools
 import map_cosmo
 import my_class
 import PS_function
+from scipy.optimize import curve_fit
+
 
 
 
@@ -63,7 +65,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name):
    cbar = plt.colorbar()
    cbar.set_label(r'$|\chi^2| \times$ sign($\chi^3$)')
    plt.savefig(figure_name, bbox_inches='tight')
-   plt.show()
+   #plt.show()
    print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
@@ -98,7 +100,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
    plt.tight_layout()
    plt.legend()
    plt.savefig(figure_name, bbox_inches='tight')
-   plt.show()
+   #plt.show()
 
 
 def xs_split_split_grid(path_to_xs, figure_name, n_splits):
@@ -158,6 +160,7 @@ def xs_split_split_grid(path_to_xs, figure_name, n_splits):
    plt.savefig(figure_name, bbox_inches='tight')
    #plt.show()
    #print ("xs_div:", xs_div)
+   plt.close()
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
 def xs_mean_from_splits(figure_name, k, xs_mean, xs_sigma):
@@ -187,7 +190,37 @@ def xs_mean_from_splits(figure_name, k, xs_mean, xs_sigma):
    plt.tight_layout()
    plt.legend()
    plt.savefig(figure_name, bbox_inches='tight')
+   plt.close()
    #plt.show()
+
+def xs_mean_autoPS(filename):
+   n_sim = 100
+   n_k = 14
+   n_sum = 0
+   xs_sum = np.zeros(n_k)
+   rms_xs_sum = np.zeros((n_k, n_sim))
+   xs_div = np.zeros(n_k)
+   
+   with h5py.File(filename, mode="r") as my_file:
+      xs = np.array(my_file['xs'][:])
+      rms_xs_std = np.array(my_file['rms_xs_std'][:])
+      k = np.array(my_file['k'][:])
+ 
+   w = np.sum(1 / rms_xs_std)
+   noise = 1 / np.sqrt(w)
+   chi3 = np.sum((xs / rms_xs_std) ** 3) 
+
+   chi2 = np.sign(chi3) * abs((np.sum((xs / rms_xs_std) ** 2) - n_k) / np.sqrt(2 * n_k)) 
+   xs_sum += xs/ rms_xs_std ** 2
+   xs_div += 1 / rms_xs_std ** 2
+   n_sum += 1
+   xs_mean_auto = xs_sum / xs_div
+   xs_sigma_auto = 1. / np.sqrt(xs_div)
+   return k, xs_mean_auto, xs_sigma_auto
+
+k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_28asept_1test_2splits_coadded_and_28asept_1test_2splits_coadded.h5')
+
+
 
 date = '28asept'
 splits_collection = np.array(['2','3','4','5'])
@@ -207,12 +240,15 @@ errorbars = np.array(errorbars)
 plt.figure()
 for g in range(len(splits_array)):
    plt.plot(k_split,errorbars[g], label='%01i splits' %(splits_array[g]))
-   plt.scatter(k_split,errorbars[g])
-plt.legend()
-plt.xlabel('k')
-plt.ylabel('xs sigma')
+   plt.scatter(k_split,errorbars[g],s=5)
+plt.plot(k_auto, xs_sigma_auto, label = 'auto PS', color='black')
+plt.scatter(k_auto, xs_sigma_auto,s=5, color='black')
+plt.legend(fontsize=12)
+plt.xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=12)
+plt.ylabel('xs sigma', fontsize=12)
 plt.yscale('log')
 plt.xscale('log')
+plt.savefig('splits_allscales_error.png')
 plt.show()
 
 sums_of_errors = []
@@ -220,11 +256,28 @@ for g in range(len(splits_array)):
    sum_of_sigmas = 1. / np.sqrt(sum( 1./errorbars[g]**2.))
    sums_of_errors.append(sum_of_sigmas)
 
+
+def sigma_of_N(x,a,b):
+   return a*x+b
+
+popt,pcov = curve_fit(sigma_of_N, splits_array, sums_of_errors)
+print (popt) #[-0.04074033  0.27340673]
+
+
 plt.figure()
-plt.scatter(splits_array, sums_of_errors)
-plt.xlabel('number of splits')
-plt.ylabel(r'sum of errors across all k, $\left( \sqrt{\sum \frac{1}{\sigma^2}} \right)^{-1}$ ')
+plt.plot(splits_array, sigma_of_N(splits_array,*popt), label=r'best fit, $%.3fx + %.3f$' %(popt[0], popt[1]), color='paleturquoise',zorder=1)
+plt.scatter(splits_array, sums_of_errors, color='lightseagreen',zorder=2)
+#plt.plot(splits_array, splits_array*(-0.04074033) + 0.27340673, color='red')
+plt.scatter(1, 1. / np.sqrt(sum( 1./xs_sigma_auto**2.)), label='auto PS', color='navy')
+plt.xlabel('Number of map-splits', fontsize=12)
+plt.ylabel(r'xs sigma across all scales, $\left( \sqrt{\sum_k \frac{1}{\sigma_k^2}} \right)^{-1}$ ', fontsize=12)
+plt.legend(fontsize=12)
+plt.savefig('splits_sum_error.png')
 plt.show()
+
+
+
+
 
 #theory spectrum
 k_th = np.load('k.npy')
