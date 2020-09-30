@@ -210,6 +210,7 @@ k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_30sept_1test_2s
 
 date = '30sept'
 splits_collection = np.array(['2','4','8','16','32'])
+#splits_collection = np.array(['2'])
 splits_array = np.zeros(len(splits_collection))
 for p in range(len(splits_collection)):
    splits_array[p] = int(splits_collection[p])
@@ -235,7 +236,7 @@ plt.xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=12)
 plt.ylabel('xs sigma', fontsize=12)
 plt.yscale('log')
 plt.xscale('log')
-plt.savefig('splits_allscales_error.png')
+plt.savefig(date + '_splits_allscales_error.png')
 plt.show()
 
 sums_of_errors = []
@@ -246,10 +247,10 @@ for g in range(len(splits_array)):
 
 def sigma_of_N(x,a,b):
    return a*x+b
-'''
+
 popt,pcov = curve_fit(sigma_of_N, splits_array, sums_of_errors)
 print (popt) #[-0.04074033  0.27340673] before changes 
-'''
+
 
 plt.figure()
 plt.plot(splits_array, sigma_of_N(splits_array,*popt), label=r'best fit, $%.3fx + %.3f$' %(popt[0], popt[1]), color='paleturquoise',zorder=1)
@@ -258,7 +259,7 @@ plt.scatter(1, 1. / np.sqrt(sum( 1./xs_sigma_auto**2.)), label='auto PS', color=
 plt.xlabel('Number of map-splits', fontsize=12)
 plt.ylabel(r'xs sigma across all scales, $\left( \sqrt{\sum_k \frac{1}{\sigma_k^2}} \right)^{-1}$ ', fontsize=12)
 plt.legend(fontsize=12)
-plt.savefig('splits_sum_error.png')
+plt.savefig(date + '_splits_sum_error.png')
 plt.show()
 
 
