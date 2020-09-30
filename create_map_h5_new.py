@@ -139,7 +139,7 @@ def coadd_splits_to_splits(from_n_splits, to_n_splits, from_map_split, from_rms_
 
 
 #n_splits_max has to be 2**N, where N is an integer - number of maps
-def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, output_name, signal_map, n_splits_max, N, date):
+def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, date):
    map_split_highest, rms_split_highest, weights_split_highest = create_highest_split_map(x,y,z,signal_map,n_splits_max)
    data_map, rms_map, data_beam_map, rms_beam_map = coadd_splits_to_whole_map(n_splits_max,map_split_highest, rms_split_highest, weights_split_highest)
    n_splits_collection = 2**np.arange(N+1)
@@ -148,6 +148,7 @@ def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, output_name, signal_map, n_spli
    for i in range(len(n_splits_collection)):
       n_splits = n_splits_collection[i]
       output_name = date + '_%stest_%ssplits.h5' %(1, n_splits)    
+      print ('Creating the map ' + output_name)
       if n_splits == n_splits_max:
          map_split = map_split_highest
          rms_split = rms_split_highest
@@ -231,45 +232,25 @@ signal_map, Voxel_volume = create_map_3d(PS_function.PS_f, x, y, z) #do this onl
 #signal_map = np.zeros_like(signal_map)
 
 
-
-#############################THIS PART HAS TO BE UPDATED#################################
 n = len(sys.argv)
 if n < 2:
     print('Missing number of maps to generate or/and number of splits!')
-    print('Example: python create_map_h5_new.py 1 2 <- to create 1 map with 2 splits')
-    print('For 8 maps with different split numbers: python create_map_h5_new.py test')
+    print('Example: python create_map_h5_new.py N 2**N/0 <- to create N maps with 2**N/no splits')
     sys.exit(1)
 
-if sys.argv[1] == 'test':
-   N = 1
-   #n_splits_collection = np.array([2,3,5,8,10,12,15,20])
-   n_splits_collection = np.array([2,3,4,5]) #if we want to have maps with different number of splits, but the same signal, we want to make these in the same run
-else:
-   N = int(sys.argv[1]) #number of maps
-   n_splits = int(sys.argv[2]) 
-
-names = []
 
 date = '30sept'
-for i in range(N):
-   if sys.argv[1] != 'test':
-      if n_splits == 1:
-         output_name = date + '_%stest.h5' %(i+1) 
-      else:
-         output_name = date + '_%stest_%ssplits.h5' %(i+1, n_splits) 
-      print ('Creating the map ' + output_name)
-      create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, False, n_splits)
-      names.append(output_name)
-   else:
-      for n_splits in n_splits_collection:
-         if n_splits == 1:
-            output_name = date + '_%stest.h5' %(i+1) 
-         else:
-            output_name = date + '_%stest_%ssplits.h5' %(i+1, n_splits) 
-         print ('Creating the map ' + output_name)
-         create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, False, n_splits)
-         names.append(output_name)
-         
-        
+N = int(sys.argv[1]) #number of maps
+if int(sys.argv[2]) != 0:
+   n_splits_max = int(sys.argv[2]) 
+   create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, date)
 
-print ('produced maps: ', names) #print this to have ready argument for my_script
+if int(sys.argv[2]) == 0: #create maps with no jk
+   names = []
+   for i in range(N):
+      output_name = date + '_%stest.h5' %(i+1) 
+      print ('Creating the map ' + output_name)
+      create_h5(x,y,z,x_deg,y_deg,freq,output_name, signal_map, False)
+      names.append(output_name)
+
+   print ('produced maps: ', names) #print this to have ready argument for my_script
