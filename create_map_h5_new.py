@@ -79,8 +79,96 @@ def create_output_map(x,y,z, signal_map):
    return output_map.transpose(2, 0, 1), rms_map.transpose(2, 0, 1), signal_map.transpose(2, 0, 1)*muK2K, w.transpose(2, 0, 1)
    #return output_map, rms_map, signal_map, w
 
-#create an output file
-def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False, n_splits=1):
+
+
+def create_highest_split_map(x,y,z,signal_map,n_splits):
+   no_of_feeds = 19
+   map_beam_shape = (4, 64, 120, 120)
+   map_split_shape = (n_splits,19, 4, 64, 120, 120)
+   map_split = np.zeros(map_split_shape)
+   rms_split = np.zeros(map_split_shape)
+   weights_split = np.zeros(map_split_shape)
+   for g in range(n_splits):
+      for i in range(no_of_feeds):
+         output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
+         output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
+         rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
+         weights_map_single_feed = np.reshape(weights_map_single_feed,map_beam_shape)
+         map_split[g,i] = output_map_single_feed 
+         rms_split[g,i] = rms_map_single_feed
+         weights_split[g,i] = weights_map_single_feed
+   return map_split, rms_split, weights_split
+
+#create main map and beam map - this is needed only once for all jk maps
+def coadd_splits_to_whole_map(from_n_splits,from_map_split, from_rms_split, from_weights_split):
+   no_of_feeds = 19
+   map_shape = (19, 4, 64, 120, 120)
+   map_beam_shape = (4, 64, 120, 120)
+   data_map = np.zeros(map_shape)
+   data_beam_map = np.zeros(map_beam_shape) 
+   rms_map = np.zeros(map_shape)
+   rms_beam_map = np.zeros(map_beam_shape) 
+   w_sum1 = np.zeros(map_shape) 
+   w_sum2 = np.zeros(map_beam_shape) 
+   for i in range(from_n_splits):
+      w_sum1 += from_weights_split[i]
+      data_map += from_weights_spli[i]*from_map_split[i]
+   data_map = data_map/w_sum1
+   rms_map = w_sum1**(-0.5)
+   for j in range(no_of_feeds):
+      w_sum2 += 1./rms_map[j]**2
+      data_beam_map += (1./rms_map[j]**2)*data_map[j]
+   data_beam_map = data_beam_map/w_sum2
+   rms_beam_map = w_sum2**(-0.5)
+   return data_map, rms_map, data_beam_map, rms_beam_map
+
+#the point here is to read a map with highest number of splits and then co-add splits to create maps with smaller number of splits and the final mapof whole data
+def coadd_splits_to_splits(from_n_splits, to_n_splits, from_map_split, from_rms_split):
+   to_map_split_shape = (to_n_splits,19, 4, 64, 120, 120)
+   to_map_split = np.zeros(map_split_shape)
+   to_rms_split = np.zeros(map_split_shape)
+   for j in range(to_n_splits):
+      w_sum = np.zeros((19, 4, 64, 120, 120))
+      for i in np.arange(2*j,2*j+2):
+         w_sum += 1./from_rms_split[i]**2.
+         to_map_split[j] += (1./from_rms_split[i]**2.)*from_map_split[i]
+      to_map_split[j] = to_map_split[j]/w_sum
+      to_rms_split[j] = w_sum**(-0.5)  
+      
+   return to_map_split, to_rms_split
+
+
+   
+#########################THIS HAS TO BE FINISHED AND THE LAST PART UPDATED
+
+#n_splits_max has to be 2**N, where N is an integer - number of maps
+def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, output_name, signal_map, n_splits_max, N):
+   map_split_highest, rms_split_highest, weights_split_highest = create_highest_split_map(x,y,z,signal_map,n_splits_max)
+   data_map, rms_map, data_beam_map, rms_beam_map = coadd_splits_to_whole_map(n_splits_max,map_split_highest, rms_split_highest, weights_split_highest)
+   n_splits_collection = 2**np.arange(N+1)
+   n_splits_collection = n_splits_collection[1:]
+   for n_splits in n_splits_collection:
+      
+
+  
+      f = h5py.File(output_name, 'w')
+      f.create_dataset('rms', data=rms_map)
+      f.create_dataset('map', data=data_map)
+      f.create_dataset('rms_coadd', data=rms_beam_map) #previously called rms_beam
+      f.create_dataset('map_coadd', data=data_beam_map) #previously called map_beam
+      f.create_dataset('x', data=x_deg)
+      f.create_dataset('y', data=y_deg)
+      f.create_dataset('freq', data=freq)
+      f.create_dataset('/jackknives/map_sim', data=map_split)
+      f.create_dataset('/jackknives/rms_sim', data=rms_split)
+      f.close()
+
+
+      
+      
+
+#create an output file for a regular map, without jack knifes
+def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False):
    no_of_feeds = 19
    map_shape = (19, 4, 64, 120, 120)
    map_beam_shape = (4, 64, 120, 120)
@@ -89,9 +177,7 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False
    rms_map = np.zeros(map_shape)
    rms_beam_map = np.zeros(map_beam_shape) #sum of weights*rms_map of each feed divided by w_sum
    w_sum = np.zeros(map_beam_shape) #sum of weights of each feed
-   map_split_shape = (n_splits,19, 4, 64, 120, 120)
-   map_split = np.zeros(map_split_shape)
-   rms_split = np.zeros(map_split_shape)
+
    
    for i in range(no_of_feeds):
       if real_rms == False:
@@ -123,14 +209,6 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False
    if real_rms == True:
       with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
          rms_beam_map = np.array(my_file['rms_beam'][:])
-   if n_splits != 1:
-      for g in range(n_splits):
-         for i in range(no_of_feeds):
-            output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
-            output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
-            rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
-            map_split[g,i] = output_map_single_feed 
-            rms_split[g,i] = rms_map_single_feed
    f = h5py.File(output_name, 'w')
    f.create_dataset('rms', data=rms_map)
    f.create_dataset('map', data=data_map)
@@ -139,9 +217,7 @@ def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False
    f.create_dataset('x', data=x_deg)
    f.create_dataset('y', data=y_deg)
    f.create_dataset('freq', data=freq)
-   if n_splits != 1:
-      f.create_dataset('/jackknives/map_sim', data=map_split)
-      f.create_dataset('/jackknives/rms_sim', data=rms_split)
+
    f.close()
 
 freq, x_deg, y_deg = read_from_a_real_map('co7_011989_good_map.h5') #the same ones go to the output h5 file
@@ -160,18 +236,17 @@ if n < 2:
     print('For 8 maps with different split numbers: python create_map_h5_new.py test')
     sys.exit(1)
 
-#if we want to have maps with different number of splits, but the same signal, we will go for:
 if sys.argv[1] == 'test':
    N = 1
    #n_splits_collection = np.array([2,3,5,8,10,12,15,20])
-   n_splits_collection = np.array([1])
+   n_splits_collection = np.array([2,3,4,5]) #if we want to have maps with different number of splits, but the same signal, we want to make these in the same run
 else:
    N = int(sys.argv[1]) #number of maps
    n_splits = int(sys.argv[2]) 
 
 names = []
 
-date = '27sept'
+date = '30sept'
 for i in range(N):
    if sys.argv[1] != 'test':
       if n_splits == 1:
