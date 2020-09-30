@@ -48,7 +48,6 @@ class CrossSpectrum_nmaps():
               for g in range(n_of_splits):
                  map_split_number = g + 1
                  map_split_name ='split%01i_' %(map_split_number) + name
-                 print (map_split_name)
                  self.names.append(map_split_name)
                  
 
