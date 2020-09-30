@@ -24,7 +24,7 @@ class MapCosmo():
             else: #create or read map_coadd - all the feeds 'added' together
                 
                 if jk == 'dayn' or jk == 'half' or jk == 'sim':
-                   print ('Creating coadded feed map for the split.')
+                   print ('Creating coadded feed map for the split number %01i.' %(split_no+1))
                    self.map, self.rms = self.coadd_feed_maps(my_file,split_no,jk)
                 if jk == 'odde' or jk == 'sdlb':
                    self.map = np.array(my_file['/jackknives/map_' + jk][split_no]) 
