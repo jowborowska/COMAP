@@ -209,7 +209,7 @@ def xs_mean_autoPS(filename):
 k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_30sept_1test_2splits_coadded_and_30sept_1test_2splits_coadded.h5')
 
 date = '30sept'
-splits_collection = np.array(['2'])
+splits_collection = np.array(['2','4','8','16','32'])
 splits_array = np.zeros(len(splits_collection))
 for p in range(len(splits_collection)):
    splits_array[p] = int(splits_collection[p])
@@ -246,10 +246,10 @@ for g in range(len(splits_array)):
 
 def sigma_of_N(x,a,b):
    return a*x+b
-
+'''
 popt,pcov = curve_fit(sigma_of_N, splits_array, sums_of_errors)
 print (popt) #[-0.04074033  0.27340673] before changes 
-
+'''
 
 plt.figure()
 plt.plot(splits_array, sigma_of_N(splits_array,*popt), label=r'best fit, $%.3fx + %.3f$' %(popt[0], popt[1]), color='paleturquoise',zorder=1)
