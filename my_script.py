@@ -73,9 +73,10 @@ if sys.argv[-1] == 'odde': #splits odd/even numbered obsIDs
    jk = 'odde'
 if sys.argv[-1] == 'sdlb': #splits the four saddlebags
    jk = 'sdlb'
-if sys.argv[-1] == 'sim': #takes the simulated maps with splits
+if sys.argv[-1] == 'sim': #takes the simulated maps with different splits
    jk = 'sim' #run this in combination with 'coadded' for now :)
-   n_of_splits = 5 #<----------remember to change this manually or create a param file later :)
+   n_of_splits = input("How many splits?")
+   n_of_splits = int(n_of_splits)
 
 feed_name = sys.argv[-2]
 if feed_name == 'coadded':

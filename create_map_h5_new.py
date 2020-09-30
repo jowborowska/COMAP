@@ -145,7 +145,6 @@ def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, da
    n_splits_collection = 2**np.arange(N+1)
    n_splits_collection = n_splits_collection[1:] #get rid of 1st element, which is 1
    n_splits_collection = np.flip(n_splits_collection)
-   print n_splits_collection, n_splits_max
    for i in range(len(n_splits_collection)):
       n_splits = n_splits_collection[i]
       output_name = date + '_%stest_%ssplits.h5' %(1, n_splits)    
@@ -153,7 +152,6 @@ def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, da
       if n_splits == n_splits_max:
          map_split = map_split_highest
          rms_split = rms_split_highest
-         print "max"
       else:
          map_split, rms_split = coadd_splits_to_splits(n_splits_collection[i-1], n_splits, map_split, rms_split)
       f = h5py.File(output_name, 'w')

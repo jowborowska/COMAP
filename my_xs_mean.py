@@ -196,8 +196,8 @@ def xs_mean_from_splits(figure_name, k, xs_mean, xs_sigma):
 def xs_mean_autoPS(filename):
   
    with h5py.File(filename, mode="r") as my_file:
-      xs = np.array(my_file['ps'][:])
-      rms_xs_std = np.array(my_file['rms_ps_std'][:])
+      xs = np.array(my_file['xs'][:])
+      rms_xs_std = np.array(my_file['rms_xs_std'][:])
       k = np.array(my_file['k'][:])
  
    xs_sum = xs/ rms_xs_std ** 2
@@ -206,12 +206,10 @@ def xs_mean_autoPS(filename):
    xs_sigma_auto = 1. / np.sqrt(xs_div)
    return k, xs_mean_auto, xs_sigma_auto
 
-#k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_28asept_1test_2splits_coadded_and_28asept_1test_2splits_coadded.h5')
-k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectraps_28asept_1test_2splits.h5')
+k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_30sept_1test_2splits_coadded_and_30sept_1test_2splits_coadded.h5')
 
-
-date = '28asept'
-splits_collection = np.array(['2','3','4','5'])
+date = '30sept'
+splits_collection = np.array(['2'])
 splits_array = np.zeros(len(splits_collection))
 for p in range(len(splits_collection)):
    splits_array[p] = int(splits_collection[p])
@@ -250,22 +248,18 @@ def sigma_of_N(x,a,b):
    return a*x+b
 
 popt,pcov = curve_fit(sigma_of_N, splits_array, sums_of_errors)
-print (popt) #[-0.04074033  0.27340673]
+print (popt) #[-0.04074033  0.27340673] before changes 
 
 
 plt.figure()
 plt.plot(splits_array, sigma_of_N(splits_array,*popt), label=r'best fit, $%.3fx + %.3f$' %(popt[0], popt[1]), color='paleturquoise',zorder=1)
 plt.scatter(splits_array, sums_of_errors, color='lightseagreen',zorder=2)
-#plt.plot(splits_array, splits_array*(-0.04074033) + 0.27340673, color='red')
 plt.scatter(1, 1. / np.sqrt(sum( 1./xs_sigma_auto**2.)), label='auto PS', color='navy')
 plt.xlabel('Number of map-splits', fontsize=12)
 plt.ylabel(r'xs sigma across all scales, $\left( \sqrt{\sum_k \frac{1}{\sigma_k^2}} \right)^{-1}$ ', fontsize=12)
 plt.legend(fontsize=12)
 plt.savefig('splits_sum_error.png')
 plt.show()
-
-
-
 
 
 #theory spectrum
