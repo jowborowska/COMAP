@@ -138,19 +138,21 @@ def coadd_splits_to_splits(from_n_splits, to_n_splits, from_map_split, from_rms_
    return to_map_split, to_rms_split
 
 
-   
-#########################THIS HAS TO BE FINISHED AND THE LAST PART UPDATED
-
 #n_splits_max has to be 2**N, where N is an integer - number of maps
-def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, output_name, signal_map, n_splits_max, N):
+def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, output_name, signal_map, n_splits_max, N, date):
    map_split_highest, rms_split_highest, weights_split_highest = create_highest_split_map(x,y,z,signal_map,n_splits_max)
    data_map, rms_map, data_beam_map, rms_beam_map = coadd_splits_to_whole_map(n_splits_max,map_split_highest, rms_split_highest, weights_split_highest)
    n_splits_collection = 2**np.arange(N+1)
-   n_splits_collection = n_splits_collection[1:]
-   for n_splits in n_splits_collection:
-      
-
-  
+   n_splits_collection = n_splits_collection[1:] #get rid of 1st element, which is 1
+   n_splits_collection.reverse()
+   for i in range(len(n_splits_collection)):
+      n_splits = n_splits_collection[i]
+      output_name = date + '_%stest_%ssplits.h5' %(1, n_splits)    
+      if n_splits == n_splits_max:
+         map_split = map_split_highest
+         rms_split = rms_split_highest
+      else:
+         map_split, rms_split = coadd_splits_to_splits(n_splits_collection[i-1], n_splits, map_split, rms_split)
       f = h5py.File(output_name, 'w')
       f.create_dataset('rms', data=rms_map)
       f.create_dataset('map', data=data_map)
@@ -165,8 +167,6 @@ def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, output_name, signal_map, n_spli
 
 
       
-      
-
 #create an output file for a regular map, without jack knifes
 def create_h5(x,y,z, x_deg, y_deg, freq, output_name, signal_map, real_rms=False):
    no_of_feeds = 19
@@ -229,6 +229,10 @@ signal_map, Voxel_volume = create_map_3d(PS_function.PS_f, x, y, z) #do this onl
 #sys.exit()
 
 #signal_map = np.zeros_like(signal_map)
+
+
+
+#############################THIS PART HAS TO BE UPDATED#################################
 n = len(sys.argv)
 if n < 2:
     print('Missing number of maps to generate or/and number of splits!')
