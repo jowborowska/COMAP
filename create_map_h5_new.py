@@ -93,10 +93,10 @@ def create_highest_split_map(x,y,z,signal_map,n_splits):
          output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
          output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
          rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
-         weights_map_single_feed = np.reshape(weights_map_single_feed,map_beam_shape)
+         weights_single_feed = np.reshape(weights_single_feed,map_beam_shape)
          map_split[g,i] = output_map_single_feed 
          rms_split[g,i] = rms_map_single_feed
-         weights_split[g,i] = weights_map_single_feed
+         weights_split[g,i] = weights_single_feed
    return map_split, rms_split, weights_split
 
 #create main map and beam map - this is needed only once for all jk maps
@@ -112,7 +112,7 @@ def coadd_splits_to_whole_map(from_n_splits,from_map_split, from_rms_split, from
    w_sum2 = np.zeros(map_beam_shape) 
    for i in range(from_n_splits):
       w_sum1 += from_weights_split[i]
-      data_map += from_weights_spli[i]*from_map_split[i]
+      data_map += from_weights_split[i]*from_map_split[i]
    data_map = data_map/w_sum1
    rms_map = w_sum1**(-0.5)
    for j in range(no_of_feeds):
@@ -144,7 +144,8 @@ def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, da
    data_map, rms_map, data_beam_map, rms_beam_map = coadd_splits_to_whole_map(n_splits_max,map_split_highest, rms_split_highest, weights_split_highest)
    n_splits_collection = 2**np.arange(N+1)
    n_splits_collection = n_splits_collection[1:] #get rid of 1st element, which is 1
-   n_splits_collection.reverse()
+   n_splits_collection = np.flip(n_splits_collection)
+   print n_splits_collection, n_splits_max
    for i in range(len(n_splits_collection)):
       n_splits = n_splits_collection[i]
       output_name = date + '_%stest_%ssplits.h5' %(1, n_splits)    
@@ -152,6 +153,7 @@ def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, da
       if n_splits == n_splits_max:
          map_split = map_split_highest
          rms_split = rms_split_highest
+         print "max"
       else:
          map_split, rms_split = coadd_splits_to_splits(n_splits_collection[i-1], n_splits, map_split, rms_split)
       f = h5py.File(output_name, 'w')
@@ -235,17 +237,17 @@ signal_map, Voxel_volume = create_map_3d(PS_function.PS_f, x, y, z) #do this onl
 n = len(sys.argv)
 if n < 2:
     print('Missing number of maps to generate or/and number of splits!')
-    print('Example: python create_map_h5_new.py N 2**N/0 <- to create N maps with 2**N/no splits')
+    print('Example: python create_map_h5_new.py N 2**N/0 <- to create N maps with max number of 2**N/no splits')
     sys.exit(1)
 
 
 date = '30sept'
 N = int(sys.argv[1]) #number of maps
-if int(sys.argv[2]) != 0:
+if int(sys.argv[2]) != 0: #create maps with jk splits
    n_splits_max = int(sys.argv[2]) 
    create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, date)
 
-if int(sys.argv[2]) == 0: #create maps with no jk
+if int(sys.argv[2]) == 0: #create maps with no jk splits
    names = []
    for i in range(N):
       output_name = date + '_%stest.h5' %(i+1) 
