@@ -124,7 +124,7 @@ def coadd_splits_to_whole_map(from_n_splits,from_map_split, from_rms_split, from
 
 #the point here is to read a map with highest number of splits and then co-add splits to create maps with smaller number of splits and the final mapof whole data
 def coadd_splits_to_splits(from_n_splits, to_n_splits, from_map_split, from_rms_split):
-   to_map_split_shape = (to_n_splits,19, 4, 64, 120, 120)
+   map_split_shape = (to_n_splits,19, 4, 64, 120, 120)
    to_map_split = np.zeros(map_split_shape)
    to_rms_split = np.zeros(map_split_shape)
    for j in range(to_n_splits):
