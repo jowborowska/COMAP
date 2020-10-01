@@ -206,9 +206,9 @@ def xs_mean_autoPS(filename):
    xs_sigma_auto = 1. / np.sqrt(xs_div)
    return k, xs_mean_auto, xs_sigma_auto
 
-k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_30sept_1test_2splits_coadded_and_30sept_1test_2splits_coadded.h5')
+k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_1oct_1test_2splits_coadded_and_1oct_1test_2splits_coadded.h5')
 
-date = '30sept'
+date = '1oct'
 splits_collection = np.array(['2','4','8','16','32'])
 #splits_collection = np.array(['2'])
 splits_array = np.zeros(len(splits_collection))
