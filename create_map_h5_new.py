@@ -70,7 +70,7 @@ def create_output_map(x,y,z, signal_map):
    #rms_map = rms_map*muK2K
    #np.random.seed(1)
    #rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 10 muK, the standard deviation of the noise in each voxel
-   rms_map = 20.*muK2K 
+   rms_map = 20.*muK2K + np.zeros((120, 120, 256))
    #rms_map = np.zeros_like(rms_map)+5.*muK2K
    #np.random.seed() #keep the same rms all the time
    w = 1./rms_map ** 2
@@ -159,7 +159,7 @@ def coadd_splits_to_splits(from_n_splits, to_n_splits, from_map_split, from_rms_
 
 #n_splits_max has to be 2**N, where N is an integer - number of maps
 def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, date):
-   map_split_highest, rms_split_highest, weights_split_highest = create_highest_split_map(x,y,z,signal_map,n_splits_max, if_real_rms=True)
+   map_split_highest, rms_split_highest, weights_split_highest = create_highest_split_map(x,y,z,signal_map,n_splits_max, if_real_rms=False)
    data_map, rms_map, data_beam_map, rms_beam_map = coadd_splits_to_whole_map(n_splits_max,map_split_highest, rms_split_highest, weights_split_highest)
    n_splits_collection = 2**np.arange(N+1)
    n_splits_collection = n_splits_collection[1:] #get rid of 1st element, which is 1
