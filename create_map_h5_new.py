@@ -69,13 +69,14 @@ def create_output_map(x,y,z, signal_map):
    #rms_map = (r / np.max(r.flatten()) + 0.05) * np.std(signal_map.flatten()) ** 2.5 / 5.0
    #rms_map = rms_map*muK2K
    #np.random.seed(1)
-   rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 10 muK, the standard deviation of the noise in each voxel
+   #rms_map = 10.*muK2K + 10.*np.random.uniform(0.0, 1.*muK2K, (120, 120, 256)) #rms drawn from uniform dist of 10 muK, the standard deviation of the noise in each voxel
+   rms_map = 20.*muK2K 
    #rms_map = np.zeros_like(rms_map)+5.*muK2K
    #np.random.seed() #keep the same rms all the time
    w = 1./rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
-   output_map = signal_map*muK2K + noise_map
-   #output_map = noise_map
+   #output_map = signal_map*muK2K + noise_map
+   output_map = noise_map
    return output_map.transpose(2, 0, 1), rms_map.transpose(2, 0, 1), signal_map.transpose(2, 0, 1)*muK2K, w.transpose(2, 0, 1)
    #return output_map, rms_map, signal_map, w
 
@@ -118,7 +119,7 @@ def create_highest_split_map(x,y,z,signal_map,n_splits, if_real_rms=False):
    return map_split, rms_split, weights_split
 
 #create main map and beam map - this is needed only once for all jk maps
-def coadd_splits_to_whole_map(from_n_splits,from_map_split, from_rms_split, from_weights_split):
+def coadd_splits_to_whole_map(from_n_splits,from_map_split, from_rms_split, from_weights_split, if_real_rms=False):
    no_of_feeds = 19
    map_shape = (19, 4, 64, 120, 120)
    map_beam_shape = (4, 64, 120, 120)
@@ -257,7 +258,7 @@ if n < 2:
     sys.exit(1)
 
 
-date = '1oct'
+date = '1octc'
 N = int(sys.argv[1]) #number of maps
 if int(sys.argv[2]) != 0: #create maps with jk splits
    n_splits_max = int(sys.argv[2]) 
