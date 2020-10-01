@@ -166,7 +166,7 @@ def xs_split_split_grid(path_to_xs, figure_name, n_splits):
 def xs_mean_from_splits(figure_name, k, xs_mean, xs_sigma):
   
   
-   lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
+   #lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
@@ -174,7 +174,7 @@ def xs_mean_from_splits(figure_name, k, xs_mean, xs_sigma):
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
-   ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
+   #ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
    ax1.set_xscale('log')
    ax1.grid()
    plt.legend()
