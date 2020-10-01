@@ -81,19 +81,37 @@ def create_output_map(x,y,z, signal_map):
 
 
 
-def create_highest_split_map(x,y,z,signal_map,n_splits):
+def create_highest_split_map(x,y,z,signal_map,n_splits, if_real_rms=False):
    no_of_feeds = 19
    map_beam_shape = (4, 64, 120, 120)
    map_split_shape = (n_splits,19, 4, 64, 120, 120)
    map_split = np.zeros(map_split_shape)
    rms_split = np.zeros(map_split_shape)
    weights_split = np.zeros(map_split_shape)
+   with h5py.File('co7_011989_good_map.h5', mode="r") as my_file:
+      real_rms = np.array(my_file['rms'][:])
    for g in range(n_splits):
       for i in range(no_of_feeds):
-         output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
-         output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
-         rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
-         weights_single_feed = np.reshape(weights_single_feed,map_beam_shape)
+         if if_real_rms == True:
+            if g ==0 and i==0:
+               print ("Using real rms map!")
+            muK2K = 1e-6 #micro Kelvins to Kelvins
+            signal_map_single_feed = signal_map.transpose(2, 0, 1)*muK2K
+            signal_map_single_feed = np.reshape(signal_map_single_feed,map_beam_shape)
+            rms_map_single_feed = real_rms[i]
+            noise_map_single_feed = np.random.randn(*rms_map_single_feed.shape) * rms_map_single_feed
+            mask = np.zeros_like(rms_map_single_feed)
+            mask[(rms_map_single_feed != 0.0)] = 1.0
+            where = (mask == 1.0) #mask is 1 when we have something
+            weights_single_feed = np.zeros_like(rms_map_single_feed)
+            weights_single_feed[where] = 1./rms_map_single_feed[where] ** 2
+            output_map_single_feed = signal_map_single_feed + noise_map_single_feed
+
+         if if_real_rms == False:
+            output_map_single_feed, rms_map_single_feed, signal_map_single_feed, weights_single_feed = create_output_map(x,y,z, signal_map)
+            output_map_single_feed = np.reshape(output_map_single_feed,map_beam_shape)
+            rms_map_single_feed = np.reshape(rms_map_single_feed,map_beam_shape)
+            weights_single_feed = np.reshape(weights_single_feed,map_beam_shape)
          map_split[g,i] = output_map_single_feed 
          rms_split[g,i] = rms_map_single_feed
          weights_split[g,i] = weights_single_feed
@@ -140,7 +158,7 @@ def coadd_splits_to_splits(from_n_splits, to_n_splits, from_map_split, from_rms_
 
 #n_splits_max has to be 2**N, where N is an integer - number of maps
 def create_h5_with_jk(x,y,z, x_deg, y_deg, freq, signal_map, n_splits_max, N, date):
-   map_split_highest, rms_split_highest, weights_split_highest = create_highest_split_map(x,y,z,signal_map,n_splits_max)
+   map_split_highest, rms_split_highest, weights_split_highest = create_highest_split_map(x,y,z,signal_map,n_splits_max, if_real_rms=True)
    data_map, rms_map, data_beam_map, rms_beam_map = coadd_splits_to_whole_map(n_splits_max,map_split_highest, rms_split_highest, weights_split_highest)
    n_splits_collection = 2**np.arange(N+1)
    n_splits_collection = n_splits_collection[1:] #get rid of 1st element, which is 1
@@ -239,7 +257,7 @@ if n < 2:
     sys.exit(1)
 
 
-date = '30sept'
+date = '1oct'
 N = int(sys.argv[1]) #number of maps
 if int(sys.argv[2]) != 0: #create maps with jk splits
    n_splits_max = int(sys.argv[2]) 
