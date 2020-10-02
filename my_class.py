@@ -114,7 +114,9 @@ class CrossSpectrum_nmaps():
               if i != j: #ensure that we compute xs, not auto spectrum
                  index +=1
                  if print_show == True:
-                    print ('Creating xs between '+ calculated_xs[index-1][1]+ ' and '+ calculated_xs[index-1][2]+ ', ' + index + ' out of ' + len(calculated_xs) + '.') 
+                    map_name1 = calculated_xs[index-1][1]
+                    map_name1 = calculated_xs[index-1][2]
+                    print ('Creating xs between '+ map_name1+ ' and '+map_name2+ ', ' + '%01i'(%index) + ' out of ' + '%01i'(%len(calculated_xs)) + '.') 
                  self.normalize_weights(i,j) #normalize weights for given xs pair of maps
                  
                  
