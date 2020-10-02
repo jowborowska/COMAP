@@ -75,8 +75,8 @@ def create_output_map(x,y,z, signal_map):
    #np.random.seed() #keep the same rms all the time
    w = 1./rms_map ** 2
    noise_map = np.random.randn(*rms_map.shape) * rms_map
-   #output_map = signal_map*muK2K + noise_map
-   output_map = noise_map
+   output_map = signal_map*muK2K + noise_map
+   #output_map = noise_map
    return output_map.transpose(2, 0, 1), rms_map.transpose(2, 0, 1), signal_map.transpose(2, 0, 1)*muK2K, w.transpose(2, 0, 1)
    #return output_map, rms_map, signal_map, w
 
@@ -258,7 +258,7 @@ if n < 2:
     sys.exit(1)
 
 
-date = '1octc'
+date = '1octd'
 N = int(sys.argv[1]) #number of maps
 if int(sys.argv[2]) != 0: #create maps with jk splits
    n_splits_max = int(sys.argv[2]) 
