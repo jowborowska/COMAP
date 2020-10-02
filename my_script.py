@@ -16,11 +16,11 @@ def run_all_methods(feed,feed1,feed2):
    else:
       my_xs = my_class.CrossSpectrum_nmaps(list_of_n_map_names,jk, feed, feed1, feed2)
 
-   #calculated_xs = my_xs.get_information()
+   calculated_xs = my_xs.get_information() #gives the xs, k, rms_sig, rms_mean index with corresponding map-pair
   # if feed1!=None and feed2!=None:
    #   print ('Creating xs between '+ calculated_xs[0][1]+ ' and '+ calculated_xs[0][2]+ '.') 
   # else:
-   #   print (calculated_xs) #gives the xs, k, rms_sig, rms_mean index with corresponding map-pair
+   #   print (calculated_xs) 
    xs, k, nmodes = my_xs.calculate_xs(print_show=True)
 
    rms_mean, rms_sig = my_xs.run_noise_sims(10) #these rms's are arrays of 14 elements, that give error bars (number of bin edges minus 1)

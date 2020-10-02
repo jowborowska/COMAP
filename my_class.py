@@ -108,13 +108,13 @@ class CrossSpectrum_nmaps():
         self.xs = []
         self.k = []
         self.nmodes = []
-        index = -1
+        index = 0
         for i in range(len(self.maps)):
            for j in range(i,len(self.maps)): #ensure that we don't compute the same pairs of maps twice <---------is this correct ?
               if i != j: #ensure that we compute xs, not auto spectrum
                  index +=1
                  if print_show == True:
-                    print ('Creating xs between '+ calculated_xs[index][1]+ ' and '+ calculated_xs[index][2]+ '.') 
+                    print ('Creating xs between '+ calculated_xs[index-1][1]+ ' and '+ calculated_xs[index-1][2]+ ', ' + index + ' out of ' + len(calculated_xs) + '.') 
                  self.normalize_weights(i,j) #normalize weights for given xs pair of maps
                  
                  
