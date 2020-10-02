@@ -99,18 +99,22 @@ class CrossSpectrum_nmaps():
         return indexes_xs
              
     #COMPUTE ALL THE XS BETWEEN THE n FEED-AVERAGED MAPS
-    def calculate_xs(self, no_of_k_bins=15): #here take the number of k-bins as an argument 
+    def calculate_xs(self, no_of_k_bins=15, print_show=False): #here take the number of k-bins as an argument 
         n_k = no_of_k_bins
         self.k_bin_edges = np.logspace(-2.0, np.log10(1.5), n_k)
-        
+        calculated_xs = self.get_information()        
+
         #store each cross-spectrum and corresponding k and nmodes by appending to these lists:
         self.xs = []
         self.k = []
         self.nmodes = []
+        index = -1
         for i in range(len(self.maps)):
            for j in range(i,len(self.maps)): #ensure that we don't compute the same pairs of maps twice <---------is this correct ?
               if i != j: #ensure that we compute xs, not auto spectrum
-                 
+                 index +=1
+                 if print_show == True:
+                    print ('Creating xs between '+ calculated_xs[index][1]+ ' and '+ calculated_xs[index][2]+ '.') 
                  self.normalize_weights(i,j) #normalize weights for given xs pair of maps
                  
                  
