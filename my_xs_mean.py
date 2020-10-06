@@ -12,7 +12,14 @@ import my_class
 import PS_function
 from scipy.optimize import curve_fit
 
+#theory spectrum
+k_th = np.load('k.npy')
+ps_th = np.load('ps.npy')
+ps_th_nobeam = np.load('psn.npy') #instrumental beam, less sensitive to small scales line broadening, error bars go up at high k, something with the intrinsic resolution of the telescope (?)
 
+#values from COPPS
+ps_copps = 8.746e3 * ps_th / ps_th_nobeam #shot noise level
+ps_copps_nobeam = 8.7e3
 
 
 def xs_feed_feed_grid(path_to_xs, figure_name):
@@ -47,7 +54,8 @@ def xs_feed_feed_grid(path_to_xs, figure_name):
            chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
            print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
            #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
-           if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
+           #if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
+           if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
                xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
                print ("if test worked")
                xs_div += 1 / rms_xs_std[i,j] ** 2
@@ -76,12 +84,12 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
-   #ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$')
-   ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
+   ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$')
+   #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
-   ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
-   #ax1.plot(k_th, k_th * ps_th_nobeam * 10, 'r--', label=r'$10 \times kP_{Theory}(k)$')
+   #ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
+   ax1.plot(k_th, k_th * ps_th_nobeam * 10, 'r--', label=r'$10 \times kP_{Theory}(k)$')
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
    ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
@@ -206,6 +214,13 @@ def xs_mean_autoPS(filename):
    xs_sigma_auto = 1. / np.sqrt(xs_div)
    return k, xs_mean_auto, xs_sigma_auto
 
+k_co7, xs_mean_co7, xs_sigma_co7 = xs_feed_feed_grid('spectra/xs_co7_map_complete_wday_1st_sidr_feed%01i_and_co7_map_complete_wday_2nd_sidr_feed%01i.h5
+', 'xs_grid_sidr_co7.png')
+xs_with_model('xs_mean_sidr_co7.png', k_co7, xs_mean_co7, xs_sigma_co7)
+
+
+
+'''
 k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_1octd_1test_2splits_coadded_and_1octd_1test_2splits_coadded.h5')
 
 date = '1octd'
@@ -261,16 +276,8 @@ plt.ylabel(r'xs sigma across all scales, $\left( \sqrt{\sum_k \frac{1}{\sigma_k^
 plt.legend(fontsize=12)
 plt.savefig(date + '_splits_sum_error.png')
 plt.show()
+'''
 
-
-#theory spectrum
-k_th = np.load('k.npy')
-ps_th = np.load('ps.npy')
-ps_th_nobeam = np.load('psn.npy') #instrumental beam, less sensitive to small scales line broadening, error bars go up at high k, something with the intrinsic resolution of the telescope (?)
-
-#values from COPPS
-ps_copps = 8.746e3 * ps_th / ps_th_nobeam #shot noise level
-ps_copps_nobeam = 8.7e3
 
 '''
 k_test, xs_mean_test, xs_sigma_test = xs_feed_feed_grid('spectra/xs_17sept_1test_feed%01i_and_17sept_1test_feed%01i.h5', 'xs_grid_test.png')
