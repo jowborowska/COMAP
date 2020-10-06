@@ -214,8 +214,7 @@ def xs_mean_autoPS(filename):
    xs_sigma_auto = 1. / np.sqrt(xs_div)
    return k, xs_mean_auto, xs_sigma_auto
 
-k_co7, xs_mean_co7, xs_sigma_co7 = xs_feed_feed_grid('spectra/xs_co7_map_complete_wday_1st_sidr_feed%01i_and_co7_map_complete_wday_2nd_sidr_feed%01i.h5
-', 'xs_grid_sidr_co7.png')
+k_co7, xs_mean_co7, xs_sigma_co7 = xs_feed_feed_grid('spectra/xs_co7_map_complete_wday_1st_sidr_feed%01i_and_co7_map_complete_wday_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_co7.png')
 xs_with_model('xs_mean_sidr_co7.png', k_co7, xs_mean_co7, xs_sigma_co7)
 
 
