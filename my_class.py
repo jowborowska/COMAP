@@ -45,7 +45,7 @@ class CrossSpectrum_nmaps():
               else:
                  map_counter += 1
                  if map_counter == 1:
-                    self.names.append(name + '_1st_' + jk + self.feed_name1)
+                    self.names.append(name + '_2nd_' + jk + self.feed_name1)
                  if map_counter == 2:
                     self.names.append(name + '_1st_' + jk + self.feed_name2)
            if jk != False and jk == 'sim':
@@ -67,7 +67,7 @@ class CrossSpectrum_nmaps():
               else:
                  map_counter2 += 1
                  if map_counter2 ==1:
-                    my_map = map_cosmo.MapCosmo(map_name, feed1, jk, 0)
+                    my_map = map_cosmo.MapCosmo(map_name, feed1, jk, 1)
                  if map_counter2 ==2:
                     my_map = map_cosmo.MapCosmo(map_name, feed2, jk, 0)
                  self.maps.append(my_map)
