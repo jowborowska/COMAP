@@ -58,7 +58,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name,split1, split2, xs_summ, xs_divv):
               #if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
               if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
                   xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
-                  print ("if test worked")
+                  #print ("if test worked")
                   xs_div += 1 / rms_xs_std[i,j] ** 2
                   n_sum += 1
 
@@ -113,22 +113,22 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
 
 
 k_12, xs_mean_12, xs_sigma_12, xs_sum, xs_div = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_earlysid_1st_sidr_feed%01i_and_co7_map_complete_night_earlysid_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_12.png', ' of split 1', ' of split 2', np.zeros(14), np.zeros(14))
-print (xs_sum, xs_div)
+print ('12: ', xs_sum, xs_div)
 
 k_13, xs_mean_13, xs_sigma_13, xs_sum, xs_div = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_earlysid_1st_sidr_feed%01i_and_co7_map_complete_night_latesid_1st_sidr_feed%01i.h5', 'xs_grid_sidr_13.png', ' of split 1', ' of split 3', xs_sum, xs_div)
-print (xs_sum, xs_div)
+print ('13: ', xs_sum, xs_div)
 
 k_14, xs_mean_14, xs_sigma_14, xs_sum, xs_div = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_earlysid_1st_sidr_feed%01i_and_co7_map_complete_night_latesid_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_14.png', ' of split 1', ' of split 4', xs_sum, xs_div)
-print (xs_sum, xs_div)
+print ('14: ', xs_sum, xs_div)
 
 k_23, xs_mean_23, xs_sigma_23, xs_sum, xs_div = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_earlysid_2nd_sidr_feed%01i_and_co7_map_complete_night_latesid_1st_sidr_feed%01i.h5', 'xs_grid_sidr_23.png', ' of split 2', ' of split 3', xs_sum, xs_div)
-print (xs_sum, xs_div)
+print ('23: ', xs_sum, xs_div)
 
-k_24, xs_mean_24, xs_sigma_24 = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_earlysid_2nd_sidr_feed%01i_and_co7_map_complete_night_latesid_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_24.png', ' of split 2', ' of split 4', xs_sum, xs_div)
-print (xs_sum, xs_div)
+k_24, xs_mean_24, xs_sigma_24, xs_sum, xs_div  = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_earlysid_2nd_sidr_feed%01i_and_co7_map_complete_night_latesid_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_24.png', ' of split 2', ' of split 4', xs_sum, xs_div)
+print ('24: ', xs_sum, xs_div)
 
-k_34, xs_mean_34, xs_sigma_34 = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_latesid_1st_sidr_feed%01i_and_co7_map_complete_night_latesid_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_34.png', ' of split 3', ' of split 4', xs_sum, xs_div)
-print (xs_sum, xs_div)
+k_34, xs_mean_34, xs_sigma_34, xs_sum, xs_div  = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_latesid_1st_sidr_feed%01i_and_co7_map_complete_night_latesid_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_34.png', ' of split 3', ' of split 4', xs_sum, xs_div)
+print ('34: ', xs_sum, xs_div)
 
 xs_with_model('xs_mean_sidr_4splits.png', k_34, xs_mean_34, xs_sigma_34)
 
