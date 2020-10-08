@@ -85,8 +85,9 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
+   ax1.errorbar(k, k*PS_estimate, k*PS_error, label=r'k $\times$ PS estimate')
    ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$')
-   ax1.errorbar(k, PS_estimate, PS_error, label='PS estimate')
+   
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
