@@ -118,7 +118,7 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) 
    xs_mean = xs_mean/transfer(k)
    xs_sigma = xs_sigma/transfer(k)
-   for i in range(2,no_of_k-3): #we exclude 2 first points and 3 last points
+   for i in range(2,no_of_k-4): #we exclude 2 first points and 4 last points
       w = 1./ xs_sigma[i]**2.
       w_sum += w
       PS_estimate += w*xs_mean[i]
