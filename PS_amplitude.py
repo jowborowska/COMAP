@@ -101,7 +101,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
-   ax1.plot(k, k*PS_estimate, label=r'k $\times$ PS estimate with complete T(k)', color='teal')
+   ax1.plot(k, k*PS_estimate, label=r'$kP_{Estimate}$', color='teal')
    ax1.fill_between(x=k, y1=k*PS_estimate-k*PS_error, y2=k*PS_estimate+k*PS_error, facecolor='paleturquoise', edgecolor='paleturquoise')
    ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{data}(k)$', color='purple')
    
