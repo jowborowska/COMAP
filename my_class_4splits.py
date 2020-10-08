@@ -28,6 +28,7 @@ class CrossSpectrum_nmaps():
            self.feed_name2 = '_feed' + str(feed2)
         self.names_of_maps = list_of_n_map_names #the names schould indicate which map and feed we take
         self.names = []
+        map_counter = 0
         for name in self.names_of_maps:
            name = name.rpartition('/')[-1] #get rid of the path, leave only the name of the map
            name = name.rpartition('.')[0] #get rid of the ".h5" part
@@ -42,8 +43,11 @@ class CrossSpectrum_nmaps():
                  self.names.append(name + '_1st_' + jk + self.feed_name)
                  self.names.append(name + '_2nd_'+ jk + self.feed_name)
               else:
-                 self.names.append(name + '_1st_' + jk + self.feed_name1)
-                 self.names.append(name + '_2nd_' + jk + self.feed_name2)
+                 map_counter += 1
+                 if map_counter == 1:
+                    self.names.append(name + '_2nd_' + jk + self.feed_name1)
+                 if map_counter == 2:
+                    self.names.append(name + '_2nd_' + jk + self.feed_name2)
            if jk != False and jk == 'sim':
               for g in range(n_of_splits):
                  map_split_number = g + 1
@@ -52,6 +56,7 @@ class CrossSpectrum_nmaps():
                  
 
         self.maps = []
+        map_counter2 = 0
         for map_name in list_of_n_map_names:
            if jk != False:
               if feed1==None and feed2==None:
@@ -60,10 +65,13 @@ class CrossSpectrum_nmaps():
                     self.maps.append(my_map_split)
                     
               else:
-                 my_map_first = map_cosmo.MapCosmo(map_name, feed1, jk, 0)
-                 my_map_second = map_cosmo.MapCosmo(map_name, feed2, jk, 1)
-                 self.maps.append(my_map_first)
-                 self.maps.append(my_map_second)
+                 map_counter2 += 1
+                 if map_counter2 ==1:
+                    my_map = map_cosmo.MapCosmo(map_name, feed1, jk, 1)
+                 if map_counter2 ==2:
+                    my_map = map_cosmo.MapCosmo(map_name, feed2, jk, 1)
+                 self.maps.append(my_map)
+                 
            else:
               if feed1==None and feed2==None:
                  my_map = map_cosmo.MapCosmo(map_name, feed) 
