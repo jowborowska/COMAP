@@ -21,6 +21,22 @@ ps_th_nobeam = np.load('psn.npy') #instrumental beam, less sensitive to small sc
 ps_copps = 8.746e3 * ps_th / ps_th_nobeam #shot noise level
 ps_copps_nobeam = 8.7e3
 
+def read_Nils_transfer(filename):
+   infile = open(filename, 'r')
+   k = np.zeros(14)
+   T = np.zeros(14)
+   i = 0
+   infile.readline()
+   for line in infile:
+      values = line.split()
+      k[i] = float(values[0])
+      T[i] = float(values[1])
+      i += 1
+   infile.close()
+   return k,T
+
+k_Nils, T_Nils = read_Nils_transfer('TF.txt')
+print k_Nils, T_Nils
 
 def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    n_sim = 100
@@ -81,13 +97,14 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
 def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
+   transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
-   ax1.plot(k, k*PS_estimate, label=r'k $\times$ PS estimate', color='teal')
+   ax1.plot(k, k*PS_estimate, label=r'k $\times$ PS estimate with complete T(k)', color='teal')
    ax1.fill_between(x=k, y1=k*PS_estimate-k*PS_error, y2=k*PS_estimate+k*PS_error, facecolor='paleturquoise', edgecolor='paleturquoise')
-   ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$', color='purple')
+   ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{data}(k)$', color='purple')
    
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
@@ -119,8 +136,9 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    w_sum = 0
    no_of_k = len(k)
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) 
-   xs_mean = xs_mean/transfer(k)
-   xs_sigma = xs_sigma/transfer(k)
+   transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
+   xs_mean = xs_mean/(transfer(k)*transfer_Nils(k))
+   xs_sigma = xs_sigma/(transfer(k)*transfer_Nils(k))
    for i in range(2,no_of_k-3): #we exclude 2 first points and 3 last points
       print (k[i]*xs_mean[i], k[i]*xs_sigma[i])
       w = 1./ xs_sigma[i]**2.
