@@ -22,7 +22,7 @@ ps_copps = 8.746e3 * ps_th / ps_th_nobeam #shot noise level
 ps_copps_nobeam = 8.7e3
 
 
-def xs_feed_feed_grid(path_to_xs, figure_name):
+def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    n_sim = 100
    n_k = 14
    n_feed = 19
@@ -37,7 +37,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name):
    xs_div = np.zeros(n_k)
    for i in range(n_feed):
        for j in range(n_feed):
-           if i != 7 and j != 7:
+           #if i != 7 and j != 7:
               try:
                   filepath = path_to_xs %(i+1, j+1)
                   with h5py.File(filepath, mode="r") as my_file:
@@ -69,8 +69,8 @@ def xs_feed_feed_grid(path_to_xs, figure_name):
    new_tick_locations = np.array(range(n_feed)) + 1
    plt.xticks(new_tick_locations)
    plt.yticks(new_tick_locations)
-   plt.xlabel('Feed')
-   plt.ylabel('Feed')
+   plt.xlabel('Feed' + split1)
+   plt.ylabel('Feed' + split2)
    cbar = plt.colorbar()
    cbar.set_label(r'$|\chi^2| \times$ sign($\chi^3$)')
    plt.savefig(figure_name, bbox_inches='tight')
@@ -215,11 +215,17 @@ def xs_mean_autoPS(filename):
    xs_sigma_auto = 1. / np.sqrt(xs_div)
    return k, xs_mean_auto, xs_sigma_auto
 
-k_co7, xs_mean_co7, xs_sigma_co7 = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_sidr_feed%01i_and_co7_map_complete_night_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_co7_night_no8.png')
-xs_with_model('xs_mean_sidr_co7_night_no8.png', k_co7, xs_mean_co7, xs_sigma_co7)
+k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_night.png', ' of 1st dayn split', ' of 2nd dayn split')
+xs_with_model('xs_mean_dayn_co7_night.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 
-k_co72, xs_mean_co72, xs_sigma_co72 = xs_feed_feed_grid('spectra/xs_co7_map_complete_wday_1st_sidr_feed%01i_and_co7_map_complete_wday_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_co7_wday_no8.png')
-xs_with_model('xs_mean_sidr_co7_wday_no8.png', k_co72, xs_mean_co72, xs_sigma_co72)
+k_co72, xs_mean_co72, xs_sigma_co72 = xs_feed_feed_grid('spectra/xs_co7_map_complete_wday_1st_dayn_feed%01i_and_co7_map_complete_wday_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_wday.png', ' of 1st dayn split', ' of 2nd dayn split')
+xs_with_model('xs_mean_dayn_co7_wday.png', k_co72, xs_mean_co72, xs_sigma_co72)
+
+k_co73, xs_mean_co73, xs_sigma_co73 = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_half_feed%01i_and_co7_map_complete_night_2nd_half_feed%01i.h5', 'xs_grid_half_co7_night.png', ' of 1st half split', ' of 2nd half split')
+xs_with_model('xs_mean_half_co7_night.png', k_co73, xs_mean_co73, xs_sigma_co73)
+
+k_co74, xs_mean_co74, xs_sigma_co74 = xs_feed_feed_grid('spectra/xs_co7_map_complete_wday_1st_half_feed%01i_and_co7_map_complete_wday_2nd_half_feed%01i.h5', 'xs_grid_half_co7_wday.png', ' of 1st half split', ' of 2nd half split')
+xs_with_model('xs_mean_half_co7_wday.png', k_co74, xs_mean_co74, xs_sigma_co74)
 
 
 '''
