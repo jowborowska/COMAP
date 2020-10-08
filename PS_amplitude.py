@@ -119,7 +119,7 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    xs_mean = xs_mean/transfer(k)
    xs_sigma = xs_sigma/transfer(k)
    for i in range(2,no_of_k-3): #we exclude 2 first points and 3 last points
-      print (xs_mean[i], xs_sigma[i])
+      print (k[i]*xs_mean[i], k[i]*xs_sigma[i])
       w = 1./ xs_sigma[i]**2.
       w_sum += w
       PS_estimate += w*xs_mean[i]
