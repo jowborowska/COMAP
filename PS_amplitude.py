@@ -36,7 +36,6 @@ def read_Nils_transfer(filename):
    return k,T
 
 k_Nils, T_Nils = read_Nils_transfer('TF.txt')
-print k_Nils, T_Nils
 
 def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    n_sim = 100
