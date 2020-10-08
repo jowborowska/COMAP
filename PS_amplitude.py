@@ -78,7 +78,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
-def xs_with_model(figure_name, k, xs_mean, xs_sigma):
+def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
@@ -86,6 +86,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$')
+   ax1.errorbar(k, PS_estimate, PS_error, label='PS estimate')
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
@@ -132,7 +133,10 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
 
 
 k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_night.png', ' of 1st dayn split', ' of 2nd dayn split')
-xs_with_model('xs_mean_dayn_co7_night.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 PS_estimate_1, PS_error_1 = calculate_PS_amplitude(k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 print (PS_estimate_1, PS_error_1)
+PS_estimate_arr = np.zeros(14) + PS_estimate_1
+PS_error_arr = np.zeros(14) + PS_error_1
+xs_with_model('xs_mean_dayn_co7_night_westimate.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn, PS_estimate_arr, PS_error_arr)
+
 
