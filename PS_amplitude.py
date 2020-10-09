@@ -97,6 +97,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
+   P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
 
    fig = plt.figure()
@@ -109,7 +110,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
    #ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
-   ax1.plot(k_th, k_th * ps_th_nobeam * 10, '--', label=r'$10 \times kP_{Theory}(k)$', color='navy')
+   ax1.plot(k, k * P_theory(k) * 10, '--', label=r'$10 \times kP_{Theory}(k)$', color='navy')
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
    ax1.set_ylim(-lim*3, lim*3)              # ax1.set_ylim(0, 0.1)
