@@ -116,7 +116,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
    ax1.set_xlim(0.02,k[-1]+0.1)
    ax1.set_xscale('log')
    ax1.grid()
-   plt.legend(bbox_to_anchor=(0.5, 0.05))
+   plt.legend(bbox_to_anchor=(0.2, 1.05))
 
    ax2 = fig.add_subplot(212)
    ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma / xs_sigma, fmt='o', label=r'$\tilde{C}_{data}(k)$')
