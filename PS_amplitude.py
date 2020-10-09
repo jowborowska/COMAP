@@ -113,10 +113,10 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
    ax1.set_ylim(-lim*3, lim*3)              # ax1.set_ylim(0, 0.1)
-   ax1.set_xlim(0.02,k[-1]+0.4)
+   ax1.set_xlim(0.02,k[-1]+0.1)
    ax1.set_xscale('log')
    ax1.grid()
-   plt.legend()
+   plt.legend(bbox_to_anchor=(0.5, 0.05))
 
    ax2 = fig.add_subplot(212)
    ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma / xs_sigma, fmt='o', label=r'$\tilde{C}_{data}(k)$')
