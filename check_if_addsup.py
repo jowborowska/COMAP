@@ -31,6 +31,7 @@ for i in range(4):
 map_coadded = map_coadded/w_sum
 rms_coadded = w_sum**(-0.5)
 
-
+print ('MAP: ')
 print (map_coadded == complete_map)
+print ('RMS: ')
 print (rms_coadded == complete_rms)
