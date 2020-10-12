@@ -129,7 +129,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
    ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]')
    ax2.set_ylim(-12, 12)
-   ax2.set_xlim(0.02,k[-1]+0.5)
+   ax2.set_xlim(0.03,k[-1]+0.1)
    ax2.set_xscale('log')
    ax2.grid()
    plt.tight_layout()
@@ -176,7 +176,7 @@ k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed
 PS_estimate_1, PS_error_1 = calculate_PS_amplitude(k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 PS_estimate_2, PS_error_2 = calculate_PS_amplitude_better(k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 print (PS_estimate_1, PS_error_1)
-print (PS_estimate_2, PS_error_2)
+print ('PS2', PS_estimate_2, PS_error_2)
 PS_estimate_arr = np.zeros(14) + PS_estimate_1
 PS_error_arr = np.zeros(14) + PS_error_1
 PS_estimate_arr2 = np.zeros(14) + PS_estimate_2
