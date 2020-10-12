@@ -93,7 +93,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
-def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
+def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, better):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
@@ -102,8 +102,12 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error):
 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
-   ax1.plot(k, k*PS_estimate, label=r'$kP_{Estimate}$', color='teal')
-   ax1.fill_between(x=k, y1=k*PS_estimate-k*PS_error, y2=k*PS_estimate+k*PS_error, facecolor='paleturquoise', edgecolor='paleturquoise')
+   if better == False:
+      ax1.plot(k, k*PS_estimate, label=r'$kA_1$', color='teal')
+      ax1.fill_between(x=k, y1=k*PS_estimate-k*PS_error, y2=k*PS_estimate+k*PS_error, facecolor='paleturquoise', edgecolor='paleturquoise')
+   if better == True:
+      ax1.plot(k, k*PS_estimate*P_theory(k), label=r'$kA_2\times P_{theory}$', color='teal')
+      ax1.fill_between(x=k, y1=k*PS_estimate*P_theory(k)-k*PS_error*P_theory(k), y2=k*PS_estimate*P_theory(k)+k*PS_error*P_theory(k), facecolor='paleturquoise', edgecolor='paleturquoise')
    ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{data}(k)$', color='purple')
    
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
@@ -150,15 +154,34 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    PS_error = w_sum**(-0.5)
    return PS_estimate, PS_error
 
-
-
+def calculate_PS_amplitude_better(k, xs_mean, xs_sigma):
+   PS_estimate = 0
+   w_sum = 0
+   no_of_k = len(k)
+   P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
+   transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) 
+   transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
+   xs_mean = xs_mean/(transfer(k)*transfer_Nils(k)*P_theory(k))
+   xs_sigma = xs_sigma/(transfer(k)*transfer_Nils(k)*P_theory(k))
+   for i in range(2,no_of_k-3): #we exclude 2 first points and 3 last points
+      w = 1./ xs_sigma[i]**2.
+      w_sum += w
+      PS_estimate += w*xs_mean[i]
+   PS_estimate = PS_estimate/w_sum
+   PS_error = w_sum**(-0.5)
+   return PS_estimate, PS_error
 
 
 k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_night.png', ' of 1st dayn split', ' of 2nd dayn split')
 PS_estimate_1, PS_error_1 = calculate_PS_amplitude(k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
+PS_estimate_2, PS_error_2 = calculate_PS_amplitude_better(k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 print (PS_estimate_1, PS_error_1)
+print (PS_estimate_2, PS_error_2)
 PS_estimate_arr = np.zeros(14) + PS_estimate_1
 PS_error_arr = np.zeros(14) + PS_error_1
-xs_with_model('xs_mean_dayn_co7_night_westimate.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn, PS_estimate_arr, PS_error_arr)
+PS_estimate_arr2 = np.zeros(14) + PS_estimate_2
+PS_error_arr2 = np.zeros(14) + PS_error_2
+xs_with_model('xs_mean_dayn_co7_night_wbetterestimate.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn, PS_estimate_arr2, PS_error_arr2, better=True)
+xs_with_model('xs_mean_dayn_co7_night_westimate.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn, PS_estimate_arr, PS_error_arr, better=False)
 
 
