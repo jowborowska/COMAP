@@ -114,7 +114,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
    #ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
-   ax1.plot(k_th, k_th * ps_th_nobeam * 5, '--', label=r'$5 \times kP_{Theory}(k)$', color='navy')
+   ax1.plot(k_th, k_th * ps_th_nobeam * 10, '--', label=r'$10 \times kP_{Theory}(k)$', color='navy')
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
    ax1.set_ylim(-lim*2.5, lim*2.5)              # ax1.set_ylim(0, 0.1)
