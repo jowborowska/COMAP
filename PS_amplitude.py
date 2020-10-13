@@ -106,7 +106,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
       ax1.plot(k, k*PS_estimate, label=r'$kA_1$', color='teal')
       ax1.fill_between(x=k, y1=k*PS_estimate-k*PS_error, y2=k*PS_estimate+k*PS_error, facecolor='paleturquoise', edgecolor='paleturquoise')
    if better == True:
-      ax1.plot(k, k*PS_estimate*P_theory(k), label=r'$kA_2\times P_{theory}$', color='teal')
+      ax1.plot(k, k*PS_estimate*P_theory(k), label=r'$A_2\times kP_{theory}(k)$', color='teal')
       ax1.fill_between(x=k, y1=k*PS_estimate*P_theory(k)-k*PS_error*P_theory(k), y2=k*PS_estimate*P_theory(k)+k*PS_error*P_theory(k), facecolor='paleturquoise', edgecolor='paleturquoise')
    ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{data}(k)$', color='purple')
    
