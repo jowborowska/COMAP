@@ -51,32 +51,80 @@ def xs_feed_feed_grid_lower_half(path_to_xs, figure_name, split1, split2):
    rms_xs_sum = np.zeros((n_k, n_sim))
    xs_div = np.zeros(n_k)
    #fill all the parts from upper half with nan
-   for i in range(n_feed):
-       for j in range(i):
-          old_i = i
-          old_j = j
-          i = old_j
-          j = old_i       
-  
-          xs[i, j] = np.nan
-          rms_xs_std[i, j] = np.nan
-          
-          w = np.sum(1 / rms_xs_std[i,j])
-          noise[i,j] = 1 / np.sqrt(w)
-          chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
-
-          chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) 
-          if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
-               xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
-               xs_div += 1 / rms_xs_std[i,j] ** 2
-               n_sum += 1
-          
+   chi2[:] = np.nan
+   xs[:] = np.nan
+   rms_xs_std[:] = np.nan
+   noise[:] = np.nan
 
    for i in range(n_feed):
        for j in range(i):
            #if i != 7 and j != 7:
               try:
                   filepath = path_to_xs %(i+1, j+1)
+                  with h5py.File(filepath, mode="r") as my_file:
+                      xs[i, j] = np.array(my_file['xs'][:])
+                      rms_xs_std[i, j] = np.array(my_file['rms_xs_std'][:])
+                      k[:] = np.array(my_file['k'][:])
+              except:
+                  xs[i, j] = np.nan
+                  rms_xs_std[i, j] = np.nan
+            
+              w = np.sum(1 / rms_xs_std[i,j])
+              noise[i,j] = 1 / np.sqrt(w)
+              chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
+
+              chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
+              print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
+              #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
+              #if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
+              if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
+                  xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
+                  print ("if test worked")
+                  xs_div += 1 / rms_xs_std[i,j] ** 2
+                  n_sum += 1
+
+
+   plt.figure()
+   vmax = 15
+   plt.imshow(chi2, interpolation='none', vmin=-vmax, vmax=vmax, extent=(0.5, n_feed + 0.5, n_feed + 0.5, 0.5))
+   new_tick_locations = np.array(range(n_feed)) + 1
+   plt.xticks(new_tick_locations)
+   plt.yticks(new_tick_locations)
+   plt.xlabel('Feed' + split1)
+   plt.ylabel('Feed' + split2)
+   cbar = plt.colorbar()
+   cbar.set_label(r'$|\chi^2| \times$ sign($\chi^3$)')
+   plt.savefig(figure_name, bbox_inches='tight')
+   #plt.show()
+   print ("xs_div:", xs_div)
+   return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
+
+
+
+def xs_feed_feed_grid_upper_half(path_to_xs, figure_name, split1, split2):
+   n_sim = 100
+   n_k = 14
+   n_feed = 19
+   xs = np.zeros((n_feed, n_feed, n_k))
+   rms_xs_std = np.zeros_like(xs)
+   chi2 = np.zeros((n_feed, n_feed))
+   noise = np.zeros_like(chi2)
+   n_sum = 0
+   k = np.zeros(n_k)
+   xs_sum = np.zeros(n_k)
+   rms_xs_sum = np.zeros((n_k, n_sim))
+   xs_div = np.zeros(n_k)
+   #fill all the parts from upper half with nan
+   chi2[:] = np.nan
+   xs[:] = np.nan
+   rms_xs_std[:] = np.nan
+   noise[:] = np.nan
+
+   for i in range(n_feed):
+       for j in range(i):
+           #if i != 7 and j != 7:
+              try:
+                  filepath = path_to_xs %(j+1, i+1)
                   with h5py.File(filepath, mode="r") as my_file:
                       xs[i, j] = np.array(my_file['xs'][:])
                       rms_xs_std[i, j] = np.array(my_file['rms_xs_std'][:])
@@ -173,9 +221,10 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
 
 
 
-k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_half.png', ' of 1st dayn split', ' of 2nd dayn split')
+k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_sigma_co7_night_dayn_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_lhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
+k_co7_night_dayn_u, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_uhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
-xs_with_model('xs_mean_dayn_co7_night_half.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
+#xs_with_model('xs_mean_dayn_co7_night_half.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 
 
