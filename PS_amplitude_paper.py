@@ -163,18 +163,21 @@ def xs_feed_feed_grid_upper_half(path_to_xs, figure_name, split1, split2):
    print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
-def xs_with_model(figure_name, k, xs_mean, xs_sigma):
+def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
+   error = (1./xs_sigma_l**2 + 1./xs_sigma_u**2)**(-0.5)
+   diff_mean = (xs_mean_u - xs_mean_l)/2.
+   sum_mean = (xs_mean_u + xs_mean_l)/2.
 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
    
-   ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{data}(k)$', color='purple')
-   
+   ax1.errorbar(k, k * diff_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\frac{\mathrm{xs}_u - \mathrm{xs}_l}{2}$', color='purple')
+    ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\frac{\mathrm{xs}_u + \mathrm{xs}_l}{2}$', color='teal')
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
@@ -221,10 +224,14 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
 
 
 
+
+
 k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_sigma_co7_night_dayn_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_lhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
 k_co7_night_dayn_u, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_uhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
-#xs_with_model('xs_mean_dayn_co7_night_half.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
+
+
+xs_with_model('xs_mean_dayn_co7_night_halfs_null.png', k_co7_night_dayn, xs_mean_co7_night_dayn_l, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_l,xs_sigma_co7_night_dayn_u )
 
 
