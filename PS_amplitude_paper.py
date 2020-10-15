@@ -206,7 +206,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    #ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
    ax2.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
    #ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
-   ax2.set_ylabel(r'$\tilde{C}_{\mathrm{diff}](k) / \sigma_\tilde{C_{\mathrm{diff}}}$')
+   ax2.set_ylabel(r'$\tilde{C}_{\mathrm{diff}](k) / \sigma_\tilde{C}$')
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]')
    ax2.set_ylim(-12, 12)
    ax2.set_xlim(0.03,k[-1]+0.1)
