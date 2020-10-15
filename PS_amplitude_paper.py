@@ -37,7 +37,7 @@ def read_Nils_transfer(filename):
 
 k_Nils, T_Nils = read_Nils_transfer('TF.txt')
 
-def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
+def xs_feed_feed_grid_lower_half(path_to_xs, figure_name, split1, split2):
    n_sim = 100
    n_k = 14
    n_feed = 19
@@ -50,6 +50,17 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    xs_sum = np.zeros(n_k)
    rms_xs_sum = np.zeros((n_k, n_sim))
    xs_div = np.zeros(n_k)
+   #fill all the parts from upper half with nan
+   for i in range(n_feed):
+       for j in range(i):
+          old_i = i
+          old_j = j
+          j = old_i
+          i = old_j
+          xs[i, j] = np.nan
+          rms_xs_std[i, j] = np.nan
+            
+
    for i in range(n_feed):
        for j in range(i):
            #if i != 7 and j != 7:
@@ -151,7 +162,7 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
 
 
 
-k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_half.png', ' of 1st dayn split', ' of 2nd dayn split')
+k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_half.png', ' of 1st dayn split', ' of 2nd dayn split')
 
 
 xs_with_model('xs_mean_dayn_co7_night_half.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
