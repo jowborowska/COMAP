@@ -53,10 +53,24 @@ def xs_feed_feed_grid_lower_half(path_to_xs, figure_name, split1, split2):
    #fill all the parts from upper half with nan
    for i in range(n_feed):
        for j in range(i):
-         
-          xs[j, i] = np.nan
-          rms_xs_std[j, i] = np.nan
-            
+          old_i = i
+          old_j = j
+          i = old_j
+          j = old_i       
+  
+          xs[i, j] = np.nan
+          rms_xs_std[i, j] = np.nan
+          
+          w = np.sum(1 / rms_xs_std[i,j])
+          noise[i,j] = 1 / np.sqrt(w)
+          chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
+
+          chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) 
+          if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
+               xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
+               xs_div += 1 / rms_xs_std[i,j] ** 2
+               n_sum += 1
+          
 
    for i in range(n_feed):
        for j in range(i):
