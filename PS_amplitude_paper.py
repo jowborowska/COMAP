@@ -177,7 +177,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax1 = fig.add_subplot(211)
    
    ax1.errorbar(k, k * diff_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\frac{\mathrm{xs}_u - \mathrm{xs}_l}{2}$', color='purple')
-    ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\frac{\mathrm{xs}_u + \mathrm{xs}_l}{2}$', color='teal')
+   ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\frac{\mathrm{xs}_u + \mathrm{xs}_l}{2}$', color='teal')
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
