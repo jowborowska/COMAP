@@ -190,7 +190,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax1.set_xscale('log')
    ax1.grid()
    plt.legend(bbox_to_anchor=(0, 0.61))
-  
+   ax1.legend()
    ax2 = fig.add_subplot(212)
    ax2.errorbar(k, xs_mean_u / xs_sigma_u, xs_sigma_u /xs_sigma_u, fmt='o', label=r'$\tilde{C}_{ upper data}(k)$')
    ax2.errorbar(k, xs_mean_l / xs_sigma_l, xs_sigma_l /xs_sigma_l, fmt='o', label=r'$\tilde{C}_{ lower data}(k)$')
@@ -203,9 +203,9 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax2.set_xlim(0.03,k[-1]+0.1)
    ax2.set_xscale('log')
    ax2.grid()
-   
+   ax2.legend(ncol=4)
    plt.tight_layout()
-   plt.legend()
+   #plt.legend()
    plt.savefig(figure_name, bbox_inches='tight')
    #plt.show()
 
