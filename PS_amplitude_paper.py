@@ -51,7 +51,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    rms_xs_sum = np.zeros((n_k, n_sim))
    xs_div = np.zeros(n_k)
    for i in range(n_feed):
-       for j in range(i-1):
+       for j in range(i):
            #if i != 7 and j != 7:
               try:
                   filepath = path_to_xs %(i+1, j+1)
