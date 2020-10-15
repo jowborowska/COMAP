@@ -53,12 +53,9 @@ def xs_feed_feed_grid_lower_half(path_to_xs, figure_name, split1, split2):
    #fill all the parts from upper half with nan
    for i in range(n_feed):
        for j in range(i):
-          old_i = i
-          old_j = j
-          j = old_i
-          i = old_j
-          xs[i, j] = np.nan
-          rms_xs_std[i, j] = np.nan
+         
+          xs[j, i] = np.nan
+          rms_xs_std[j, i] = np.nan
             
 
    for i in range(n_feed):
