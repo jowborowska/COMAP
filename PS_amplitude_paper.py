@@ -168,11 +168,11 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
-   lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
+   
    error = (1./xs_sigma_l**2 + 1./xs_sigma_u**2)**(-0.5)
    diff_mean = (xs_mean_u - xs_mean_l)/2.
    sum_mean = (xs_mean_u + xs_mean_l)/2.
-
+   lim = np.mean(np.abs(sum_mean[4:-2] * k[4:-2])) * 8
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
    
@@ -190,16 +190,17 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax1.set_xscale('log')
    ax1.grid()
    plt.legend(bbox_to_anchor=(0, 0.61))
-
+   '''
    ax2 = fig.add_subplot(212)
-   ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma / xs_sigma, fmt='o', label=r'$\tilde{C}_{data}(k)$')
-   ax2.plot(k, 0 * xs_mean, 'k', alpha=0.4)
+   ax2.errorbar(k, xs_mean_l / xs_sigma_l, xs_sigma_l /xs_sigma_l fmt='o', label=r'$\tilde{C}_{data}(k)$')
+   ax2.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
    ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]')
    ax2.set_ylim(-12, 12)
    ax2.set_xlim(0.03,k[-1]+0.1)
    ax2.set_xscale('log')
    ax2.grid()
+   '''
    plt.tight_layout()
    plt.legend()
    plt.savefig(figure_name, bbox_inches='tight')
