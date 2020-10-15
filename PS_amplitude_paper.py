@@ -237,13 +237,36 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
 
 
 
-
+'''
 k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_sigma_co7_night_dayn_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_lhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
 k_co7_night_dayn_u, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_uhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
-
-
 xs_with_model('xs_mean_dayn_co7_night_halfs_null.png', k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_l,xs_sigma_co7_night_dayn_u )
+'''
+
+
+k_co7_night_half_l, xs_mean_co7_night_half_l, xs_sigma_co7_night_half_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_half_feed%01i_and_co7_map_complete_night_2nd_half_feed%01i.h5', 'xs_grid_half_lhalf.png', ' of 1st half split', ' of 2nd half split')
+
+k_co7_night_half_u, xs_mean_co7_night_half_u, xs_sigma_co7_night_half_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_half_feed%01i_and_co7_map_complete_night_2nd_half_feed%01i.h5', 'xs_grid_half_uhalf.png', ' of 1st half split', ' of 2nd half split')
+
+xs_with_model('xs_mean_half_co7_night_halfs_null.png', k_co7_night_half_l, xs_mean_co7_night_half_l, xs_mean_co7_night_half_u, xs_sigma_co7_night_half_l,xs_sigma_co7_night_half_u )
+
+
+k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_sigma_co7_night_sidr_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_sidr_feed%01i_and_co7_map_complete_night_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_lhalf.png', ' of 1st sidr split', ' of 2nd sidr split')
+
+k_co7_night_sidr_u, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_sidr_feed%01i_and_co7_map_complete_night_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_uhalf.png', ' of 1st sidr split', ' of 2nd sidr split')
+
+xs_with_model('xs_mean_sidr_co7_night_halfs_null.png', k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_l,xs_sigma_co7_night_sidr_u )
+
+
+
+
+
+
+
+
+
+
 
 
