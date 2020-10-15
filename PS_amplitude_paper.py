@@ -203,7 +203,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax1.legend()
    ax2 = fig.add_subplot(212)
    ax2.errorbar(k, diff_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='darkturquoise')
-   ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='plum')
+   ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
    ax2.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
    ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]')
