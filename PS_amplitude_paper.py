@@ -126,25 +126,25 @@ def xs_feed_feed_grid_upper_half(path_to_xs, figure_name, split1, split2):
               try:
                   filepath = path_to_xs %(j+1, i+1)
                   with h5py.File(filepath, mode="r") as my_file:
-                      xs[i, j] = np.array(my_file['xs'][:])
-                      rms_xs_std[i, j] = np.array(my_file['rms_xs_std'][:])
+                      xs[j, i] = np.array(my_file['xs'][:])
+                      rms_xs_std[j, i] = np.array(my_file['rms_xs_std'][:])
                       k[:] = np.array(my_file['k'][:])
               except:
-                  xs[i, j] = np.nan
-                  rms_xs_std[i, j] = np.nan
+                  xs[j, i] = np.nan
+                  rms_xs_std[j, i] = np.nan
             
-              w = np.sum(1 / rms_xs_std[i,j])
-              noise[i,j] = 1 / np.sqrt(w)
-              chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
+              w = np.sum(1 / rms_xs_std[j,i])
+              noise[j,i] = 1 / np.sqrt(w)
+              chi3 = np.sum((xs[j,i] / rms_xs_std[j,i]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
 
-              chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
-              print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
+              chi2[j, i] = np.sign(chi3) * abs((np.sum((xs[j,i] / rms_xs_std[j,i]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
+              print ("chi2: ", chi2[j, i]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
               #if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
-              if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
-                  xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
+              if abs(chi2[j,i]) < 5. and not np.isnan(chi2[j,i]) and j != i:
+                  xs_sum += xs[j,i] / rms_xs_std[j,i] ** 2
                   print ("if test worked")
-                  xs_div += 1 / rms_xs_std[i,j] ** 2
+                  xs_div += 1 / rms_xs_std[j,i] ** 2
                   n_sum += 1
 
 
