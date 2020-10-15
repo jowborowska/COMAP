@@ -175,7 +175,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    lim = np.mean(np.abs(sum_mean[4:-2] * k[4:-2])) * 8
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
-   ax1.errorbar(k, k * diff_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{diff}(k)$', color='teal')
+   ax1.errorbar(k, k * diff_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{diff}(k)$', color='black')
    '''
    error_scaled = k * error / (transfer(k)*transfer_Nils(k))   
    
@@ -187,23 +187,23 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax1.fill_between(x=k, y1=k * sum_mean / (transfer(k)*transfer_Nils(k)) - error_scaled, y2=k * sum_mean / (transfer(k)*transfer_Nils(k)) + error_scaled, facecolor='plum', edgecolor='plum')
    '''
    
-   ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{sum}(k)$', color='purple')
+   #ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{sum}(k)$', color='purple')
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
    #ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
-   ax1.plot(k_th, k_th * ps_th_nobeam * 10, '--', label=r'$10 \times kP_{Theory}(k)$', color='dodgerblue')
+   #ax1.plot(k_th, k_th * ps_th_nobeam * 10, '--', label=r'$10 \times kP_{Theory}(k)$', color='dodgerblue')
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
-   ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
+   ax1.set_ylabel(r'$k\tilde{C_{\mathrm{diff}}}(k)$ [$\mu$K${}^2$ Mpc${}^2$]')
    ax1.set_ylim(-lim*2.5, lim*2.5)              # ax1.set_ylim(0, 0.1)
    ax1.set_xlim(0.03,k[-1]+0.1)
    ax1.set_xscale('log')
    ax1.grid()
    plt.legend(bbox_to_anchor=(0, 0.61))
-   ax1.legend()
+   #ax1.legend()
    ax2 = fig.add_subplot(212)
-   ax2.errorbar(k, diff_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='darkturquoise')
-   ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
+   ax2.errorbar(k, diff_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
+   #ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
    ax2.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
    ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]')
@@ -211,7 +211,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax2.set_xlim(0.03,k[-1]+0.1)
    ax2.set_xscale('log')
    ax2.grid()
-   ax2.legend(ncol=4)
+   #ax2.legend(ncol=4)
    plt.tight_layout()
    #plt.legend()
    plt.savefig(figure_name, bbox_inches='tight')
@@ -237,14 +237,14 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
 
 
 
-'''
+
 k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_sigma_co7_night_dayn_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_lhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
 k_co7_night_dayn_u, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_uhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
-xs_with_model('xs_mean_dayn_co7_night_halfs_null.png', k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_l,xs_sigma_co7_night_dayn_u )
-'''
+xs_with_model('xs_mean_dayn_co7_night_halfs_paper.png', k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_l,xs_sigma_co7_night_dayn_u )
 
+'''
 
 k_co7_night_half_l, xs_mean_co7_night_half_l, xs_sigma_co7_night_half_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_half_feed%01i_and_co7_map_complete_night_2nd_half_feed%01i.h5', 'xs_grid_half_lhalf.png', ' of 1st half split', ' of 2nd half split')
 
@@ -260,7 +260,7 @@ k_co7_night_sidr_u, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_u = xs_fee
 xs_with_model('xs_mean_sidr_co7_night_halfs_null.png', k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_l,xs_sigma_co7_night_sidr_u )
 
 
-
+'''
 
 
 
