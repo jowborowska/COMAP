@@ -244,7 +244,7 @@ k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_sigma_co7_night_dayn_l = xs_fee
 
 k_co7_night_dayn_u, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_uhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
-xs_with_model('xs_mean_dayn_co7_night_halfs_paper.png', k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_l,xs_sigma_co7_night_dayn_u )
+xs_with_model('xs_mean_dayn_co7_night_halfs_paper.pdf', k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_l,xs_sigma_co7_night_dayn_u )
 
 '''
 
