@@ -169,7 +169,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
    
-   error = (xs_sigma_l**2 + xs_sigma_u**2)**(0.5)
+   error = ((xs_sigma_l**2 + xs_sigma_u**2)**(0.5))*0.5
    diff_mean = (xs_mean_u - xs_mean_l)/2.
    sum_mean = (xs_mean_u + xs_mean_l)/2.
    lim = np.mean(np.abs(sum_mean[4:-2] * k[4:-2])) * 8
