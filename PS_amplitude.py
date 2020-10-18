@@ -121,7 +121,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
    ax1.set_xlim(0.03,k[-1]+0.1)
    ax1.set_xscale('log')
    ax1.grid()
-   plt.legend(bbox_to_anchor=(0, 0.61), ncol=3, fontsize=13)
+   plt.legend(ncol=3, fontsize=13)
 
    ax2 = fig.add_subplot(212)
    ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma / xs_sigma, fmt='o',color='purple')
@@ -175,13 +175,14 @@ def calculate_PS_amplitude_better(k, xs_mean, xs_sigma):
 k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_night.png', ' of 1st dayn split', ' of 2nd dayn split')
 PS_estimate_1, PS_error_1 = calculate_PS_amplitude(k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 PS_estimate_2, PS_error_2 = calculate_PS_amplitude_better(k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
-print (PS_estimate_1, PS_error_1)
-print ('PS2', PS_estimate_2, PS_error_2)
+print (PS_estimate_1, PS_error_1) #14622.089136473009 12593.846308010017
+print ('PS2', PS_estimate_2, PS_error_2) #PS2 4.061535273875437 5.053176958684818
+
 PS_estimate_arr = np.zeros(14) + PS_estimate_1
 PS_error_arr = np.zeros(14) + PS_error_1
 PS_estimate_arr2 = np.zeros(14) + PS_estimate_2
 PS_error_arr2 = np.zeros(14) + PS_error_2
-xs_with_model('xs_mean_dayn_co7_night_wbetterestimate.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn, PS_estimate_arr2, PS_error_arr2, better=True)
-xs_with_model('xs_mean_dayn_co7_night_westimate.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn, PS_estimate_arr, PS_error_arr, better=False)
+xs_with_model('xs_mean_dayn_co7_night_wbetterestimate.pdf', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn, PS_estimate_arr2, PS_error_arr2, better=True)
+xs_with_model('xs_mean_dayn_co7_night_westimate.pdf', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn, PS_estimate_arr, PS_error_arr, better=False)
 
 
