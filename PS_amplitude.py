@@ -121,7 +121,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
    ax1.set_xlim(0.03,k[-1]+0.1)
    ax1.set_xscale('log')
    ax1.grid()
-   plt.legend(ncol=3, fontsize=13)
+   plt.legend(ncol=3, fontsize=11)
 
    ax2 = fig.add_subplot(212)
    ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma / xs_sigma, fmt='o',color='purple')
@@ -133,7 +133,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
    ax2.set_xscale('log')
    ax2.grid()
    plt.tight_layout()
-   plt.legend(ncol=2, fontsize=13)
+   
    plt.savefig(figure_name, bbox_inches='tight')
    #plt.show()
 
