@@ -200,22 +200,22 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax1.set_xscale('log')
    ax1.grid()
    #plt.legend(bbox_to_anchor=(0, 0.61))
-   #ax1.legend()
+   ax1.legend(ncol=2)
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
    ax2.errorbar(k, diff_mean / error, error/error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='lightseagreen')
    ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
    ax2.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
    #ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
-   ax2.set_ylabel(r'$\tilde{C}_{\mathrm{diff}}(k) / \sigma_\tilde{C}$', fontsize=13)
+   ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$', fontsize=13)
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=13)
    ax2.set_ylim(-5, 5)
    ax2.set_xlim(0.03,k[-1]+0.1)
    ax2.set_xscale('log')
    ax2.grid()
-   ax2.legend(ncol=4)
+   ax2.legend(ncol=2)
    plt.tight_layout()
-   plt.legend()
+   plt.legend(ncol=2)
    plt.savefig(figure_name, bbox_inches='tight')
    #plt.show()
 
@@ -252,14 +252,14 @@ k_co7_night_half_l, xs_mean_co7_night_half_l, xs_sigma_co7_night_half_l = xs_fee
 
 k_co7_night_half_u, xs_mean_co7_night_half_u, xs_sigma_co7_night_half_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_half_feed%01i_and_co7_map_complete_night_2nd_half_feed%01i.h5', 'xs_grid_half_uhalf.png', ' of 1st half split', ' of 2nd half split')
 
-xs_with_model('xs_mean_half_co7_night_halfs_null.png', k_co7_night_half_l, xs_mean_co7_night_half_l, xs_mean_co7_night_half_u, xs_sigma_co7_night_half_l,xs_sigma_co7_night_half_u )
+xs_with_model('xs_mean_half_co7_night_halfs_null.pdf', k_co7_night_half_l, xs_mean_co7_night_half_l, xs_mean_co7_night_half_u, xs_sigma_co7_night_half_l,xs_sigma_co7_night_half_u )
 
 
 k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_sigma_co7_night_sidr_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_sidr_feed%01i_and_co7_map_complete_night_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_lhalf.png', ' of 1st sidr split', ' of 2nd sidr split')
 
 k_co7_night_sidr_u, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_sidr_feed%01i_and_co7_map_complete_night_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_uhalf.png', ' of 1st sidr split', ' of 2nd sidr split')
 
-xs_with_model('xs_mean_sidr_co7_night_halfs_null.png', k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_l,xs_sigma_co7_night_sidr_u )
+xs_with_model('xs_mean_sidr_co7_night_halfs_null.pdf', k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_l,xs_sigma_co7_night_sidr_u )
 
 
 
