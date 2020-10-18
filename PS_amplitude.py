@@ -103,10 +103,10 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
    if better == False:
-      ax1.plot(k, k*PS_estimate, label=r'$kA_1$', color='teal')
+      ax1.plot(k, k*PS_estimate, label=r'$A_1k$', color='teal')
       ax1.fill_between(x=k, y1=k*PS_estimate-k*PS_error, y2=k*PS_estimate+k*PS_error, facecolor='paleturquoise', edgecolor='paleturquoise')
    if better == True:
-      ax1.plot(k, k*PS_estimate*P_theory(k), label=r'$A_2\times kP_{theory}(k)$', color='teal')
+      ax1.plot(k, k*PS_estimate*P_theory(k), label=r'$A_2kP_{theory}(k)$', color='teal')
       ax1.fill_between(x=k, y1=k*PS_estimate*P_theory(k)-k*PS_error*P_theory(k), y2=k*PS_estimate*P_theory(k)+k*PS_error*P_theory(k), facecolor='paleturquoise', edgecolor='paleturquoise')
    ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{data}(k)$', color='purple')
    
@@ -114,14 +114,14 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
    #ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
-   ax1.plot(k_th, k_th * ps_th_nobeam * 10, '--', label=r'$10 \times kP_{Theory}(k)$', color='navy')
+   ax1.plot(k_th, k_th * ps_th_nobeam * 10, '--', label=r'$10 kP_{Theory}(k)$', color='navy')
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]', fontsize=13)
    ax1.set_ylim(-lim*2.5, lim*2.5)              # ax1.set_ylim(0, 0.1)
    ax1.set_xlim(0.03,k[-1]+0.1)
    ax1.set_xscale('log')
    ax1.grid()
-   plt.legend(ncol=3, fontsize=11)
+   plt.legend(ncol=3, fontsize=10)
 
    ax2 = fig.add_subplot(212)
    ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma / xs_sigma, fmt='o',color='purple')
