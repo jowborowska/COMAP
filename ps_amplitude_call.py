@@ -202,7 +202,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    ax1.set_xscale('log')
    ax1.grid()
    #plt.legend(bbox_to_anchor=(0, 0.61))
-   ax1.legend(ncol=4, fontsize=13)
+   ax1.legend(ncol=4)
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
    ax2.errorbar(k, diff_mean / error, error/error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='lightseagreen')
@@ -219,9 +219,9 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    ax2.set_xlim(0.03,k[-1]+0.1)
    ax2.set_xscale('log')
    ax2.grid()
-   ax2.legend(ncol=4, fontsize=13)
+   ax2.legend(ncol=4)
    plt.tight_layout()
-   plt.legend(ncol=4, fontsize=13)
+   plt.legend(ncol=4)
    plt.savefig(figure_name, bbox_inches='tight')
    #plt.show()
 
@@ -250,7 +250,7 @@ k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_sigma_co7_night_dayn_l = xs_fee
 
 k_co7_night_dayn_u, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_uhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
 
-xs_with_model('xs_mean_dayn_co7_night_halfs_uplow.pdf', k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_l,xs_sigma_co7_night_dayn_u, 'Daytime-Nighttime data split')
+xs_with_model('xs_mean_dayn_co7_night_halfs_uplow.png', k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_mean_co7_night_dayn_u, xs_sigma_co7_night_dayn_l,xs_sigma_co7_night_dayn_u, 'Daytime-Nighttime data split')
 
 '''
 
