@@ -215,6 +215,33 @@ def xs_mean_autoPS(filename):
    xs_sigma_auto = 1. / np.sqrt(xs_div)
    return k, xs_mean_auto, xs_sigma_auto
 
+
+
+
+'''
+#The task for now:
+maps/co2_map_complete_night_ces.h5
+python my_script.py /mn/stornext/d16/cmbco/comap/protodir/maps/co2_map_complete_night_ces.h5 all dayn
+
+
+maps/co2_map_complete_night_liss.h5
+python my_script.py /mn/stornext/d16/cmbco/comap/protodir/maps/co2_map_complete_night_liss.h5 all dayn
+
+
+maps/co6_map_complete_night_ces.h5
+
+maps/co6_map_complete_night_liss.h5
+
+calculate the feed-feed cross-spectra for all of these maps (start with using the dayn-split, but do all of them eventually)
+'''
+k_co2_night_ces_dayn, xs_mean_co2_night_ces_dayn, xs_sigma_co2_night_ces_dayn = xs_feed_feed_grid('spectra/xs_co2_map_complete_night_ces_1st_dayn_feed%01i_and_co2_map_complete_night_ces_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co2_night_ces.png', ' of 1st dayn split', ' of 2nd dayn split')
+xs_with_model('xs_mean_dayn_co2_night_ces.png',k_co2_night_ces_dayn, xs_mean_co2_night_ces_dayn, xs_sigma_co2_night_ces_dayn)
+
+k_co2_night_liss_dayn, xs_mean_co2_night_liss_dayn, xs_sigma_co2_night_liss_dayn = xs_feed_feed_grid('spectra/xs_co2_map_complete_night_liss_1st_dayn_feed%01i_and_co2_map_complete_night_liss_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co2_night_liss.png', ' of 1st dayn split', ' of 2nd dayn split')
+xs_with_model('xs_mean_dayn_co2_night_liss.png',k_co2_night_liss_dayn, xs_mean_co2_night_liss_dayn, xs_sigma_co2_night_liss_dayn)
+
+
+'''
 k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_night.png', ' of 1st dayn split', ' of 2nd dayn split')
 xs_with_model('xs_mean_dayn_co7_night.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 
@@ -228,7 +255,6 @@ k_co74, xs_mean_co74, xs_sigma_co74 = xs_feed_feed_grid('spectra/xs_co7_map_comp
 xs_with_model('xs_mean_half_co7_wday.png', k_co74, xs_mean_co74, xs_sigma_co74)
 
 
-'''
 k_auto, xs_mean_auto, xs_sigma_auto = xs_mean_autoPS('spectra/xs_1octd_1test_2splits_coadded_and_1octd_1test_2splits_coadded.h5')
 
 date = '1octd'
