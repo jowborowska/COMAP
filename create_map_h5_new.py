@@ -258,7 +258,7 @@ if n < 2:
     sys.exit(1)
 
 
-date = '1octd'
+date = '20oct'
 N = int(sys.argv[1]) #number of maps
 if int(sys.argv[2]) != 0: #create maps with jk splits
    n_splits_max = int(sys.argv[2]) 
