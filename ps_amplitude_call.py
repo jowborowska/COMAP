@@ -259,7 +259,7 @@ k_co7_night_half_l, xs_mean_co7_night_half_l, xs_sigma_co7_night_half_l = xs_fee
 k_co7_night_half_u, xs_mean_co7_night_half_u, xs_sigma_co7_night_half_u = xs_feed_feed_grid_upper_half('spectra/xs_co7_map_complete_night_1st_half_feed%01i_and_co7_map_complete_night_2nd_half_feed%01i.h5', 'xs_grid_half_uhalf.png', ' of 1st half split', ' of 2nd half split')
 
 xs_with_model('xs_mean_half_co7_night_halfs_null.pdf', k_co7_night_half_l, xs_mean_co7_night_half_l, xs_mean_co7_night_half_u, xs_sigma_co7_night_half_l,xs_sigma_co7_night_half_u, 'Half mission split' )
-'''
+
 
 k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_sigma_co7_night_sidr_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_sidr_feed%01i_and_co7_map_complete_night_2nd_sidr_feed%01i.h5', 'xs_grid_sidr_lhalf.png', ' of 1st sidr split', ' of 2nd sidr split')
 
@@ -267,14 +267,28 @@ k_co7_night_sidr_u, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_u = xs_fee
 
 xs_with_model('xs_mean_sidr_co7_night_halfs_null.pdf', k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_l,xs_sigma_co7_night_sidr_u, 'Sidereal time split' )
 
+'''
 
 
 
+k_sim_l, xs_mean_sim_l, xs_sigma_sim_l = xs_feed_feed_grid_lower_half('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test_l.png', ' of 1st sim split', ' of 2nd sim split')
+
+k_sim_u, xs_mean_sim_u, xs_sigma_sim_u = xs_feed_feed_grid_upper_half('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test_u.png', ' of 1st sim split', ' of 2nd sim split')
+
+xs_with_model('xs_mean_sim_null.png', k_sim_l, xs_mean_sim_l, xs_mean_sim_u, xs_sigma_sim_l, xs_sigma_sim_u, 'Simulated split')
 
 
+def call_all(mapname, split):
+   xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +' _feed%01i.h5'
+   kl, xs_mean_l, xs_sigma_l = xs_feed_feed_grid_lower_half(xs_files, 'xs_grid' +mapname + '_lower.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split')
+   ku, xs_mean_u, xs_sigma_u = xs_feed_feed_grid_upper_half(xs_files, 'xs_grid' +mapname + '_upper.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split')
+   xs_with_model('xs_mean' + mapname + '_null.png', kl, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, split + 'split')
+   print ("Created files:")
+   print('xs_grid' +mapname + '_lower.png')
+   print('xs_grid' +mapname + '_upper.png')
+   print('xs_mean' + mapname + '_null.png')
 
-
-
+call_all('20oct_1test_2splits', 'sim')
 
 
 
