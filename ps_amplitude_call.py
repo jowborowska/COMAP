@@ -173,8 +173,8 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    error = ((xs_sigma_l**2 + xs_sigma_u**2)**(0.5))*0.5
    diff_mean = (xs_mean_u - xs_mean_l)/2.
    sum_mean = (xs_mean_u + xs_mean_l)/2.
-   print (diff_mean, sum_mean)
-   #lim = np.mean(np.abs(sum_mean[4:-2] * k[4:-2])) * 8
+   print ("diff and sum: ", diff_mean, sum_mean)
+   lim = np.mean(np.abs(sum_mean[4:-2] * k[4:-2])) * 8
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * diff_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{diff}(k)$', color='teal')
@@ -199,7 +199,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    #ax1.plot(k_th, k_th * ps_th_nobeam * 10, '--', label=r'$10 \times kP_{Theory}(k)$', color='dodgerblue')
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]', fontsize=13)
-   #ax1.set_ylim(-lim*4, lim*4)              # ax1.set_ylim(0, 0.1)
+   ax1.set_ylim(-lim*4, lim*4)              # ax1.set_ylim(0, 0.1)
    ax1.set_xlim(0.03,k[-1]+0.1)
    ax1.set_xscale('log')
    ax1.grid()
