@@ -287,8 +287,8 @@ def call_all(mapname, split):
    print('xs_grid' +mapname + '_lower.png')
    print('xs_grid' +mapname + '_upper.png')
    print('xs_mean' + mapname + '_null.png')
-
+'''
 call_all('20oct_1test_2splits', 'sim')
-
+'''
 
 
