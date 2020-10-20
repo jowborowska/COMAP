@@ -245,7 +245,69 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    return PS_estimate, PS_error
 
 
+def xs_feed_feed_grid_new(path_to_xs, figure_name, split1, split2, bigger_smaller):
+   n_sim = 100
+   n_k = 14
+   n_feed = 19
+   xs = np.zeros((n_feed, n_feed, n_k))
+   rms_xs_std = np.zeros_like(xs)
+   chi2 = np.zeros((n_feed, n_feed))
+   noise = np.zeros_like(chi2)
+   n_sum = 0
+   k = np.zeros(n_k)
+   xs_sum = np.zeros(n_k)
+   rms_xs_sum = np.zeros((n_k, n_sim))
+   xs_div = np.zeros(n_k)
+   for i in range(n_feed):
+       for j in range(n_feed):
+           #if i != 7 and j != 7:
+              try:
+                  filepath = path_to_xs %(i+1, j+1)
+                  with h5py.File(filepath, mode="r") as my_file:
+                      xs[i, j] = np.array(my_file['xs'][:])
+                      rms_xs_std[i, j] = np.array(my_file['rms_xs_std'][:])
+                      k[:] = np.array(my_file['k'][:])
+              except:
+                  xs[i, j] = np.nan
+                  rms_xs_std[i, j] = np.nan
+            
+              w = np.sum(1 / rms_xs_std[i,j])
+              noise[i,j] = 1 / np.sqrt(w)
+              chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
 
+              chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
+              print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
+              #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal      
+              if bigger_smaller == True:
+                 if i > j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
+                    xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
+                    print ("if test worked")
+                    xs_div += 1 / rms_xs_std[i,j] ** 2
+                    n_sum += 1
+
+              if bigger_smaller == False:
+                 if i < j and not np.isnan(chi2[i,j]):
+              #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and j>i:#i != j:
+                    xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
+                    print ("if test worked")
+                    xs_div += 1 / rms_xs_std[i,j] ** 2
+                    n_sum += 1
+
+
+   plt.figure()
+   vmax = 15
+   plt.imshow(chi2, interpolation='none', vmin=-vmax, vmax=vmax, extent=(0.5, n_feed + 0.5, n_feed + 0.5, 0.5))
+   new_tick_locations = np.array(range(n_feed)) + 1
+   plt.xticks(new_tick_locations)
+   plt.yticks(new_tick_locations)
+   plt.xlabel('Feed' + split1)
+   plt.ylabel('Feed' + split2)
+   cbar = plt.colorbar()
+   cbar.set_label(r'$|\chi^2| \times$ sign($\chi^3$)')
+   plt.savefig(figure_name, bbox_inches='tight')
+   #plt.show()
+   print ("xs_div:", xs_div)
+   return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
 '''
 k_co7_night_dayn_l, xs_mean_co7_night_dayn_l, xs_sigma_co7_night_dayn_l = xs_feed_feed_grid_lower_half('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_lhalf.png', ' of 1st dayn split', ' of 2nd dayn split')
@@ -272,12 +334,15 @@ xs_with_model('xs_mean_sidr_co7_night_halfs_null.pdf', k_co7_night_sidr_l, xs_me
 '''
 
 
+k_sim1, xs_mean_sim1, xs_sigma_sim1 = xs_feed_feed_grid_new('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test.png', ' of 1st sim split', ' of 2nd sim split', True)
+k_sim2, xs_mean_sim2, xs_sigma_sim2 = xs_feed_feed_grid_new('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test.png', ' of 1st sim split', ' of 2nd sim split', False)
 
+'''
 k_sim_l, xs_mean_sim_l, xs_sigma_sim_l = xs_feed_feed_grid_lower_half('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test_l.png', ' of 1st sim split', ' of 2nd sim split')
 
-k_sim_u, xs_mean_sim_u, xs_sigma_sim_u = xs_feed_feed_grid_upper_half('spectra/xs_20oct_1test_2splits_2nd_sim_feed%01i_and_20oct_1test_2splits_1st_sim_feed%01i.h5', 'xs_grid_test_u.png', ' of 1st sim split', ' of 2nd sim split')
-
-xs_with_model('xs_mean_sim_null.png', k_sim_l, xs_mean_sim_l, xs_mean_sim_u, xs_sigma_sim_l, xs_sigma_sim_u, 'Simulated split')
+k_sim_u, xs_mean_sim_u, xs_sigma_sim_u = xs_feed_feed_grid_upper_half('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test_u.png', ' of 1st sim split', ' of 2nd sim split')
+'''
+xs_with_model('xs_mean_sim_null.png', k_sim1, xs_mean_sim1, xs_mean_sim2, xs_sigma_sim2, xs_sigma_sim2, 'Simulated split')
 
 
 def call_all(mapname, split):
