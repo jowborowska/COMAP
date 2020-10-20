@@ -37,14 +37,14 @@ class CrossSpectrum_nmaps():
               else:
                  self.names.append(name + self.feed_name1)
                  self.names.append(name + self.feed_name2)
-           if jk != False and jk != 'sim':
+           if jk != False: #and jk != 'sim':
               if feed1 == None and feed2 == None:
                  self.names.append(name + '_1st_' + jk + self.feed_name)
                  self.names.append(name + '_2nd_'+ jk + self.feed_name)
               else:
                  self.names.append(name + '_1st_' + jk + self.feed_name1)
                  self.names.append(name + '_2nd_' + jk + self.feed_name2)
-           if jk != False and jk == 'sim':
+           if jk != False: #and jk == 'sim':
               for g in range(n_of_splits):
                  map_split_number = g + 1
                  map_split_name ='split%01i_' %(map_split_number) + name
