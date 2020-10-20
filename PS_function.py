@@ -7,7 +7,7 @@ def PS_f(k_array):
    PS_array = np.zeros(len(k_array))
    for i in range(len(k_array)):
       if k_array[i] != 0.: 
-          PS_array[i] = k_array[i]**(-3.)
+          PS_array[i] = 2.*k_array[i]**(-3.)
       else:
          PS_array[i] = 0.
    PS_array = np.reshape(PS_array,shape)
