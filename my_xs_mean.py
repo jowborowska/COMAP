@@ -55,7 +55,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
               print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
-              if i < j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
+              if i > j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and j>i:#i != j:
                   xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
                   print ("if test worked")
@@ -240,7 +240,7 @@ calculate the feed-feed cross-spectra for all of these maps (start with using th
 
 '''
 k_sim, xs_mean_sim, xs_sigma_sim = xs_feed_feed_grid('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test.png', ' of 1st sim split', ' of 2nd sim split')
-xs_with_model('xs_mean_sim_null_1half.png', k_sim, xs_mean_sim, xs_sigma_sim)
+xs_with_model('xs_mean_sim_null_2half.png', k_sim, xs_mean_sim, xs_sigma_sim)
 
 
 
