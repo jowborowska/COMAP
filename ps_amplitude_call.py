@@ -275,7 +275,7 @@ xs_with_model('xs_mean_sidr_co7_night_halfs_null.pdf', k_co7_night_sidr_l, xs_me
 
 k_sim_l, xs_mean_sim_l, xs_sigma_sim_l = xs_feed_feed_grid_lower_half('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test_l.png', ' of 1st sim split', ' of 2nd sim split')
 
-k_sim_u, xs_mean_sim_u, xs_sigma_sim_u = xs_feed_feed_grid_upper_half('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test_u.png', ' of 1st sim split', ' of 2nd sim split')
+k_sim_u, xs_mean_sim_u, xs_sigma_sim_u = xs_feed_feed_grid_upper_half('spectra/xs_20oct_1test_2splits_2nd_sim_feed%01i_and_20oct_1test_2splits_1st_sim_feed%01i.h5', 'xs_grid_test_u.png', ' of 1st sim split', ' of 2nd sim split')
 
 xs_with_model('xs_mean_sim_null.png', k_sim_l, xs_mean_sim_l, xs_mean_sim_u, xs_sigma_sim_l, xs_sigma_sim_u, 'Simulated split')
 
