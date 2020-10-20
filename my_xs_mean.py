@@ -56,7 +56,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
               #if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
-              if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and j<i:#i != j:
+              if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and j>i:#i != j:
                   xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
                   print ("if test worked")
                   xs_div += 1 / rms_xs_std[i,j] ** 2
@@ -252,8 +252,8 @@ k_co6_night_liss_dayn, xs_mean_co6_night_liss_dayn, xs_sigma_co6_night_liss_dayn
 xs_with_model('xs_mean_dayn_co6_night_liss.png',k_co6_night_liss_dayn, xs_mean_co6_night_liss_dayn, xs_sigma_co6_night_liss_dayn)
 
 '''
-k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_night.png', ' of 1st dayn split', ' of 2nd dayn split')
-xs_with_model('xs_mean_dayn_co7_night.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
+k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_night2.png', ' of 1st dayn split', ' of 2nd dayn split')
+xs_with_model('xs_mean_dayn_co7_night2.png', k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn)
 '''
 k_co72, xs_mean_co72, xs_sigma_co72 = xs_feed_feed_grid('spectra/xs_co7_map_complete_wday_1st_dayn_feed%01i_and_co7_map_complete_wday_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_wday.png', ' of 1st dayn split', ' of 2nd dayn split')
 xs_with_model('xs_mean_dayn_co7_wday.png', k_co72, xs_mean_co72, xs_sigma_co72)
