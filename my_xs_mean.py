@@ -193,7 +193,7 @@ def xs_mean_from_splits(figure_name, k, xs_mean, xs_sigma):
    ax2.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]')
-   ax2.set_ylim(-12, 12)
+   ax2.set_ylim(-6, 6)
    ax2.set_xscale('log')
    ax2.grid()
    plt.tight_layout()
