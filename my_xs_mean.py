@@ -55,8 +55,8 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
               print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
-              if i > j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
-              #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and j>i:#i != j:
+              #if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
+              if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
                   xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
                   print ("if test worked")
                   xs_div += 1 / rms_xs_std[i,j] ** 2
@@ -238,11 +238,20 @@ python my_script.py /mn/stornext/d16/cmbco/comap/protodir/maps/co6_map_complete_
 
 calculate the feed-feed cross-spectra for all of these maps (start with using the dayn-split, but do all of them eventually)
 
-'''
+
 k_sim, xs_mean_sim, xs_sigma_sim = xs_feed_feed_grid('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test.png', ' of 1st sim split', ' of 2nd sim split')
-xs_with_model('xs_mean_sim_null_2half.png', k_sim, xs_mean_sim, xs_sigma_sim)
+xs_with_model('xs_mean_sim_null_1half.png', k_sim, xs_mean_sim, xs_sigma_sim)
+'''
+def call_all(mapname, split):
+   xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +' _feed%01i.h5'
+   k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' +mapname + '.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split')
+   xs_with_model('xs_mean' + mapname + '_.png', k, xs_mean, xs_sigma)
+   print ("Created files:")
+   print('xs_grid_' +mapname + '.png')
+   print('xs_mean' + mapname + '_.png')
 
-
+call_all('co7_night_ces_liss_added')
+call_all('co7_night_ces_liss_subtracted')
 
 '''
 k_co2_night_ces_dayn, xs_mean_co2_night_ces_dayn, xs_sigma_co2_night_ces_dayn = xs_feed_feed_grid('spectra/xs_co2_map_complete_night_ces_1st_dayn_feed%01i_and_co2_map_complete_night_ces_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co2_night_ces.png', ' of 1st dayn split', ' of 2nd dayn split')
