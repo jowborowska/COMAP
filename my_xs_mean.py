@@ -251,7 +251,7 @@ def call_all(mapname, split):
    print('xs_grid_' + mapname + '.png')
    print('xs_mean_' + mapname + '.png')
 
-call_all('co7_night_ces_liss_added', 'dayn')
+#call_all('co7_night_ces_liss_added', 'dayn')
 call_all('co7_night_ces_liss_subtracted', 'dayn')
 
 '''
