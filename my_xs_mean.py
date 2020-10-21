@@ -244,8 +244,10 @@ xs_with_model('xs_mean_sim_null_1half.png', k_sim, xs_mean_sim, xs_sigma_sim)
 '''
 def call_all(mapname, split):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +' _feed%01i.h5'
+   print xs_files
    k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' +mapname + '.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split')
    xs_with_model('xs_mean' + mapname + '_.png', k, xs_mean, xs_sigma)
+   
    print ("Created files:")
    print('xs_grid_' +mapname + '.png')
    print('xs_mean' + mapname + '_.png')
