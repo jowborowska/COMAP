@@ -12,6 +12,7 @@ ces = co7_ces['/jackknives/map_dayn'][0]
 liss = co7_liss['/jackknives/map_dayn'][0]
 
 print ('ces-lis: ')
-print (ces == liss)
+print (np.allclose(ces,liss))
 print ('difference: ')
 print (sum(difference_map))
+print (np.max(np.abs(difference_map)))
