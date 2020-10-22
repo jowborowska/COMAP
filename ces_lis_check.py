@@ -9,8 +9,8 @@ co7_liss = h5py.File('/mn/stornext/d16/cmbco/comap/protodir/maps/co7_map_complet
 
 
 
-ces_complete = co7_ces['rms']
-liss_complete = co7_liss['rms']
+ces_complete = co6_ces['map']
+liss_complete = co6_liss['map']
 
 
 #ces = co7_ces['/jackknives/map_dayn'][0]
@@ -21,4 +21,7 @@ print ('ces-lis: ')
 print (np.allclose(ces_complete,liss_complete))
 #print ('difference: ')
 #print (np.max(np.abs(difference_map)))
-
+ces_complete = co2_ces['map']
+liss_complete = co2_liss['map']
+print ('ces-lis: ')
+print (np.allclose(ces_complete,liss_complete))
