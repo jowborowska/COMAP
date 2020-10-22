@@ -9,8 +9,8 @@ co7_liss = h5py.File('/mn/stornext/d16/cmbco/comap/protodir/maps/co7_map_complet
 
 
 
-ces_complete = co7_ces['map']
-liss_complete = co7_liss['map']
+ces_complete = co7_ces['rms']
+liss_complete = co7_liss['rms']
 
 
 #ces = co7_ces['/jackknives/map_dayn'][0]
