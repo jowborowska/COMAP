@@ -260,13 +260,16 @@ def call_all(mapname, split):
 #call_all('co7_map_complete_sunel', 'dayn')
 #call_all('co7_map_complete_sunel_ces', 'dayn')
 
-call_all('co2_map_complete_sunel_ces', 'dayn')
-call_all('co2_map_complete_sunel_liss', 'dayn')
-call_all('co6_map_complete_sunel_ces', 'dayn') 
-call_all('co6_map_complete_sunel_liss', 'dayn')
-call_all('co7_map_complete_sunel_ces', 'dayn')
-call_all('co7_map_complete_sunel_liss', 'dayn') 
-call_all('co7_map_complete_sunel', 'dayn')  #running now
+#call_all('co2_map_complete_sunel_ces', 'dayn')
+#call_all('co2_map_complete_sunel_liss', 'dayn')
+#call_all('co6_map_complete_sunel_ces', 'dayn') 
+#call_all('co6_map_complete_sunel_liss', 'dayn')
+#call_all('co7_map_complete_sunel_ces', 'dayn')
+#call_all('co7_map_complete_sunel_liss', 'dayn') 
+#call_all('co7_map_complete_sunel', 'dayn')  
+call_all('co7_map_complete_sunel', 'cesc')  
+
+
 '''
 k_co2_night_ces_dayn, xs_mean_co2_night_ces_dayn, xs_sigma_co2_night_ces_dayn = xs_feed_feed_grid('spectra/xs_co2_map_complete_night_ces_1st_dayn_feed%01i_and_co2_map_complete_night_ces_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co2_night_ces.png', ' of 1st dayn split', ' of 2nd dayn split')
 xs_with_model('xs_mean_dayn_co2_night_ces.png',k_co2_night_ces_dayn, xs_mean_co2_night_ces_dayn, xs_sigma_co2_night_ces_dayn)
