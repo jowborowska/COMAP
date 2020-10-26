@@ -74,6 +74,8 @@ if sys.argv[-1] == 'sdlb': #splits the four saddlebags
    jk = 'sdlb'
 if sys.argv[-1] == 'sidr': #sidereal time, says where in it's track (in az-el) the field is
    jk = 'sidr'
+if sys.argv[-1] == 'cesc': #splits scanning strategy, ces/liss 
+   jk = 'cesc'
 if sys.argv[-1] == 'sim': #takes the simulated maps with different splits
    jk = 'sim' #run this in combination with 'coadded' for now :)
    n_of_splits = input("How many splits?")
