@@ -248,8 +248,8 @@ def call_all(mapname, split):
    xs_with_model('xs_mean_' + mapname + '_' + split + '.png', k, xs_mean, xs_sigma)
    
    print ("Created files:")
-   print('xs_grid_' + mapname + '.png')
-   print('xs_mean_' + mapname + '.png')
+   print('xs_grid_' + mapname + '_' + split + '.png')
+   print('xs_mean_' + mapname + '_' + split + '.png')
 
 #call_all('co7_night_ces_liss_added', 'dayn')
 #call_all('co7_night_ces_liss_subtracted', 'dayn')
