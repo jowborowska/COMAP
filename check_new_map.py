@@ -1,7 +1,7 @@
 import h5py
 
 #f = h5py.File('co2_map_complete.h5', 'r')
-f = h5py.File('/mn/stornext/d16/cmbco/comap/protodir/maps/co7_map_complete_wday.h5', 'r')
+f = h5py.File('/mn/stornext/d16/cmbco/comap/protodir/maps/co7_map_complete_sunel.h5', 'r')
 keys_list = list(f.keys())
 
 print keys_list
@@ -17,3 +17,7 @@ print jackknives.keys()
 
 half_split = jackknives['map_sidr']
 print (half_split.shape) #(2, 19, 4, 64, 120, 120)
+
+
+
+/mn/stornext/d16/cmbco/comap/protodir/maps/co7_map_complete_night.h5
