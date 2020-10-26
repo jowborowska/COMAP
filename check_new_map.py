@@ -20,4 +20,4 @@ print (half_split.shape) #(2, 19, 4, 64, 120, 120)
 
 
 
-/mn/stornext/d16/cmbco/comap/protodir/maps/co7_map_complete_night.h5
+
