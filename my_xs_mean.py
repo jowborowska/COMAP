@@ -53,12 +53,12 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
 
               chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
-              print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
+              #print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
               #if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
               if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
                   xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
-                  print ("if test worked")
+                  #print ("if test worked")
                   xs_div += 1 / rms_xs_std[i,j] ** 2
                   n_sum += 1
 
@@ -75,7 +75,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    cbar.set_label(r'$|\chi^2| \times$ sign($\chi^3$)')
    plt.savefig(figure_name, bbox_inches='tight')
    #plt.show()
-   print ("xs_div:", xs_div)
+   #print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
 def xs_with_model(figure_name, k, xs_mean, xs_sigma):
@@ -257,8 +257,16 @@ def call_all(mapname, split):
 #call_all('co6_map_complete_night_hpcut', 'dayn')
 #call_all('co7_map_complete_sunel', 'dayn')
 
-call_all('co7_map_complete_sunel', 'dayn')
+#call_all('co7_map_complete_sunel', 'dayn')
+#call_all('co7_map_complete_sunel_ces', 'dayn')
+
+call_all('co2_map_complete_sunel_ces', 'dayn')
+call_all('co2_map_complete_sunel_liss', 'dayn')
+call_all('co6_map_complete_sunel_ces', 'dayn') 
+call_all('co6_map_complete_sunel_liss', 'dayn')
 call_all('co7_map_complete_sunel_ces', 'dayn')
+call_all('co7_map_complete_sunel_liss', 'dayn') 
+call_all('co7_map_complete_sunel', 'dayn')  #running now
 '''
 k_co2_night_ces_dayn, xs_mean_co2_night_ces_dayn, xs_sigma_co2_night_ces_dayn = xs_feed_feed_grid('spectra/xs_co2_map_complete_night_ces_1st_dayn_feed%01i_and_co2_map_complete_night_ces_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co2_night_ces.png', ' of 1st dayn split', ' of 2nd dayn split')
 xs_with_model('xs_mean_dayn_co2_night_ces.png',k_co2_night_ces_dayn, xs_mean_co2_night_ces_dayn, xs_sigma_co2_night_ces_dayn)
