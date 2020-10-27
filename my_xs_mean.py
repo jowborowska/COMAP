@@ -262,9 +262,9 @@ def call_all(mapname, split):
 
 call_all('co2_map_complete_sunel_ces', 'dayn')
 call_all('co2_map_complete_sunel_liss', 'dayn')
-#call_all('co6_map_complete_sunel_ces', 'dayn') 
-#call_all('co6_map_complete_sunel_liss', 'dayn')
-#call_all('co7_map_complete_sunel_ces', 'dayn')
+call_all('co6_map_complete_sunel_ces', 'dayn') 
+call_all('co6_map_complete_sunel_liss', 'dayn')
+call_all('co7_map_complete_sunel_ces', 'dayn')
 #call_all('co7_map_complete_sunel_liss', 'dayn') 
 #call_all('co7_map_complete_sunel', 'dayn')  
 #call_all('co7_map_complete_sunel', 'cesc')
