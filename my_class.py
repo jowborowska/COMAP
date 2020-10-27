@@ -121,10 +121,20 @@ class CrossSpectrum_nmaps():
                     else:
                        print ('Creating xs between '+ map_name1+ ' and '+map_name2+ ', ' + '%01i'%(index) + ' out of ' + '%01i'%(len(calculated_xs)) + '.') 
                  self.normalize_weights(i,j) #normalize weights for given xs pair of maps
-                 
-                 
+
+                 wi = self.maps[i].w
+                 wj = self.maps[j].w
+                 wh_i = np.where(np.log10(wi) < -0.5)
+                 wh_j = np.where(np.log10(wj) < -0.5)
+                 wi[wh_i] = 0.0
+                 wj[wh_j] = 0.0
+                 '''
                  my_xs, my_k, my_nmodes = tools.compute_cross_spec3d(
                  (self.maps[i].map * np.sqrt(self.maps[i].w*self.maps[j].w), self.maps[j].map * np.sqrt(self.maps[i].w*self.maps[j].w)),
+                 self.k_bin_edges, dx=self.maps[i].dx, dy=self.maps[i].dy, dz=self.maps[i].dz)
+                 '''
+                 my_xs, my_k, my_nmodes = tools.compute_cross_spec3d(
+                 (self.maps[i].map * np.sqrt(wi*wj), self.maps[j].map * np.sqrt(wi*wj)),
                  self.k_bin_edges, dx=self.maps[i].dx, dy=self.maps[i].dy, dz=self.maps[i].dz)
 
                  self.reverse_normalization(i,j) #go back to the previous state to normalize again with a different map-pair
@@ -146,6 +156,12 @@ class CrossSpectrum_nmaps():
               if i != j: #only for xs, not auto spectra
 
                  self.normalize_weights(i,j)
+                 wi = self.maps[i].w
+                 wj = self.maps[j].w
+                 wh_i = np.where(np.log10(wi) < -0.5)
+                 wh_j = np.where(np.log10(wj) < -0.5)
+                 wi[wh_i] = 0.0
+                 wj[wh_j] = 0.0
 
                  if seed is not None:
                      if self.maps[i].feed is not None:
@@ -162,7 +178,7 @@ class CrossSpectrum_nmaps():
                          randmap[l] = np.random.randn(*self.maps[l].rms.shape) * self.maps[l].rms
 
                      rms_xs[:, g] = tools.compute_cross_spec3d(
-                         (randmap[0] * np.sqrt(self.maps[i].w*self.maps[j].w), randmap[1] * np.sqrt(self.maps[i].w*self.maps[j].w)),
+                         (randmap[0] * np.sqrt(wi*wj), randmap[1] * np.sqrt(wi*wj)),
                          self.k_bin_edges, dx=self.maps[i].dx, dy=self.maps[i].dy, dz=self.maps[i].dz)[0]
                  
                  self.reverse_normalization(i,j) #go back to the previous state to normalize again with a different map-pair
