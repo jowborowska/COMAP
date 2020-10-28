@@ -37,7 +37,8 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    xs_div = np.zeros(n_k)
    for i in range(n_feed):
        for j in range(n_feed):
-           #if i != 7 and j != 7:
+           
+           if i != 7 and j != 7:
               try:
                   filepath = path_to_xs %(i+1, j+1)
                   with h5py.File(filepath, mode="r") as my_file:
