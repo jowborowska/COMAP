@@ -38,7 +38,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    for i in range(n_feed):
        for j in range(n_feed):
            
-           if i != 7 and j != 7:
+           #if i != 7 and j != 7:
               try:
                   filepath = path_to_xs %(i+1, j+1)
                   with h5py.File(filepath, mode="r") as my_file:
@@ -269,8 +269,8 @@ k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')  #this
 k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn') #this
 k7l, mean7l, sigma7l = call_all('co7_map_complete_sunel_liss', 'dayn') #combine this
 
-xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c,sigma7l])
-xs_mean_arr = np.array([mean2c, mean6c, mean7c, mean7l])
+xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c])
+xs_mean_arr = np.array([mean2c, mean6c, mean7c])
 mean_combined = 0
 w_sum = 0
 no_maps = len(xs_sigma_arr)
@@ -280,7 +280,7 @@ for i in range(no_maps):
    mean_combined += w*xs_mean_arr[i]
 mean_combined = mean_combined/w_sum
 sigma_combined = w_sum**(-0.5)
-xs_with_model('xs_mean_co2ces_co6ces_co7ces_co7liss.png', k2c, mean_combined, sigma_combined)
+xs_with_model('xs_mean_co2ces_co6ces_co7ces.png', k2c, mean_combined, sigma_combined)
 
 
 
