@@ -22,7 +22,7 @@ ps_copps = 8.746e3 * ps_th / ps_th_nobeam #shot noise level
 ps_copps_nobeam = 8.7e3
 
 
-def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
+def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2, title_name):
    n_sim = 100
    n_k = 14
    n_feed = 19
@@ -65,6 +65,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
 
 
    plt.figure()
+   plt.title(title_name)
    vmax = 15
    plt.imshow(chi2, interpolation='none', vmin=-vmax, vmax=vmax, extent=(0.5, n_feed + 0.5, n_feed + 0.5, 0.5))
    new_tick_locations = np.array(range(n_feed)) + 1
@@ -79,12 +80,13 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    #print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
-def xs_with_model(figure_name, k, xs_mean, xs_sigma):
+def xs_with_model(figure_name, k, xs_mean, xs_sigma, title_name):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
 
    fig = plt.figure()
+   plt.title(title_name)
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
@@ -243,11 +245,11 @@ calculate the feed-feed cross-spectra for all of these maps (start with using th
 k_sim, xs_mean_sim, xs_sigma_sim = xs_feed_feed_grid('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test.png', ' of 1st sim split', ' of 2nd sim split')
 xs_with_model('xs_mean_sim_null_1half.png', k_sim, xs_mean_sim, xs_sigma_sim)
 '''
-def call_all(mapname, split):
+def call_all(mapname, split, title_name):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +'_feed%01i.h5'
-   k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' + mapname + '_' + split + '.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split')
-   xs_with_model('xs_mean_' + mapname + '_' + split + '.png', k, xs_mean, xs_sigma)
-   return k, xs_mean, xs_sigma
+   k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' + mapname + '_' + split + '.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split', title_name)
+   xs_with_model('xs_mean_' + mapname + '_' + split + '.png', k, xs_mean, xs_sigma, title_name)
+   #return k, xs_mean, xs_sigma
 
    print ("Created files:")
    print('xs_grid_' + mapname + '_' + split + '.png')
@@ -262,13 +264,17 @@ def call_all(mapname, split):
 #call_all('co7_map_complete_sunel', 'dayn')
 #call_all('co7_map_complete_sunel_ces', 'dayn')
 
-k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn') #this
-#call_all('co2_map_complete_sunel_liss', 'dayn')
-k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')  #this
-#call_all('co6_map_complete_sunel_liss', 'dayn')
-k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn') #this
-k7l, mean7l, sigma7l = call_all('co7_map_complete_sunel_liss', 'dayn') #combine this
-
+#k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn') #this
+call_all('co2_map_complete_sunel_ces', 'dayn', 'co2 ces') #this
+call_all('co2_map_complete_sunel_liss', 'dayn', 'co2 liss')
+#k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')  #this
+call_all('co6_map_complete_sunel_ces', 'dayn', 'co6 ces')  
+call_all('co6_map_complete_sunel_liss', 'dayn', 'co6 liss')
+#k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn') #this
+call_all('co7_map_complete_sunel_ces', 'dayn', 'co7 ces')
+#k7l, mean7l, sigma7l = call_all('co7_map_complete_sunel_liss', 'dayn') #combine this
+call_all('co7_map_complete_sunel_liss', 'dayn', 'co7 liss') 
+'''
 xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c])
 xs_mean_arr = np.array([mean2c, mean6c, mean7c])
 mean_combined = 0
@@ -281,7 +287,7 @@ for i in range(no_maps):
 mean_combined = mean_combined/w_sum
 sigma_combined = w_sum**(-0.5)
 xs_with_model('xs_mean_co2ces_co6ces_co7ces.png', k2c, mean_combined, sigma_combined)
-
+'''
 
 
 #call_akll('co7_map_complete_sunel', 'dayn')  
