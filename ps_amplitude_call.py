@@ -258,6 +258,10 @@ def xs_feed_feed_grid_new(path_to_xs, figure_name, split1, split2, bigger_smalle
    xs_sum = np.zeros(n_k)
    rms_xs_sum = np.zeros((n_k, n_sim))
    xs_div = np.zeros(n_k)
+   chi2[:] = np.nan
+   xs[:] = np.nan
+   rms_xs_std[:] = np.nan
+   noise[:] = np.nan
    for i in range(n_feed):
        for j in range(n_feed):
            if i != 7 and j != 7:
@@ -347,12 +351,12 @@ xs_with_model('xs_mean_sim_null.png', k_sim1, xs_mean_sim1, xs_mean_sim2, xs_sig
 
 def call_all(mapname, split):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +'_feed%01i.h5'
-   kl, xs_mean_l, xs_sigma_l = xs_feed_feed_grid_new(xs_files, 'xs_grid' +mapname + '_lower.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split', True)
-   ku, xs_mean_u, xs_sigma_u = xs_feed_feed_grid_new(xs_files, 'xs_grid' +mapname + '_upper.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split', False)
+   kl, xs_mean_l, xs_sigma_l = xs_feed_feed_grid_new(xs_files, 'xs_grid_' +mapname + '_lower.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split', True)
+   ku, xs_mean_u, xs_sigma_u = xs_feed_feed_grid_new(xs_files, 'xs_grid_' +mapname + '_upper.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split', False)
    xs_with_model('xs_mean_' + mapname + '_null.png', kl, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, mapname + ', '+ split + 'split')
    print ("Created files:")
-   print('xs_grid' +mapname + '_lower.png')
-   print('xs_grid' +mapname + '_upper.png')
+   print('xs_grid_' +mapname + '_lower.png')
+   print('xs_grid_' +mapname + '_upper.png')
    print('xs_mean_' + mapname + '_null.png')
 
 call_all('co2_map_complete_sunel_ces', 'dayn')
