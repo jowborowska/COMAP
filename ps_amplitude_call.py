@@ -279,24 +279,24 @@ def xs_feed_feed_grid_new(path_to_xs, figure_name, split1, split2, bigger_smalle
               noise[i,j] = 1 / np.sqrt(w)
               chi3 = np.sum((xs[i,j] / rms_xs_std[i,j]) ** 3) #we need chi3 to take the sign into account - positive or negative correlation
               if bigger_smaller == True:
-                 if i > 18-j: #cut on chi2 not necessary for the testing              
+                 if i > 18-j and i!=j: #cut on chi2 not necessary for the testing              
                     chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
 
               if bigger_smaller == False:
-                 if i < 18-j:
+                 if i < 18-j and i!=j:
                     chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
 
               #print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal      
               if bigger_smaller == True:
-                 if i > 18-j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
+                 if i > 18-j and not np.isnan(chi2[i,j]) and i !=j: #cut on chi2 not necessary for the testing
                     xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
                     print ("if test worked")
                     xs_div += 1 / rms_xs_std[i,j] ** 2
                     n_sum += 1
 
               if bigger_smaller == False:
-                 if i < 18-j and not np.isnan(chi2[i,j]):
+                 if i < 18-j and not np.isnan(chi2[i,j]) and i!=j:
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and j>i:#i != j:
                     xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
                     print ("if test worked")
