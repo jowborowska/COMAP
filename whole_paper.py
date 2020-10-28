@@ -38,7 +38,7 @@ def read_Nils_transfer(filename):
 
 k_Nils, T_Nils = read_Nils_transfer('TF.txt')
 
-def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2, title_name):
+def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
    n_sim = 100
    n_k = 14
    n_feed = 19
@@ -81,7 +81,6 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2, title_name):
 
 
    plt.figure()
-   plt.title(title_name)
    vmax = 15
    plt.imshow(chi2, interpolation='none', vmin=-vmax, vmax=vmax, extent=(0.5, n_feed + 0.5, n_feed + 0.5, 0.5))
    new_tick_locations = np.array(range(n_feed)) + 1
