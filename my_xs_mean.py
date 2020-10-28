@@ -246,7 +246,8 @@ def call_all(mapname, split):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +'_feed%01i.h5'
    k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' + mapname + '_' + split + '.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split')
    xs_with_model('xs_mean_' + mapname + '_' + split + '.png', k, xs_mean, xs_sigma)
-   
+   return k, xs_mean, xs_sigma
+
    print ("Created files:")
    print('xs_grid_' + mapname + '_' + split + '.png')
    print('xs_mean_' + mapname + '_' + split + '.png')
@@ -260,13 +261,29 @@ def call_all(mapname, split):
 #call_all('co7_map_complete_sunel', 'dayn')
 #call_all('co7_map_complete_sunel_ces', 'dayn')
 
-call_all('co2_map_complete_sunel_ces', 'dayn')
-call_all('co2_map_complete_sunel_liss', 'dayn')
-call_all('co6_map_complete_sunel_ces', 'dayn') 
-call_all('co6_map_complete_sunel_liss', 'dayn')
-call_all('co7_map_complete_sunel_ces', 'dayn')
-call_all('co7_map_complete_sunel_liss', 'dayn') 
-#call_all('co7_map_complete_sunel', 'dayn')  
+k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn') #this
+#call_all('co2_map_complete_sunel_liss', 'dayn')
+k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')  #this
+#call_all('co6_map_complete_sunel_liss', 'dayn')
+k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn') #this
+k7l, mean7l, sigma7l = call_all('co7_map_complete_sunel_liss', 'dayn') #combine this
+
+xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c,sigma7l])
+xs_mean_arr = np.array([mean2c, mean6c, mean7c, mean7l])
+mean_combined = 0
+w_sum = 0
+no_of_k = len(k2c)
+for i in range(no_of_k): 
+   w = 1./ xs_sigma_arr[i]**2.
+   w_sum += w
+   mean_combined += w*xs_mean_arr[i]
+mean_combined = mean_combined/w_sum
+sigma_combined = w_sum**(-0.5)
+xs_with_model('xs_mean_co2ces_co6ces_co7ces_co7liss.png', k2c, mean_combined, sigma_combined)
+
+
+
+#call_akll('co7_map_complete_sunel', 'dayn')  
 #call_all('co7_map_complete_sunel', 'cesc')
 #call_all('co7_sunel_ces_liss_added', 'dayn') 
 #call_all('co7_sunel_ces_liss_subtracted', 'dayn')  
