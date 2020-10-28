@@ -178,8 +178,8 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    fig = plt.figure()
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * diff_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{diff}(k)$', color='teal')
-   ax1.errorbar(k, k * xs_mean_l / (transfer(k)*transfer_Nils(k)), k * xs_sigma_l / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{lower}(k)$', color='red')
-   ax1.errorbar(k, k * xs_mean_u / (transfer(k)*transfer_Nils(k)), k * xs_sigma_u / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{upper}(k)$', color='green')
+  # ax1.errorbar(k, k * xs_mean_l / (transfer(k)*transfer_Nils(k)), k * xs_sigma_l / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{lower}(k)$', color='red')
+  # ax1.errorbar(k, k * xs_mean_u / (transfer(k)*transfer_Nils(k)), k * xs_sigma_u / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{upper}(k)$', color='green')
    '''
    error_scaled = k * error / (transfer(k)*transfer_Nils(k))   
    
@@ -191,7 +191,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    ax1.fill_between(x=k, y1=k * sum_mean / (transfer(k)*transfer_Nils(k)) - error_scaled, y2=k * sum_mean / (transfer(k)*transfer_Nils(k)) + error_scaled, facecolor='plum', edgecolor='plum')
    '''
    ax1.set_title(title_name, fontsize=13)
-   ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{sum}(k)$', color='purple')
+ #  ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{sum}(k)$', color='purple')
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
@@ -347,12 +347,12 @@ xs_with_model('xs_mean_sim_null.png', k_sim1, xs_mean_sim1, xs_mean_sim2, xs_sig
 
 def call_all(mapname, split):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +'_feed%01i.h5'
-   kl, xs_mean_l, xs_sigma_l = xs_feed_feed_grid_upper_half(xs_files, 'xs_grid' +mapname + '_lower.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split')
-   ku, xs_mean_u, xs_sigma_u = xs_feed_feed_grid_lower_half(xs_files, 'xs_grid' +mapname + '_upper.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split')
+   kl, xs_mean_l, xs_sigma_l = xs_feed_feed_grid_new(xs_files, 'xs_grid' +mapname + '_lower.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split', True)
+   ku, xs_mean_u, xs_sigma_u = xs_feed_feed_grid_new(xs_files, 'xs_grid' +mapname + '_upper.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split', False)
    xs_with_model('xs_mean' + mapname + '_null.png', kl, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, mapname + ', '+ split + 'split')
    print ("Created files:")
-   print('xs_grid_' +mapname + '_lower.png')
-   print('xs_grid_' +mapname + '_upper.png')
+   print('xs_grid' +mapname + '_lower.png')
+   print('xs_grid' +mapname + '_upper.png')
    print('xs_mean_' + mapname + '_null.png')
 
 call_all('co2_map_complete_sunel_ces', 'dayn')
@@ -360,4 +360,4 @@ call_all('co2_map_complete_sunel_ces', 'dayn')
 call_all('20oct_1test_2splits', 'sim')
 '''
 
-
+-
