@@ -208,9 +208,9 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
    ax2.errorbar(k, diff_mean / error, error/error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='lightseagreen')
-   ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
-   ax2.errorbar(k, xs_mean_l / xs_sigma_l, xs_sigma_l/xs_sigma_l, fmt='o', label=r'$\tilde{C}_{lower}(k)$', color='red')
-   ax2.errorbar(k, xs_mean_u / xs_sigma_u, xs_sigma_u /xs_sigma_u, fmt='o', label=r'$\tilde{C}_{upper}(k)$', color='green')
+   #ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
+   #ax2.errorbar(k, xs_mean_l / xs_sigma_l, xs_sigma_l/xs_sigma_l, fmt='o', label=r'$\tilde{C}_{lower}(k)$', color='red')
+   #ax2.errorbar(k, xs_mean_u / xs_sigma_u, xs_sigma_u /xs_sigma_u, fmt='o', label=r'$\tilde{C}_{upper}(k)$', color='green')
 
 
    ax2.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
