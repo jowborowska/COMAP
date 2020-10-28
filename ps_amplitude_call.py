@@ -238,7 +238,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    sum_mean = (xs_mean_u + xs_mean_l)/2.
    lim = np.mean(np.abs(sum_mean[4:-2] * k[4:-2])) * 8
    fig = plt.figure()
-   #fig.set_figwidth(8)
+   fig.set_figwidth(8)
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * diff_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{diff}(k)$', color='black')
    '''
