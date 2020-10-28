@@ -266,6 +266,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax1.grid()
    #plt.legend(bbox_to_anchor=(0, 0.61))
    #ax1.legend()
+   '''
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
    ax2.errorbar(k, diff_mean / error, error/error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
@@ -279,6 +280,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax2.set_xscale('log')
    ax2.grid()
    #ax2.legend(ncol=4)
+   '''
    plt.tight_layout()
    #plt.legend()
    plt.savefig(figure_name, bbox_inches='tight')
@@ -424,6 +426,9 @@ def call_all(mapname, split):
    print('xs_mean_' + mapname + '_null.pdf')
 
 call_all('co2_map_complete_sunel_ces', 'dayn')
+
+
+
 '''
 call_all('20oct_1test_2splits', 'sim')
 '''
