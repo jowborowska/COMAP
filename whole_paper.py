@@ -125,6 +125,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
    ax1.grid()
    #plt.legend(bbox_to_anchor=(0, 0.61))
    #ax1.legend()
+   '''
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
    ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma/xs_sigma, fmt='o', label=r'$\tilde{C}(k)$', color='black')
@@ -138,6 +139,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
    ax2.set_xscale('log')
    ax2.grid()
    #ax2.legend(ncol=4)
+   '''
    plt.tight_layout()
    #plt.legend()
    plt.savefig(figure_name, bbox_inches='tight')
@@ -148,11 +150,11 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
 def call_all_whole(mapname, split):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +'_feed%01i.h5'
    k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' + mapname + '_' + split + '.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split')
-   xs_with_model('xs_mean_' + mapname + '_' + split + '.png', k, xs_mean, xs_sigma)
+   xs_with_model('xs_mean_' + mapname + '_' + split + '.pdf', k, xs_mean, xs_sigma)
    #return k, xs_mean, xs_sigma
 
    print ("Created files:")
    print('xs_grid_' + mapname + '_' + split + '.png')
-   print('xs_mean_' + mapname + '_' + split + '.png')
+   print('xs_mean_' + mapname + '_' + split + '.pdf')
 
 call_all_whole('co2_map_complete_sunel_ces', 'dayn')
