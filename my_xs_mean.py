@@ -86,7 +86,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, title_name):
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
 
    fig = plt.figure()
-   plt.title(title_name)
+   ax1.set_title(title_name)
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * xs_mean / transfer(k), k * xs_sigma / transfer(k), fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
