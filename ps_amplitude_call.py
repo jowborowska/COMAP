@@ -58,7 +58,7 @@ def xs_feed_feed_grid_lower_half(path_to_xs, figure_name, split1, split2):
 
    for i in range(n_feed):
        for j in range(i):
-           #if i != 7 and j != 7:
+           if i != 7 and j != 7:
               try:
                   filepath = path_to_xs %(i+1, j+1)
                   with h5py.File(filepath, mode="r") as my_file:
@@ -123,7 +123,7 @@ def xs_feed_feed_grid_upper_half(path_to_xs, figure_name, split1, split2):
 
    for i in range(n_feed):
        for j in range(i):
-           #if i != 7 and j != 7:
+           if i != 7 and j != 7:
               try:
                   filepath = path_to_xs %(j+1, i+1)
                   with h5py.File(filepath, mode="r") as my_file:
@@ -331,29 +331,31 @@ k_co7_night_sidr_u, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_u = xs_fee
 
 xs_with_model('xs_mean_sidr_co7_night_halfs_null.pdf', k_co7_night_sidr_l, xs_mean_co7_night_sidr_l, xs_mean_co7_night_sidr_u, xs_sigma_co7_night_sidr_l,xs_sigma_co7_night_sidr_u, 'Sidereal time split' )
 
-'''
+
 
 
 k_sim1, xs_mean_sim1, xs_sigma_sim1 = xs_feed_feed_grid_new('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test.png', ' of 1st sim split', ' of 2nd sim split', True)
 k_sim2, xs_mean_sim2, xs_sigma_sim2 = xs_feed_feed_grid_new('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test.png', ' of 1st sim split', ' of 2nd sim split', False)
 
-'''
+
 k_sim_l, xs_mean_sim_l, xs_sigma_sim_l = xs_feed_feed_grid_lower_half('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test_l.png', ' of 1st sim split', ' of 2nd sim split')
 
 k_sim_u, xs_mean_sim_u, xs_sigma_sim_u = xs_feed_feed_grid_upper_half('spectra/xs_20oct_1test_2splits_1st_sim_feed%01i_and_20oct_1test_2splits_2nd_sim_feed%01i.h5', 'xs_grid_test_u.png', ' of 1st sim split', ' of 2nd sim split')
-'''
-xs_with_model('xs_mean_sim_null.png', k_sim1, xs_mean_sim1, xs_mean_sim2, xs_sigma_sim2, xs_sigma_sim2, 'Simulated split')
 
+xs_with_model('xs_mean_sim_null.png', k_sim1, xs_mean_sim1, xs_mean_sim2, xs_sigma_sim2, xs_sigma_sim2, 'Simulated split')
+'''
 
 def call_all(mapname, split):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +' _feed%01i.h5'
    kl, xs_mean_l, xs_sigma_l = xs_feed_feed_grid_lower_half(xs_files, 'xs_grid' +mapname + '_lower.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split')
    ku, xs_mean_u, xs_sigma_u = xs_feed_feed_grid_upper_half(xs_files, 'xs_grid' +mapname + '_upper.png', 'of 1st' + split + ' split', 'of 2nd' + split + ' split')
-   xs_with_model('xs_mean' + mapname + '_null.png', kl, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, split + 'split')
+   xs_with_model('xs_mean' + mapname + '_null.png', kl, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, mapname + ', '+ split + 'split')
    print ("Created files:")
    print('xs_grid' +mapname + '_lower.png')
    print('xs_grid' +mapname + '_upper.png')
    print('xs_mean' + mapname + '_null.png')
+
+call_all('co2_map_complete_sunel_ces', 'dayn')
 '''
 call_all('20oct_1test_2splits', 'sim')
 '''
