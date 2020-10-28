@@ -38,7 +38,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2, title_name):
    for i in range(n_feed):
        for j in range(n_feed):
            
-           #if i != 7 and j != 7:
+           if i != 7 and j != 7:
               try:
                   filepath = path_to_xs %(i+1, j+1)
                   with h5py.File(filepath, mode="r") as my_file:
@@ -266,15 +266,15 @@ def call_all(mapname, split, title_name):
 #call_all('co7_map_complete_sunel_ces', 'dayn')
 
 #k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn') #this
-call_all('co2_map_complete_sunel_ces', 'dayn', 'co2 ces') #this
-call_all('co2_map_complete_sunel_liss', 'dayn', 'co2 liss')
+#call_all('co2_map_complete_sunel_ces', 'dayn', 'co2 ces') #this
+#call_all('co2_map_complete_sunel_liss', 'dayn', 'co2 liss')
 #k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')  #this
-call_all('co6_map_complete_sunel_ces', 'dayn', 'co6 ces')  
-call_all('co6_map_complete_sunel_liss', 'dayn', 'co6 liss')
+#call_all('co6_map_complete_sunel_ces', 'dayn', 'co6 ces')  
+#call_all('co6_map_complete_sunel_liss', 'dayn', 'co6 liss')
 #k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn') #this
-call_all('co7_map_complete_sunel_ces', 'dayn', 'co7 ces')
+#call_all('co7_map_complete_sunel_ces', 'dayn', 'co7 ces')
 #k7l, mean7l, sigma7l = call_all('co7_map_complete_sunel_liss', 'dayn') #combine this
-call_all('co7_map_complete_sunel_liss', 'dayn', 'co7 liss') 
+#call_all('co7_map_complete_sunel_liss', 'dayn', 'co7 liss') 
 '''
 xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c])
 xs_mean_arr = np.array([mean2c, mean6c, mean7c])
@@ -294,7 +294,7 @@ xs_with_model('xs_mean_co2ces_co6ces_co7ces.png', k2c, mean_combined, sigma_comb
 #call_akll('co7_map_complete_sunel', 'dayn')  
 #call_all('co7_map_complete_sunel', 'cesc')
 #call_all('co7_sunel_ces_liss_added', 'dayn') 
-#call_all('co7_sunel_ces_liss_subtracted', 'dayn')  
+call_all('co7_sunel_ces_liss_subtracted', 'dayn', 'co7 ces-liss')  
 #call_all('co6_sunel_ces_liss_added', 'dayn') 
 #call_all('co6_sunel_ces_liss_subtracted', 'dayn') 
 #call_all('co2_sunel_ces_liss_added', 'dayn')
