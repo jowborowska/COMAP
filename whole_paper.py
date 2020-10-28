@@ -127,7 +127,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
    #ax1.legend()
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
-   ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma/xs_sgima, fmt='o', label=r'$\tilde{C}(k)$', color='black')
+   ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma/xs_sigma, fmt='o', label=r'$\tilde{C}(k)$', color='black')
    #ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
    ax2.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
