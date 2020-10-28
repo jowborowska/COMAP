@@ -272,8 +272,8 @@ xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c,sigma7l])
 xs_mean_arr = np.array([mean2c, mean6c, mean7c, mean7l])
 mean_combined = 0
 w_sum = 0
-no_of_k = len(k2c)
-for i in range(no_of_k): 
+no_maps = len(xs_sigma_arr)
+for i in range(no_maps): 
    w = 1./ xs_sigma_arr[i]**2.
    w_sum += w
    mean_combined += w*xs_mean_arr[i]
