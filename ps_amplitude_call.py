@@ -164,7 +164,7 @@ def xs_feed_feed_grid_upper_half(path_to_xs, figure_name, split1, split2):
    print ("xs_div:", xs_div)
    return k, xs_sum / xs_div, 1. / np.sqrt(xs_div)
 
-def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, title_name):
+def xs_with_model1(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, title_name):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
@@ -226,6 +226,63 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    plt.legend(ncol=4)
    plt.savefig(figure_name, bbox_inches='tight')
    #plt.show()
+
+def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
+  
+   transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
+   transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
+   P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
+   
+   error = ((xs_sigma_l**2 + xs_sigma_u**2)**(0.5))*0.5
+   diff_mean = (xs_mean_u - xs_mean_l)/2.
+   sum_mean = (xs_mean_u + xs_mean_l)/2.
+   lim = np.mean(np.abs(sum_mean[4:-2] * k[4:-2])) * 8
+   fig = plt.figure()
+   ax1 = fig.add_subplot(211)
+   ax1.errorbar(k, k * diff_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{diff}(k)$', color='black')
+   '''
+   error_scaled = k * error / (transfer(k)*transfer_Nils(k))   
+   
+   ax1.plot(k, k * diff_mean / (transfer(k)*transfer_Nils(k)),  label=r'$k\tilde{C}_{diff}(k)$', color='teal')
+   ax1.fill_between(x=k, y1=k * diff_mean / (transfer(k)*transfer_Nils(k)) - error_scaled, y2=k * diff_mean / (transfer(k)*transfer_Nils(k)) + error_scaled, facecolor='paleturquoise', edgecolor='paleturquoise')
+   
+
+   ax1.plot(k, k * sum_mean / (transfer(k)*transfer_Nils(k)),  label=r'$k\tilde{C}_{sum}(k)$', color='purple')
+   ax1.fill_between(x=k, y1=k * sum_mean / (transfer(k)*transfer_Nils(k)) - error_scaled, y2=k * sum_mean / (transfer(k)*transfer_Nils(k)) + error_scaled, facecolor='plum', edgecolor='plum')
+   '''
+   
+   #ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{sum}(k)$', color='purple')
+   #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
+   ax1.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
+   #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
+   #ax1.plot(k, k*PS_function.PS_f(k), label='k*PS of the input signal')
+   #ax1.plot(k_th, k_th * ps_th_nobeam * 10, '--', label=r'$10 \times kP_{Theory}(k)$', color='dodgerblue')
+   #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
+   ax1.set_ylabel(r'$k\tilde{C}_{\mathrm{diff}}(k)$ [$\mu$K${}^2$ Mpc${}^2$]', fontsize=13)
+   ax1.set_ylim(-lim*4, lim*4)              # ax1.set_ylim(0, 0.1)
+   ax1.set_xlim(0.03,k[-1]+0.1)
+   ax1.set_xscale('log')
+   ax1.grid()
+   #plt.legend(bbox_to_anchor=(0, 0.61))
+   #ax1.legend()
+   ax2 = fig.add_subplot(212)
+   #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
+   ax2.errorbar(k, diff_mean / error, error/error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
+   #ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
+   ax2.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
+   #ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
+   ax2.set_ylabel(r'$\tilde{C}_{\mathrm{diff}}(k) / \sigma_\tilde{C}$', fontsize=13)
+   ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=13)
+   ax2.set_ylim(-5, 5)
+   ax2.set_xlim(0.03,k[-1]+0.1)
+   ax2.set_xscale('log')
+   ax2.grid()
+   #ax2.legend(ncol=4)
+   plt.tight_layout()
+   #plt.legend()
+   plt.savefig(figure_name, bbox_inches='tight')
+   #plt.show()
+
 
 def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    PS_estimate = 0
@@ -359,7 +416,7 @@ def call_all(mapname, split):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +'_feed%01i.h5'
    kl, xs_mean_l, xs_sigma_l = xs_feed_feed_grid_new(xs_files, 'xs_grid_' +mapname + '_lower.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split', True)
    ku, xs_mean_u, xs_sigma_u = xs_feed_feed_grid_new(xs_files, 'xs_grid_' +mapname + '_upper.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split', False)
-   xs_with_model('xs_mean_' + mapname + '_null.png', kl, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, mapname + ', '+ split + 'split')
+   xs_with_model('xs_mean_' + mapname + '_null.png', kl, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u)
    print ("Created files:")
    print('xs_grid_' +mapname + '_lower.png')
    print('xs_grid_' +mapname + '_upper.png')
