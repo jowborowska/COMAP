@@ -191,7 +191,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    ax1.fill_between(x=k, y1=k * sum_mean / (transfer(k)*transfer_Nils(k)) - error_scaled, y2=k * sum_mean / (transfer(k)*transfer_Nils(k)) + error_scaled, facecolor='plum', edgecolor='plum')
    '''
    ax1.set_title(title_name, fontsize=13)
- #  ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{sum}(k)$', color='purple')
+   ax1.errorbar(k, k * sum_mean / (transfer(k)*transfer_Nils(k)), k * error / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}_{sum}(k)$', color='purple')
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean_l, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
@@ -208,7 +208,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u, 
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
    ax2.errorbar(k, diff_mean / error, error/error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='lightseagreen')
-   #ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
+   ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
    #ax2.errorbar(k, xs_mean_l / xs_sigma_l, xs_sigma_l/xs_sigma_l, fmt='o', label=r'$\tilde{C}_{lower}(k)$', color='red')
    #ax2.errorbar(k, xs_mean_u / xs_sigma_u, xs_sigma_u /xs_sigma_u, fmt='o', label=r'$\tilde{C}_{upper}(k)$', color='green')
 
