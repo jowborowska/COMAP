@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as matplotlib
 import numpy.fft as fft
 import corner
 import h5py
@@ -106,7 +107,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
   
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
    fig = plt.figure()
-   fig.set_figwidth(8)
+   #fig.set_figwidth(8)
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'$k\tilde{C}(k)$', color='black')
    
@@ -124,6 +125,9 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma):
    ax1.set_xscale('log')
    ax1.grid()
    ax1.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=16)
+   labnums = [0.05,0.1, 0.2, 0.5]
+   ax1.set_xticks(labnums)
+   ax1.get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
    #plt.legend(bbox_to_anchor=(0, 0.61))
    #ax1.legend()
    '''
