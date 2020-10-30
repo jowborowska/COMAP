@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as matplotlib
 import numpy.fft as fft
 import corner
 import h5py
