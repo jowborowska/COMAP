@@ -271,7 +271,7 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    mins = np.array(minorticks)[wh]
    labs = []
 
-    for min in mins:
+   for min in mins:
        if (min in labnums):
           labs.append('%0.2f' % min)
        else:
