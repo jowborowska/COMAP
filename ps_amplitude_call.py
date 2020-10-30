@@ -265,8 +265,8 @@ def xs_with_model(figure_name, k, xs_mean_l, xs_mean_u, xs_sigma_l, xs_sigma_u):
    ax1.set_xscale('log')
    ax1.grid()
    ax1.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=16)
-   labnums = [0.02, 0.04, 0.2, 0.4]
-   labels = ['0.02', '0.04', '0.2', '0.4']
+   labnums = [0.02, 0.04,0.1, 0.2, 0.4]
+   labels = ['0.02', '0.04', '0.1','0.2', '0.4']
    ax1.set_xticks(labnums, minor=True)
    ax1.set_xticklabels(labels, minor=True)
 
