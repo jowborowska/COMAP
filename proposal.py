@@ -165,6 +165,6 @@ def call_all(mapname, split):
 k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn')
 k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')
 k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn')
-xs_with_model_3fields('xs_mean_' + 'ces' + '_' + dayn + '.pdf', k2c, mean2c, mean6c, mean7c, sigma2c, sigma6c, sigma7c)
-print ('xs_mean_' + ces + '_' + dayn + '.pdf')
+xs_with_model_3fields('xs_mean_' + 'ces' + '_' + 'dayn' + '.pdf', k2c, mean2c, mean6c, mean7c, sigma2c, sigma6c, sigma7c)
+print ('xs_mean_' + 'ces' + '_' + 'dayn' + '.pdf')
 
