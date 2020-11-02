@@ -98,7 +98,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
 
 
 
-def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma2, xs_sigma6, xs_sigma7):
+def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma2, xs_sigma6, xs_sigma7, titlename):
   
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
@@ -125,7 +125,7 @@ def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma
    ax1.set_ylim(-lim*3, lim*3)              # ax1.set_ylim(0, 0.1)
    ax1.set_xlim(0.04,1)
    ax1.set_xscale('log')
-   ax1.set_title('CES scans, night time data')
+   ax1.set_title(titlename)
    ax1.grid()
    #ax1.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=14)
    labnums = [0.05,0.1, 0.2, 0.5, 1.0]
@@ -169,6 +169,12 @@ def call_all(mapname, split):
 k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn')
 k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')
 k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn')
-xs_with_model_3fields('xs_mean_' + 'ces' + '_' + 'dayn' + '.pdf', k2c, mean2c, mean6c, mean7c, sigma2c, sigma6c, sigma7c)
+xs_with_model_3fields('xs_mean_' + 'ces' + '_' + 'dayn' + '.pdf', k2c, mean2c, mean6c, mean7c, sigma2c, sigma6c, sigma7c, 'CES scans, night time data')
 print ('xs_mean_' + 'ces' + '_' + 'dayn' + '.pdf')
+
+k2l, mean2l, sigma2l = call_all('co2_map_complete_sunel_liss', 'dayn')
+k6l, mean6l, sigma6l = call_all('co6_map_complete_sunel_liss', 'dayn')
+k7l, mean7l, sigma7l = call_all('co7_map_complete_sunel_liss', 'dayn')
+xs_with_model_3fields('xs_mean_' + 'liss' + '_' + 'dayn' + '.pdf', k2l, mean2l, mean6l, mean7l, sigma2l, sigma6l, sigma7l, 'Lissajous scans, night time data')
+print ('xs_mean_' + 'liss' + '_' + 'dayn' + '.pdf')
 
