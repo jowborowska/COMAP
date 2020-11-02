@@ -104,7 +104,7 @@ def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
    
-   k_offset = k*0.1
+   k_offset = k*0.08
    k6 = k + k_offset
    k7 = k + k_offset*2
    lim = np.mean(np.abs(xs_mean2[4:-2] * k[4:-2])) * 8
