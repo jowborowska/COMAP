@@ -137,6 +137,8 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, PS_estimate, PS_error, bett
    plt.savefig(figure_name, bbox_inches='tight')
    #plt.show()
 
+
+
 def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    PS_estimate = 0
    w_sum = 0
@@ -178,8 +180,9 @@ def call_all(mapname, split):
    return k, xs_mean, xs_sigma
 
 k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn')
-k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')
-k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn')
+#k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')
+#k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn')
+'''
 xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c])
 xs_mean_arr = np.array([mean2c, mean6c, mean7c])
 mean_combined = 0
@@ -196,6 +199,12 @@ sigma_combined = w_sum**(-0.5)
 
 PS_estimate_1, PS_error_1 = calculate_PS_amplitude(k2c, mean_combined, sigma_combined)
 PS_estimate_2, PS_error_2 = calculate_PS_amplitude_better(k2c, mean_combined, sigma_combined)
+print ('PS1', PS_estimate_1, PS_error_1)#PS1 28560.3860758366 12383.365385164725
+print ('PS2', PS_estimate_2, PS_error_2) #PS2 12.881779694882994 4.916077608835785
+
+'''
+PS_estimate_1, PS_error_1 = calculate_PS_amplitude(k2c, mean2c, sigma2c)
+PS_estimate_2, PS_error_2 = calculate_PS_amplitude_better(k2c, mean2c, sigma2c)
 print ('PS1', PS_estimate_1, PS_error_1)
 print ('PS2', PS_estimate_2, PS_error_2) 
 
@@ -203,8 +212,8 @@ PS_estimate_arr = np.zeros(no_k) + PS_estimate_1
 PS_error_arr = np.zeros(no_k) + PS_error_1
 PS_estimate_arr2 = np.zeros(no_k) + PS_estimate_2
 PS_error_arr2 = np.zeros(no_k) + PS_error_2
-xs_with_model('xs_mean_ces_combined_v2.png', k2c, mean_combined, sigma_combined, PS_estimate_arr2, PS_error_arr2, better=True)
-xs_with_model('xs_mean_ces_combined_v1.png', k2c, mean_combined, sigma_combined, PS_estimate_arr, PS_error_arr, better=False)
+xs_with_model('xs_mean_co2ces_v2.pdf', k2c, mean2c, sigma2c, PS_estimate_arr2, PS_error_arr2, better=True)
+xs_with_model('xs_mean_co2ces_v1.pdf', k2c, mean2c, sigma2c, PS_estimate_arr, PS_error_arr, better=False)
 
 '''
 k_co7_night_dayn, xs_mean_co7_night_dayn, xs_sigma_co7_night_dayn = xs_feed_feed_grid('spectra/xs_co7_map_complete_night_1st_dayn_feed%01i_and_co7_map_complete_night_2nd_dayn_feed%01i.h5', 'xs_grid_dayn_co7_night.png', ' of 1st dayn split', ' of 2nd dayn split')
