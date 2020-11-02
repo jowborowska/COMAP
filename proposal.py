@@ -121,14 +121,14 @@ def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]', fontsize=14)
    ax1.set_ylim(-lim*3, lim*3)              # ax1.set_ylim(0, 0.1)
-   ax1.set_xlim(0.01,1.)
+   ax1.set_xlim(0.04,0.7)
    ax1.set_xscale('log')
    ax1.set_title('CES scans, night time data')
    ax1.grid()
-   ax1.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=14)
-   #labnums = [0.05,0.1, 0.2, 0.5]
-   #ax1.set_xticks(labnums)
-   #ax1.get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
+   #ax1.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=14)
+   labnums = [0.05,0.1, 0.2, 0.5]
+   ax1.set_xticks(labnums)
+   ax1.get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
    #plt.legend(bbox_to_anchor=(0, 0.61))
    ax1.legend(ncol=3)
    
@@ -143,10 +143,12 @@ def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma
    ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$', fontsize=14)
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=14)
    ax2.set_ylim(-5, 5)
-   ax2.set_xlim(0.01,1.)
+   ax2.set_xlim(0.04,0.7)
    ax2.set_xscale('log')
    ax2.grid()
    ax2.legend(ncol=3)
+   ax2.set_xticks(labnums)
+   ax2.get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
    
    plt.tight_layout()
    #plt.legend()
