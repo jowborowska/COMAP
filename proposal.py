@@ -104,14 +104,16 @@ def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
    
-  
+   k_offset = k*0.1
+   k6 = k + k_offset
+   k7 = k + k_offset*2
    lim = np.mean(np.abs(xs_mean2[4:-2] * k[4:-2])) * 8
    fig = plt.figure()
    #fig.set_figwidth(8)
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * xs_mean2 / (transfer(k)*transfer_Nils(k)), k * xs_sigma2 / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'co2', color='indianred')
-   ax1.errorbar(k, k * xs_mean6 / (transfer(k)*transfer_Nils(k)), k * xs_sigma6 / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'co6', color='teal')
-   ax1.errorbar(k, k * xs_mean7 / (transfer(k)*transfer_Nils(k)), k * xs_sigma7 / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'co7', color='purple')
+   ax1.errorbar(k6, k6 * xs_mean6 / (transfer(k6)*transfer_Nils(k6)), k6 * xs_sigma6 / (transfer(k6)*transfer_Nils(k6)), fmt='o', label=r'co6', color='teal')
+   ax1.errorbar(k7, k7 * xs_mean7 / (transfer(k7)*transfer_Nils(k7)), k7 * xs_sigma7 / (transfer(k7)*transfer_Nils(k7)), fmt='o', label=r'co7', color='purple')
   
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean2, 'k', alpha=0.4)
@@ -121,7 +123,7 @@ def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma
    #ax1.plot(k_th, k_th * ps_copps_nobeam * 5, 'g--', label=r'$5 \times kP_{COPPS}$ (shot)')
    ax1.set_ylabel(r'$k\tilde{C}(k)$ [$\mu$K${}^2$ Mpc${}^2$]', fontsize=14)
    ax1.set_ylim(-lim*3, lim*3)              # ax1.set_ylim(0, 0.1)
-   ax1.set_xlim(0.04,0.7)
+   ax1.set_xlim(0.04,0.9)
    ax1.set_xscale('log')
    ax1.set_title('CES scans, night time data')
    ax1.grid()
@@ -135,15 +137,15 @@ def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
    ax2.errorbar(k, xs_mean2 / xs_sigma2, xs_sigma2/xs_sigma2, fmt='o', label=r'co2', color='indianred')
-   ax2.errorbar(k, xs_mean6 / xs_sigma6, xs_sigma6/xs_sigma6, fmt='o', label=r'co6', color='teal')
-   ax2.errorbar(k, xs_mean7 / xs_sigma7, xs_sigma7/xs_sigma7, fmt='o', label=r'co7', color='purple')
+   ax2.errorbar(k6, xs_mean6 / xs_sigma6, xs_sigma6/xs_sigma6, fmt='o', label=r'co6', color='teal')
+   ax2.errorbar(k7, xs_mean7 / xs_sigma7, xs_sigma7/xs_sigma7, fmt='o', label=r'co7', color='purple')
    #ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
    ax2.plot(k, 0 * xs_mean2, 'k', alpha=0.4)
    #ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
    ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$', fontsize=14)
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=14)
    ax2.set_ylim(-5, 5)
-   ax2.set_xlim(0.04,0.7)
+   ax2.set_xlim(0.04,0.9)
    ax2.set_xscale('log')
    ax2.grid()
    ax2.legend(ncol=3)
