@@ -147,7 +147,7 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    xs_mean = xs_mean/(transfer(k)*transfer_Nils(k))
    xs_sigma = xs_sigma/(transfer(k)*transfer_Nils(k))
-   for i in range(2,no_of_k-3): #we exclude 2 first points and 3 last points
+   for i in range(4,no_of_k-3): #we exclude 4 first points and 3 last points
       print (k[i]*xs_mean[i], k[i]*xs_sigma[i])
       w = 1./ xs_sigma[i]**2.
       w_sum += w
@@ -165,7 +165,7 @@ def calculate_PS_amplitude_better(k, xs_mean, xs_sigma):
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    xs_mean = xs_mean/(transfer(k)*transfer_Nils(k)*P_theory(k))
    xs_sigma = xs_sigma/(transfer(k)*transfer_Nils(k)*P_theory(k))
-   for i in range(2,no_of_k-3): #we exclude 2 first points and 3 last points
+   for i in range(4,no_of_k-3): #we exclude 4 first points and 3 last points
       w = 1./ xs_sigma[i]**2.
       w_sum += w
       PS_estimate += w*xs_mean[i]
