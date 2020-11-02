@@ -112,8 +112,8 @@ def xs_with_model_3fields(figure_name, k, xs_mean2, xs_mean6, xs_mean7, xs_sigma
    #fig.set_figwidth(8)
    ax1 = fig.add_subplot(211)
    ax1.errorbar(k, k * xs_mean2 / (transfer(k)*transfer_Nils(k)), k * xs_sigma2 / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'co2', color='indianred')
-   ax1.errorbar(k6, k6 * xs_mean6 / (transfer(k6)*transfer_Nils(k6)), k6 * xs_sigma6 / (transfer(k6)*transfer_Nils(k6)), fmt='o', label=r'co6', color='teal')
-   ax1.errorbar(k7, k7 * xs_mean7 / (transfer(k7)*transfer_Nils(k7)), k7 * xs_sigma7 / (transfer(k7)*transfer_Nils(k7)), fmt='o', label=r'co7', color='purple')
+   ax1.errorbar(k6, k * xs_mean6 / (transfer(k)*transfer_Nils(k)), k * xs_sigma6 / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'co6', color='teal')
+   ax1.errorbar(k7, k * xs_mean7 / (transfer(k)*transfer_Nils(k)), k * xs_sigma7 / (transfer(k)*transfer_Nils(k)), fmt='o', label=r'co7', color='purple')
   
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean2, 'k', alpha=0.4)
