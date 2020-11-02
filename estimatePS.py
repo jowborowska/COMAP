@@ -182,6 +182,7 @@ def call_all(mapname, split):
 k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn')
 #k6c, mean6c, sigma6c = call_all('co6_map_complete_sunel_ces', 'dayn')
 #k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn')
+no_k = len(k2c)
 '''
 xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c])
 xs_mean_arr = np.array([mean2c, mean6c, mean7c])
