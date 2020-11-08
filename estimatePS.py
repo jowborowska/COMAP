@@ -185,7 +185,7 @@ k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn')
 no_k = len(k2c)
 print ('k2c', k2c)
 print ('mean2c', mean2c)
-print ('sigma2c', signma2c)
+print ('sigma2c', sigma2c)
 '''
 xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c])
 xs_mean_arr = np.array([mean2c, mean6c, mean7c])
