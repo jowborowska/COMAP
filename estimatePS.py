@@ -147,7 +147,7 @@ def calculate_PS_amplitude(k, xs_mean, xs_sigma):
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    xs_mean = xs_mean/(transfer(k)*transfer_Nils(k))
    xs_sigma = xs_sigma/(transfer(k)*transfer_Nils(k))
-   for i in range(4,no_of_k-3): #we exclude 4 first points and 3 last points
+   for i in range(4,no_of_k-3): #we exclude 4 first points and 3 last points, previously excluded 2 first
       print (k[i]*xs_mean[i], k[i]*xs_sigma[i])
       w = 1./ xs_sigma[i]**2.
       w_sum += w
@@ -165,7 +165,7 @@ def calculate_PS_amplitude_better(k, xs_mean, xs_sigma):
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    xs_mean = xs_mean/(transfer(k)*transfer_Nils(k)*P_theory(k))
    xs_sigma = xs_sigma/(transfer(k)*transfer_Nils(k)*P_theory(k))
-   for i in range(4,no_of_k-3): #we exclude 4 first points and 3 last points
+   for i in range(4,no_of_k-3): #we exclude 4 first points and 3 last points, previously excluded 2 first
       w = 1./ xs_sigma[i]**2.
       w_sum += w
       PS_estimate += w*xs_mean[i]
@@ -184,6 +184,8 @@ k2c, mean2c, sigma2c = call_all('co2_map_complete_sunel_ces', 'dayn')
 #k7c, mean7c, sigma7c = call_all('co7_map_complete_sunel_ces', 'dayn')
 no_k = len(k2c)
 print ('k2c', k2c)
+print ('mean2c', mean2c)
+print ('sigma2c', signma2c)
 '''
 xs_sigma_arr = np.array([sigma2c,sigma6c,sigma7c])
 xs_mean_arr = np.array([mean2c, mean6c, mean7c])
@@ -207,9 +209,11 @@ print ('PS2', PS_estimate_2, PS_error_2) #PS2 12.881779694882994 4.9160776088357
 '''
 PS_estimate_1, PS_error_1 = calculate_PS_amplitude(k2c, mean2c, sigma2c)
 PS_estimate_2, PS_error_2 = calculate_PS_amplitude_better(k2c, mean2c, sigma2c)
-print ('PS1', PS_estimate_1, PS_error_1) #PS1 8501.497553100298 22182.74198158648
-print ('PS2', PS_estimate_2, PS_error_2) #PS2 -0.5309810823690728 8.607523530565278
+print ('PS1', PS_estimate_1, PS_error_1) 
+print ('PS2', PS_estimate_2, PS_error_2) 
 
+#PS1 8496.58335475071 22182.791182467696
+#PS2 -0.5425939574210513 8.608316607884488
 
 
 PS_estimate_arr = np.zeros(no_k) + PS_estimate_1
