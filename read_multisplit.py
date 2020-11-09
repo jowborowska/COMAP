@@ -75,28 +75,28 @@ map_split_coadded_ambt, rms_split_coadded_ambt = coadd_split(map_split, rms_spli
 
 def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
     #create the name
-    0part = field + '_map_'
+    part0 = field + '_map_'
     if elev == 'coadded':
-       1part = 'coadded_elev_'
+       part1 = 'coadded_elev_'
        my_map = map_out[cesc,:,ambt,:,:,:,:,:]
        my_rms = rms_out[cesc,:,ambt,:,:,:,:,:]
     if ambt == 'coadded':
-       1part = 'coadded_ambt_'
+       part1 = 'coadded_ambt_'
        my_map = map_out[cesc,:,elev,:,:,:,:,:]
        my_rms = rms_out[cesc,:,elev,:,:,:,:,:]
     if cesc == 0:
-       2part = 'ces_' #is that ces or liss??
+       part2 = 'ces_' #is that ces or liss??
     if cesc == 1:
-       2part = 'liss_' #is that ces or liss??
+       part2 = 'liss_' #is that ces or liss??
     if ambt == 0:
-       3part = 'lower_ambt.h5'
+       part3 = 'lower_ambt.h5'
     if ambt == 1:
-       3part = 'upper_ambt.h5'
+       part3 = 'upper_ambt.h5'
     if elev == 0:
-       3part = 'lower_elev.h5'
+       part3 = 'lower_elev.h5'
     if elev == 1:
-       3part = 'upper_elev.h5'
-    new_mapname = 0part + 1part + 2part + 3part
+       part3 = 'upper_elev.h5'
+    new_mapname = part0 + part1 + part2 + part3
     print ('Creating HDF5 file for the map ' + new_mapname + '.')
        
     f = h5py.File(new_mapname, 'w')
