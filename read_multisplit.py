@@ -29,24 +29,38 @@ def coadd_split(old_map_split, old_rms_split, elev_or_ambt):
    new_rms_split = np.zeros(new_map_shape)
    w_sum = np.zeros(new_map_shape)
    if elev_or_ambt == 'elev':
+      print ('Coadding elev-split.')
       for i in range(2):
-            weight = 1./old_rms_split[:,:,i,:,:,:,:,:,:]**2.
+            mask = np.zeros(new_map_shape)
+            mask[(old_rms_split[:,:,i,:,:,:,:,:,:] != 0.0)] = 1.0
+            where = (mask == 1.0) 
+            weight = np.zeros(new_map_shape)
+            weight[where] = 1./old_rms_split[:,:,i,:,:,:,:,:,:][where]**2.
             w_sum += weight
             new_map_split += weight*old_map_split[:,:,i,:,:,:,:,:,:]
-      new_map_split = new_map_split/w_sum
-      new_rms_split = w_sum**(-0.5)  
-      return new_map_split, new_rms_split
    if elev_or_ambt == 'ambt':
-     for i in range(2):
-           weight = 1./old_rms_split[:,:,:,i,:,:,:,:,:]**2.
-           w_sum += weight
-           new_map_split += weight*old_map_split[:,:,:,i,:,:,:,:,:]
-     new_map_split = new_map_split/w_sum
-     new_rms_split = w_sum**(-0.5)  
-     return new_map_split, new_rms_split
+      print ('Coadding ambt-split.')
+      for i in range(2):
+            mask = np.zeros(new_map_shape)
+            mask[(old_rms_split[:,:,:,i,:,:,:,:,:] != 0.0)] = 1.0
+            where = (mask == 1.0) 
+            weight = np.zeros(new_map_shape)
+            weight[where] = 1./old_rms_split[:,:,:,i,:,:,:,:,:][where]**2.
+            w_sum += weight
+            new_map_split += weight*old_map_split[:,:,:,i,:,:,:,:,:]
+   
+   mask2 =  np.zeros_like(w_sum)
+   mask2[(w_sum != 0.0)] = 1.0
+   where2 = (mask2 == 1.0)
+   new_map_split[where2] = new_map_split[where2]/w_sum[where2]
+   new_rms_split[where2] = w_sum[where2]**(-0.5)  
+   return new_map_split, new_rms_split
 
+   
 map_split_coadded_elev, rms_split_coadded_elev = coadd_split(map_split, rms_split, 'elev')
 map_split_coadded_ambt, rms_split_coadded_ambt = coadd_split(map_split, rms_split, 'ambt')
+
+
 
 
 
