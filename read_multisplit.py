@@ -49,16 +49,19 @@ def coadd_split(old_map_split, old_rms_split, elev_or_ambt):
             w_sum += weight
             new_map_split += weight*old_map_split[:,:,:,i,:,:,:,:,:]
    
-   mask2 =  np.zeros_like(w_sum)
+   mask2 =  np.zeros_like(new_map_shape)
    mask2[(w_sum != 0.0)] = 1.0
    where2 = (mask2 == 1.0)
    new_map_split[where2] = new_map_split[where2]/w_sum[where2]
    new_rms_split[where2] = w_sum[where2]**(-0.5)  
    return new_map_split, new_rms_split
 
-   
-map_split_coadded_elev, rms_split_coadded_elev = coadd_split(map_split, rms_split, 'elev')
-map_split_coadded_ambt, rms_split_coadded_ambt = coadd_split(map_split, rms_split, 'ambt')
+#we want to coadd two elevation-splits and look at ambient, as well as add two ambient-splits and look at elevation   
+map_split_coadded_elev, rms_split_coadded_elev = coadd_split(map_split, rms_split, 'elev') #cesc, sune, ambt, feed, sideband, freq, x, y
+map_split_coadded_ambt, rms_split_coadded_ambt = coadd_split(map_split, rms_split, 'ambt') #cesc, sune, elev, feed, sideband, freq, x, y
+
+#now, fro three first indices 0 means first half of the data, 1 means second half of the data, with respect to that feature
+#for coadded elev we would have 4 final maps: lower cesc - upper ambt [0,:,1], upper cesc - lower ambt [1,:,0], lower cesc - lower ambt [0,:,0], upper cesc - upper ambient [1,:,1], and similarly for coadded ambt -> the whole program would give us 8 maps with two sune-splits
 
 
 
