@@ -85,18 +85,18 @@ def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
        my_map = map_out[cesc,:,elev,:,:,:,:,:]
        my_rms = rms_out[cesc,:,elev,:,:,:,:,:]
     if cesc == 0:
-       part2 = 'ces_' #is that ces or liss??
+       part2 = 'ces.h5' #is that ces or liss??
     if cesc == 1:
-       part2 = 'liss_' #is that ces or liss??
+       part2 = 'liss.h5' #is that ces or liss??
     if ambt == 0:
-       part3 = 'lower_ambt.h5'
+       part3 = 'lower_ambt_'
     if ambt == 1:
-       part3 = 'upper_ambt.h5'
+       part3 = 'upper_ambt_'
     if elev == 0:
-       part3 = 'lower_elev.h5'
+       part3 = 'lower_elev_'
     if elev == 1:
-       part3 = 'upper_elev.h5'
-    new_mapname = part0 + part1 + part2 + part3
+       part3 = 'upper_elev_'
+    new_mapname = part0 + part1 + part3 + part2
     print ('Creating HDF5 file for the map ' + new_mapname + '.')
        
     f = h5py.File(new_mapname, 'w')
