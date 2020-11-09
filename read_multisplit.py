@@ -7,4 +7,10 @@ input_map = h5py.File(mappath, 'r')
 keys_list = list(input_map.keys())
 
 print (keys_list)
+'''
+['feeds', 'freq', 'jackknives', 'map', 'map_coadd', 'mean_az', 'mean_el', 'n_x', 'n_y', 'nhit', 'nhit_coadd', 'njk', 'nside', 'nsim', 'patch_center', 'rms', 'rms_coadd', 'time', 'x', 'y']
+'''
+jackknives = input_map['jackknives']
+
+print (jackknives.keys())
 
