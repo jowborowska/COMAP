@@ -17,6 +17,6 @@ jackknives = input_map['jackknives']
 '''
 ['jk_def', 'jk_feedmap', 'map_sidr', 'map_split', 'nhit_sidr', 'nhit_split', 'rms_sidr', 'rms_split']
 '''
-map_split = jackknives['map_split']
+map_split = np.array(jackknives['map_split'][:]) #shape (16, 19, 4, 64, 120, 120)
 #map_split = np.array(map_split)
-print (map_split)
+print (map_split.shape)
