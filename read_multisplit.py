@@ -59,7 +59,7 @@ def coadd_split(old_map_split, old_rms_split, elev_or_ambt):
             w_sum += weight
             new_map_split += weight*old_map_split[:,:,:,i,:,:,:,:,:]
    
-   mask2 =  np.zeros_like(new_map_shape)
+   mask2 =  np.zeros(new_map_shape)
    mask2[(w_sum != 0.0)] = 1.0
    where2 = (mask2 == 1.0)
    new_map_split[where2] = new_map_split[where2]/w_sum[where2]
