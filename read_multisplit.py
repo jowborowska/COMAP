@@ -2,6 +2,7 @@ import h5py
 import numpy as np
 
 mapname = 'co6_map_complete_sunel_multisplit.h5' #co2_map_complete_sunel_multisplit.h5
+field = 'co6'
 mappath = '/mn/stornext/d16/cmbco/comap/protodir/maps/' + mapname
 
 input_map = h5py.File(mappath, 'r')
@@ -11,6 +12,15 @@ keys_list = list(input_map.keys())
 '''
 ['feeds', 'freq', 'jackknives', 'map', 'map_coadd', 'mean_az', 'mean_el', 'n_x', 'n_y', 'nhit', 'nhit_coadd', 'njk', 'nside', 'nsim', 'patch_center', 'rms', 'rms_coadd', 'time', 'x', 'y']
 '''
+print ('Reading common parts.')
+data_map = np.array(input_map['map'][:])
+rms_map = np.array(input_map['rms'][:])
+data_beam_map = np.array(input_map['map_coadd'][:])
+rms_beam_map = np.array(input_map['rms_coadd'][:])
+x = np.array(input_map['x'][:])
+y = np.array(input_map['y'][:])
+freq = np.array(input_map['freq'][:])
+
 jackknives = input_map['jackknives']
 
 #print (jackknives.keys())
@@ -63,6 +73,46 @@ map_split_coadded_ambt, rms_split_coadded_ambt = coadd_split(map_split, rms_spli
 #now, fro three first indices 0 means first half of the data, 1 means second half of the data, with respect to that feature
 #for coadded elev we would have 4 final maps: lower cesc - upper ambt [0,:,1], upper cesc - lower ambt [1,:,0], lower cesc - lower ambt [0,:,0], upper cesc - upper ambient [1,:,1], and similarly for coadded ambt -> the whole program would give us 8 maps with two sune-splits
 
+def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
+    #create the name
+    0part = field + '_map_'
+    if elev == 'coadded':
+       1part = 'coadded_elev_'
+       my_map = map_out[cesc,:,ambt,:,:,:,:,:]
+       my_rms = rms_out[cesc,:,ambt,:,:,:,:,:]
+    if ambt == 'coadded':
+       1part = 'coadded_ambt_'
+       my_map = map_out[cesc,:,elev,:,:,:,:,:]
+       my_rms = rms_out[cesc,:,elev,:,:,:,:,:]
+    if cesc == 0:
+       2part = 'ces_' #is that ces or liss??
+    if cesc == 1:
+       2part = 'liss_' #is that ces or liss??
+    if ambt == 0:
+       3part = 'lower_ambt.h5'
+    if ambt == 1:
+       3part = 'upper_ambt.h5'
+    if elev == 0:
+       3part = 'lower_elev.h5'
+    if elev == 1:
+       3part = 'upper_elev.h5'
+    new_mapname = 0part + 1part + 2part + 3part
+    print ('Creating HDF5 file for the map ' + new_mapname + '.')
+       
+    f = h5py.File(new_mapname, 'w')
+    f.create_dataset('rms', data=rms_map)
+    f.create_dataset('map', data=data_map)
+    f.create_dataset('rms_coadd', data=rms_beam_map) 
+    f.create_dataset('map_coadd', data=data_beam_map) 
+    f.create_dataset('x', data=x)
+    f.create_dataset('y', data=y)
+    f.create_dataset('freq', data=freq)
+    f.create_dataset('/jackknives/map_dayn', data=my_map)
+    f.create_dataset('/jackknives/rms_dayn', data=my_rms)
+    f.close()
+
+#for ces, upper elev, coadded ambt, co6 field
+create_output_map(0,1,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
 
 
