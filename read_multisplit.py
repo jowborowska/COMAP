@@ -18,5 +18,36 @@ jackknives = input_map['jackknives']
 ['jk_def', 'jk_feedmap', 'map_sidr', 'map_split', 'nhit_sidr', 'nhit_split', 'rms_sidr', 'rms_split']
 '''
 map_split = np.array(jackknives['map_split'][:]) #shape (16, 19, 4, 64, 120, 120)
-#map_split = np.array(map_split)
-print (map_split.shape)
+rms_split = np.array(jackknives['rms_split'][:]) #shape (16, 19, 4, 64, 120, 120)
+shp = map_split.shape
+map_split = map_split.reshape((2,2,2,2,shp[1],shp[2],shp[3],shp[4],shp[5])) #cesc, sune, elev, ambt, feed, sideband, freq, x, y
+rms_split = rms_split.reshape((2,2,2,2,shp[1],shp[2],shp[3],shp[4],shp[5]))
+
+def coadd_split(old_map_split, old_rms_split, elev_or_ambt):
+   new_map_shape = (2,2,2,19,4,64,120,120)
+   new_map_split = np.zeros(new_map_shape)
+   new_rms_split = np.zeros(new_map_shape)
+   w_sum = np.zeros(new_map_shape)
+   if elev_or_ambt == 'elev':
+      for i in range(2):
+            weight = 1./old_rms_split[:,:,i,:,:,:,:,:,:]**2.
+            w_sum += weight
+            new_map_split += weight*old_map_split[:,:,i,:,:,:,:,:,:]
+      new_map_split = new_map_split/w_sum
+      new_rms_split = w_sum**(-0.5)  
+      return new_map_split, new_rms_split
+   if elev_or_ambt == 'ambt':
+     for i in range(2):
+           weight = 1./old_rms_split[:,:,:,i,:,:,:,:,:]**2.
+           w_sum += weight
+           new_map_split += weight*old_map_split[:,:,:,i,:,:,:,:,:]
+     new_map_split = new_map_split/w_sum
+     new_rms_split = w_sum**(-0.5)  
+     return new_map_split, new_rms_split
+
+map_split_coadded_elev, rms_split_coadded_elev = coadd_split(map_split, rms_split, 'elev')
+map_split_coadded_ambt, rms_split_coadded_ambt = coadd_split(map_split, rms_split, 'ambt')
+
+
+
+
