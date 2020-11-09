@@ -19,4 +19,4 @@ jackknives = input_map['jackknives']
 '''
 map_split = jackknives['map_split']
 map_split = np.array(map_split)
-print map_split.shape()
+print (map_split.shape())
