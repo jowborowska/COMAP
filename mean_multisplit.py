@@ -160,7 +160,7 @@ def call_all(mapname, split, scan_strategy):
    xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +'_feed%01i.h5'
    k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' + mapname + '_' + split + '.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split')
    name_list = mapname.split('_')
-   titlename = name_list[0] + ' field, coadded ' + name_list[3] + name_list[4] + ' ' + name_list[5] + ' ' + scan_strategy
+   titlename = name_list[0] + ' field, coadded ' + name_list[3] + ' ' + name_list[4] + ' ' + name_list[5] + ', ' + scan_strategy
    print (titlename)
    figurename = 'xs_mean_' + mapname + '_' + split + '.pdf'
    xs_with_model(figurename, k, xs_mean, xs_sigma, titlename, scan_strategy)
