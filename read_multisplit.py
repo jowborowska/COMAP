@@ -99,7 +99,8 @@ def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
        part3 = 'upper_elev_'
     new_mapname = part0 + part1 + part3 + part2
     print ('Creating HDF5 file for the map ' + new_mapname + '.')
-    mapnames_created.append(mapname)
+    mapnames_created.append(new_mapname)
+
     f = h5py.File(new_mapname, 'w')
     f.create_dataset('rms', data=rms_map)
     f.create_dataset('map', data=data_map)
