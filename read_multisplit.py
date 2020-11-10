@@ -73,6 +73,7 @@ map_split_coadded_ambt, rms_split_coadded_ambt = coadd_split(map_split, rms_spli
 #now, fro three first indices 0 means first half of the data, 1 means second half of the data, with respect to that feature
 #for coadded elev we would have 4 final maps: lower cesc - upper ambt [0,:,1], upper cesc - lower ambt [1,:,0], lower cesc - lower ambt [0,:,0], upper cesc - upper ambient [1,:,1], and similarly for coadded ambt -> the whole program would give us 8 maps with two sune-splits
 
+mapnames_created = [] 
 def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
     #create the name
     part0 = field + '_map_'
@@ -85,9 +86,9 @@ def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
        my_map = map_out[cesc,:,elev,:,:,:,:,:]
        my_rms = rms_out[cesc,:,elev,:,:,:,:,:]
     if cesc == 0:
-       part2 = 'ces.h5' #is that ces or liss??
+       part2 = 'ces.h5' 
     if cesc == 1:
-       part2 = 'liss.h5' #is that ces or liss??
+       part2 = 'liss.h5' 
     if ambt == 0:
        part3 = 'lower_ambt_'
     if ambt == 1:
@@ -98,7 +99,7 @@ def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
        part3 = 'upper_elev_'
     new_mapname = part0 + part1 + part3 + part2
     print ('Creating HDF5 file for the map ' + new_mapname + '.')
-       
+    mapnames_created.append(mapname)
     f = h5py.File(new_mapname, 'w')
     f.create_dataset('rms', data=rms_map)
     f.create_dataset('map', data=data_map)
@@ -114,7 +115,26 @@ def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
 #for ces, upper elev, coadded ambt, co6 field
 create_output_map(0,1,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
+#for liss, upper elev, coadded ambt, co6 field
+create_output_map(1,1,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
+#for ces, lower elev, coadded ambt, co6 field
+create_output_map(0,0,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
+#for liss, lower elev, coadded ambt, co6 field
+create_output_map(1,0,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
+#for ces, coadded elev, lower ambt, co6 field
+create_output_map(0,'coadded', 0,field, map_split_coadded_elev, rms_split_coadded_elev)
+
+#for liss, coadded elev, lower ambt, co6 field
+create_output_map(1,'coadded', 0,field, map_split_coadded_elev, rms_split_coadded_elev)
+
+#for ces, coadded elev, upper ambt, co6 field
+create_output_map(0,'coadded', 1, field, map_split_coadded_elev, rms_split_coadded_elev)
+
+#for liss, coadded elev, upper ambt, co6 field
+create_output_map(1,'coadded', 1, field, map_split_coadded_elev, rms_split_coadded_elev)
+
+print ('All the maps created: ', mapnames_created)
 
