@@ -1,8 +1,8 @@
 import h5py
 import numpy as np
 
-mapname = 'co6_map_complete_sunel_multisplit.h5' #co2_map_complete_sunel_multisplit.h5
-field = 'co6'
+mapname = 'co2_map_complete_sunel_multisplit.h5'
+field = 'co2'
 mappath = '/mn/stornext/d16/cmbco/comap/protodir/maps/' + mapname
 
 input_map = h5py.File(mappath, 'r')
@@ -113,28 +113,28 @@ def create_output_map(cesc, elev, ambt, field, map_out, rms_out):
     f.create_dataset('/jackknives/rms_dayn', data=my_rms)
     f.close()
 
-#for ces, upper elev, coadded ambt, co6 field
+#for ces, upper elev, coadded ambt
 create_output_map(0,1,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
-#for liss, upper elev, coadded ambt, co6 field
+#for liss, upper elev, coadded ambt
 create_output_map(1,1,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
-#for ces, lower elev, coadded ambt, co6 field
+#for ces, lower elev, coadded ambt
 create_output_map(0,0,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
-#for liss, lower elev, coadded ambt, co6 field
+#for liss, lower elev, coadded ambt
 create_output_map(1,0,'coadded',field, map_split_coadded_ambt, rms_split_coadded_ambt)
 
-#for ces, coadded elev, lower ambt, co6 field
+#for ces, coadded elev, lower ambt
 create_output_map(0,'coadded', 0,field, map_split_coadded_elev, rms_split_coadded_elev)
 
-#for liss, coadded elev, lower ambt, co6 field
+#for liss, coadded elev, lower ambt
 create_output_map(1,'coadded', 0,field, map_split_coadded_elev, rms_split_coadded_elev)
 
-#for ces, coadded elev, upper ambt, co6 field
+#for ces, coadded elev, upper ambt
 create_output_map(0,'coadded', 1, field, map_split_coadded_elev, rms_split_coadded_elev)
 
-#for liss, coadded elev, upper ambt, co6 field
+#for liss, coadded elev, upper ambt
 create_output_map(1,'coadded', 1, field, map_split_coadded_elev, rms_split_coadded_elev)
 
 print ('All the maps created: ', mapnames_created)
