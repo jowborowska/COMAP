@@ -103,13 +103,17 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, titlename, scan_strategy):
    transfer = scipy.interpolate.interp1d(k_th, ps_th / ps_th_nobeam) #transfer(k) always < 1, values at high k are even larger and std as well
    transfer_Nils = scipy.interpolate.interp1d(k_Nils, T_Nils) 
    P_theory = scipy.interpolate.interp1d(k_th,ps_th_nobeam)
-  
+   if scan_strategy == 'ces':
+      plotcolor = 'indianred'
+   if scan_strategy == 'liss':
+      plotcolor = 'teal'
+
    lim = np.mean(np.abs(xs_mean[4:-2] * k[4:-2])) * 8
    fig = plt.figure()
    #fig.set_figwidth(8)
    ax1 = fig.add_subplot(211)
   
-   ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', color='indianred')
+   ax1.errorbar(k, k * xs_mean / (transfer(k)*transfer_Nils(k)), k * xs_sigma / (transfer(k)*transfer_Nils(k)), fmt='o', color=plotcolor)
    #ax1.errorbar(k, k * xs_mean, k * xs_sigma, fmt='o', label=r'$k\tilde{C}_{data}(k)$')
    ax1.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax1.plot(k, k*PS_function.PS_f(k)/ transfer(k), label='k*PS of the input signal')
@@ -121,12 +125,12 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, titlename, scan_strategy):
       ax1.set_ylim(-lim*3, lim*3)              # ax1.set_ylim(0, 0.1)
    if scan_strategy == 'liss':
       ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
-   ax1.set_xlim(0.04,0.7)
+   ax1.set_xlim(0.04,1.)
    ax1.set_xscale('log')
    ax1.set_title(titlename)
    ax1.grid()
    #ax1.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=14)
-   labnums = [0.05,0.1, 0.2, 0.5]
+   labnums = [0.05,0.1, 0.2, 0.5,1.]
    ax1.set_xticks(labnums)
    ax1.get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
    #plt.legend(bbox_to_anchor=(0, 0.61))
@@ -135,14 +139,14 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, titlename, scan_strategy):
    ax2 = fig.add_subplot(212)
    #ax2.plot(k, diff_mean / error, fmt='o', label=r'$\tilde{C}_{diff}(k)$', color='black')
   
-   ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma/xs_sigma, fmt='o', color='indianred')
+   ax2.errorbar(k, xs_mean / xs_sigma, xs_sigma/xs_sigma, fmt='o', color=plotcolor)
    #ax2.errorbar(k, sum_mean / error, error /error, fmt='o', label=r'$\tilde{C}_{sum}(k)$', color='mediumorchid')
    ax2.plot(k, 0 * xs_mean, 'k', alpha=0.4)
    #ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$')
    ax2.set_ylabel(r'$\tilde{C}(k) / \sigma_\tilde{C}$', fontsize=14)
    ax2.set_xlabel(r'$k$ [Mpc${}^{-1}$]', fontsize=14)
    ax2.set_ylim(-5, 5)
-   ax2.set_xlim(0.04,0.7)
+   ax2.set_xlim(0.04,1.)
    ax2.set_xscale('log')
    ax2.grid()
    #ax2.legend(ncol=3)
