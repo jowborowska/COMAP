@@ -175,7 +175,7 @@ call_all('co6_map_coadded_ambt_upper_elev_liss', 'dayn', 'liss')
 call_all('co6_map_coadded_ambt_lower_elev_ces', 'dayn', 'ces')
 call_all('co6_map_coadded_ambt_lower_elev_liss', 'dayn','liss')
 call_all('co6_map_coadded_elev_lower_ambt_ces', 'dayn', 'ces')
-cal_all('co6_map_coadded_elev_lower_ambt_liss', 'dayn', 'liss')
+call_all('co6_map_coadded_elev_lower_ambt_liss', 'dayn', 'liss')
 call_all('co6_map_coadded_elev_upper_ambt_ces', 'dayn', 'ces')
 call_all('co6_map_coadded_elev_upper_ambt_liss', 'dayn', 'liss')
 
