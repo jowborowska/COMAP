@@ -139,3 +139,7 @@ create_output_map(1,'coadded', 1, field, map_split_coadded_elev, rms_split_coadd
 
 print ('All the maps created: ', mapnames_created)
 
+'''
+All the maps created:  ['co6_map_coadded_ambt_upper_elev_ces.h5', 'co6_map_coadded_ambt_upper_elev_liss.h5', 'co6_map_coadded_ambt_lower_elev_ces.h5', 'co6_map_coadded_ambt_lower_elev_liss.h5', 'co6_map_coadded_elev_lower_ambt_ces.h5', 'co6_map_coadded_elev_lower_ambt_liss.h5', 'co6_map_coadded_elev_upper_ambt_ces.h5', 'co6_map_coadded_elev_upper_ambt_liss.h5']
+'''
+
