@@ -1,8 +1,8 @@
 import h5py
 import numpy as np
 
-mapname = 'co2_map_complete_sunel_multisplit.h5'
-field = 'co2'
+mapname = 'co7_map_complete_sunel_multisplit.h5'
+field = 'co7'
 mappath = '/mn/stornext/d16/cmbco/comap/protodir/maps/' + mapname
 
 input_map = h5py.File(mappath, 'r')
@@ -140,6 +140,6 @@ create_output_map(1,'coadded', 1, field, map_split_coadded_elev, rms_split_coadd
 print ('All the maps created: ', mapnames_created)
 
 '''
-All the maps created:  ['co6_map_coadded_ambt_upper_elev_ces.h5', 'co6_map_coadded_ambt_upper_elev_liss.h5', 'co6_map_coadded_ambt_lower_elev_ces.h5', 'co6_map_coadded_ambt_lower_elev_liss.h5', 'co6_map_coadded_elev_lower_ambt_ces.h5', 'co6_map_coadded_elev_lower_ambt_liss.h5', 'co6_map_coadded_elev_upper_ambt_ces.h5', 'co6_map_coadded_elev_upper_ambt_liss.h5']
+All the maps created:  ['co2_map_coadded_ambt_upper_elev_ces.h5', 'co2_map_coadded_ambt_upper_elev_liss.h5', 'co2_map_coadded_ambt_lower_elev_ces.h5', 'co2_map_coadded_ambt_lower_elev_liss.h5', 'co2_map_coadded_elev_lower_ambt_ces.h5', 'co2_map_coadded_elev_lower_ambt_liss.h5', 'co2_map_coadded_elev_upper_ambt_ces.h5', 'co2_map_coadded_elev_upper_ambt_liss.h5']
 '''
 
