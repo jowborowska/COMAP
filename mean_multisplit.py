@@ -170,6 +170,7 @@ def call_all(mapname, split, scan_strategy):
    print (figurename)
    #return k, xs_mean, xs_sigma
 
+'''
 call_all('co7_map_coadded_ambt_upper_elev_ces', 'dayn', 'ces')
 call_all('co7_map_coadded_ambt_upper_elev_liss', 'dayn', 'liss')
 call_all('co7_map_coadded_ambt_lower_elev_ces', 'dayn', 'ces')
@@ -178,6 +179,27 @@ call_all('co7_map_coadded_elev_lower_ambt_ces', 'dayn', 'ces')
 call_all('co7_map_coadded_elev_lower_ambt_liss', 'dayn', 'liss')
 call_all('co7_map_coadded_elev_upper_ambt_ces', 'dayn', 'ces')
 call_all('co7_map_coadded_elev_upper_ambt_liss', 'dayn', 'liss')
+'''
+
+
+def call_all_both_coadded(mapname, split, scan_strategy):
+   xs_files = 'spectra/xs_' + mapname + '_1st_' + split + '_feed%01i_and_' + mapname +'_2nd_' + split +'_feed%01i.h5'
+   k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' + mapname + '_' + split + '.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split')
+   name_list = mapname.split('_')
+   titlename = name_list[0] + ' field, coadded El and ambt, ', ' + scan_strategy
+   figurename = 'xs_mean_' + mapname + '_' + split + '.pdf'
+   xs_with_model(figurename, k, xs_mean, xs_sigma, titlename, scan_strategy)
+   print (figurename)
+   #return k, xs_mean, xs_sigma
+
+#here I correct the naming liss/ces
+call_all_both_coadded('co7_map_ces', 'dayn', 'liss')
+call_all_both_coadded('co7_map_liss', 'dayn', 'ces')
+call_all_both_coadded('co6_map_ces', 'dayn', 'liss')
+call_all_both_coadded('co6_map_liss', 'dayn', 'ces')
+call_all_both_coadded('co2_map_ces', 'dayn', 'liss')
+call_all_both_coadded('co2_map_liss', 'dayn', 'ces')
+
 
 
 
