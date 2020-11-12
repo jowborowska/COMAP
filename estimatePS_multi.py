@@ -178,8 +178,11 @@ def call_all(mapname, split):
    k, xs_mean, xs_sigma = xs_feed_feed_grid(xs_files, 'xs_grid_' + mapname + '_' + split + '.png', ' of 1st ' + split + ' split', ' of 2nd ' + split + ' split')
    #xs_with_model('xs_mean_' + mapname + '_' + split + '.png', k, xs_mean, xs_sigma)
    return k, xs_mean, xs_sigma
-
+'''
 maps_to_coadd = ['co2_map_coadded_ambt_upper_elev_ces', 'co6_map_coadded_elev_lower_ambt_ces', 'co7_map_coadded_ambt_upper_elev_ces', 'co7_map_coadded_ambt_lower_elev_ces', 'co7_map_coadded_elev_lower_ambt_ces', 'co7_map_coadded_elev_upper_ambt_ces', 'co2_map_coadded_ambt_upper_elev_liss', 'co2_map_coadded_ambt_lower_elev_liss', 'co2_map_coadded_elev_lower_ambt_liss', 'co2_map_coadded_elev_upper_ambt_liss', 'co6_map_coadded_elev_lower_ambt_liss']
+'''
+
+maps_to_coadd = ['co7_map_liss', 'co6_map_liss', 'co2_map_liss', 'co7_map_ces']
 
 
 no_maps = len(maps_to_coadd)
@@ -207,15 +210,22 @@ sigma_combined = w_sum**(-0.5)
 
 PS_estimate_1, PS_error_1 = calculate_PS_amplitude(k, mean_combined, sigma_combined)
 PS_estimate_2, PS_error_2 = calculate_PS_amplitude_better(k, mean_combined, sigma_combined)
-print ('PS1', PS_estimate_1, PS_error_1)
-print ('PS2', PS_estimate_2, PS_error_2)
+print ('A1', PS_estimate_1, PS_error_1)
+print ('A2', PS_estimate_2, PS_error_2)
+
+#for the many maps
+#A1 -30439.95352185144 15230.341349226537
+#A2 -10.583968388802706 6.031752741715404
+
+#for 3 ces and co7 liss
+
 
 PS_estimate_arr = np.zeros(no_k) + PS_estimate_1
 PS_error_arr = np.zeros(no_k) + PS_error_1
 PS_estimate_arr2 = np.zeros(no_k) + PS_estimate_2
 PS_error_arr2 = np.zeros(no_k) + PS_error_2
-xs_with_model('xs_mean_multicombo_v2.pdf', k, mean_combined, sigma_combined, PS_estimate_arr2, PS_error_arr2, better=True)
-xs_with_model('xs_mean_multicombo_v1.pdf', k, mean_combined, sigma_combined, PS_estimate_arr, PS_error_arr, better=False)
+xs_with_model('xs_mean_3ces_1liss_v2.pdf', k, mean_combined, sigma_combined, PS_estimate_arr2, PS_error_arr2, better=True)
+xs_with_model('xs_mean_3ces_1liss_v1.pdf', k, mean_combined, sigma_combined, PS_estimate_arr, PS_error_arr, better=False)
 
 
 
