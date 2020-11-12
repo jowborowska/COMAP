@@ -124,7 +124,7 @@ def xs_with_model(figure_name, k, xs_mean, xs_sigma, titlename, scan_strategy):
    if scan_strategy == 'ces':
       ax1.set_ylim(-lim*3, lim*3)              # ax1.set_ylim(0, 0.1)
    if scan_strategy == 'liss':
-      ax1.set_ylim(-lim, lim)              # ax1.set_ylim(0, 0.1)
+      ax1.set_ylim(-lim*2, lim*2)              # ax1.set_ylim(0, 0.1)
    ax1.set_xlim(0.04,1.)
    ax1.set_xscale('log')
    ax1.set_title(titlename)
