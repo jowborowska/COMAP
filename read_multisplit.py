@@ -1,8 +1,8 @@
 import h5py
 import numpy as np
 
-mapname = 'co7_map_complete_sunel_multisplit.h5'
-field = 'co7'
+mapname = 'co6_map_complete_sunel_multisplit.h5'
+field = 'co6'
 mappath = '/mn/stornext/d16/cmbco/comap/protodir/maps/' + mapname
 
 input_map = h5py.File(mappath, 'r')
@@ -149,6 +149,12 @@ def create_output_map(cesc, elev, ambt, field, map_out, rms_out, both_coadded=Fa
 create_output_map(0,'coadded','coadded',field, map_split_coadded_ambt_and_elev, rms_split_coadded_ambt_and_elev, True)
 create_output_map(1,'coadded','coadded',field, map_split_coadded_ambt_and_elev, rms_split_coadded_ambt_and_elev, True)
 print ('All the maps created: ', mapnames_created)
+
+'''
+All the maps created:  ['co7_map_ces.h5', 'co7_map_liss.h5']
+'''
+
+
 
 '''
 #for ces, upper elev, coadded ambt
