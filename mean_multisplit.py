@@ -61,9 +61,9 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
                   with h5py.File(filepath, mode="r") as my_file:
                       print ("finds file", i, j)
                       xs[i, j] = np.array(my_file['xs'][:])
-                      print ("xs")
+                      print (xs[i,j])
                       rms_xs_std[i, j] = np.array(my_file['rms_xs_std'][:])
-                      print ("rms_xs_std")
+                      print (rms_xs_std[i,j])
                       k[:] = np.array(my_file['k'][:])
               except:
                   xs[i, j] = np.nan
