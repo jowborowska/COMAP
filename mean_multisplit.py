@@ -76,7 +76,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               #if i != j and not np.isnan(chi2[i,j]): #cut on chi2 not necessary for the testing
               if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
                   xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
-                  #print ("if test worked")
+                  print ("if test worked")
                   xs_div += 1 / rms_xs_std[i,j] ** 2
                   n_sum += 1
 
