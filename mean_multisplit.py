@@ -59,7 +59,6 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               try:
                   filepath = path_to_xs %(i+1, j+1)
                   with h5py.File(filepath, mode="r") as my_file:
-                      print ('finds this file')
                       xs[i, j] = np.array(my_file['xs'][:])
                       rms_xs_std[i, j] = np.array(my_file['rms_xs_std'][:])
                       k[:] = np.array(my_file['k'][:])
@@ -74,8 +73,8 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               chi2[i, j] = np.sign(chi3) * abs((np.sum((xs[i,j] / rms_xs_std[i,j]) ** 2) - n_k) / np.sqrt(2 * n_k)) #chi2 gives magnitude - how far it is from the white noise
               #print ("chi2: ", chi2[i, j]) #this chi2 is very very big, so it never comes through the if-test - check how to generate maps with smaller chi2 maybe :)
               #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j: #if excess power is smaller than 5 sigma and chi2 is not nan, and we are not on the diagonal   
-              #if i != j and not np.isnan(chi2[i,j]): #removed cut on chi2 for day data
-              if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
+              if i != j and not np.isnan(chi2[i,j]): #removed cut on chi2 for day data
+              #if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
                   xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
                   print ("if test worked")
                   xs_div += 1 / rms_xs_std[i,j] ** 2
