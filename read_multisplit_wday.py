@@ -94,6 +94,12 @@ def create_output_map(cesc, snup, field, map_out, rms_out):
 create_output_map(0,1,field, map_split_coadded_elev, rms_split_coadded_elev)
 create_output_map(1,1,field, map_split_coadded_elev, rms_split_coadded_elev)
 
+create_output_map(0,0,field, map_split_coadded_elev, rms_split_coadded_elev)
+create_output_map(1,0,field, map_split_coadded_elev, rms_split_coadded_elev)
+
 print ('All the maps created: ', mapnames_created)
 
+'''
+All the maps created:  ['co2_map_day_liss.h5', 'co2_map_day_ces.h5']
+'''
 
