@@ -55,7 +55,7 @@ def coadd_elev(old_map_split, old_rms_split):
    new_rms_split[where2] = w_sum[where2]**(-0.5)  
    return new_map_split, new_rms_split
 
-map_split_coadded_elev, rms_split_coadded_elev = coadd_split(map_split, rms_split) #cesc, snup, sune, feed, sideband, freq, x, y
+map_split_coadded_elev, rms_split_coadded_elev = coadd_elev(map_split, rms_split) #cesc, snup, sune, feed, sideband, freq, x, y
 
 mapnames_created = [] 
 def create_output_map(cesc, snup, field, map_out, rms_out):
