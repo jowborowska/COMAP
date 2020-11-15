@@ -39,14 +39,14 @@ def coadd_elev(old_map_split, old_rms_split):
    new_rms_split = np.zeros(new_map_shape)
    w_sum = np.zeros(new_map_shape)
    print ('Coadding elev-split.')
-      for i in range(2):
-         mask = np.zeros(new_map_shape)
-         mask[(old_rms_split[:,:,:,i,:,:,:,:,:] != 0.0)] = 1.0
-         where = (mask == 1.0) 
-         weight = np.zeros(new_map_shape)
-         weight[where] = 1./old_rms_split[:,:,:,i,:,:,:,:,:][where]**2.
-         w_sum += weight
-         new_map_split += weight*old_map_split[:,:,:,i,:,:,:,:,:]
+   for i in range(2):
+      mask = np.zeros(new_map_shape)
+      mask[(old_rms_split[:,:,:,i,:,:,:,:,:] != 0.0)] = 1.0
+      where = (mask == 1.0) 
+      weight = np.zeros(new_map_shape)
+      weight[where] = 1./old_rms_split[:,:,:,i,:,:,:,:,:][where]**2.
+      w_sum += weight
+      new_map_split += weight*old_map_split[:,:,:,i,:,:,:,:,:]
    
    mask2 =  np.zeros(new_map_shape)
    mask2[(w_sum != 0.0)] = 1.0
