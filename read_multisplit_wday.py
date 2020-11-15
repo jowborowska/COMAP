@@ -28,7 +28,7 @@ print (jackknives.keys())
 ['jk_def', 'jk_feedmap', 'map_sidr', 'map_split', 'nhit_sidr', 'nhit_split', 'rms_sidr', 'rms_split']
 '''
 map_split = np.array(jackknives['map_split'][:]) #shape (16, 19, 4, 64, 120, 120)
-print map_split.shape()
+print (map_split.shape)
 rms_split = np.array(jackknives['rms_split'][:]) #shape (16, 19, 4, 64, 120, 120)
 shp = map_split.shape
 map_split = map_split.reshape((2,2,2,2,shp[1],shp[2],shp[3],shp[4],shp[5])) #cesc, sune, elev, ambt, feed, sideband, freq, x, y
