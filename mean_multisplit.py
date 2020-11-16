@@ -215,8 +215,10 @@ def call_all_wday(mapname, split, scan_strategy):
    print (figurename)
    #return k, xs_mean, xs_sigma
 
-call_all_wday('co2_elmap_day_liss','dayn', 'liss')
-call_all_wday('co2_elmap_day_ces','dayn', 'ces')
+#call_all_wday('co2_elmap_day_liss','dayn', 'liss')
+#call_all_wday('co2_elmap_day_ces','dayn', 'ces')
+call_all_wday('co2_elmap_night_liss','dayn', 'liss')
+call_all_wday('co2_elmap_night_ces','dayn', 'ces')
 
 #call_all_wday('co2_map_day_liss', 'dayn','liss') #here scanning strategy should be correct, fixed that program version
 #call_all_wday('co2_map_day_ces','dayn', 'ces')
