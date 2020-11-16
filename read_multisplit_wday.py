@@ -55,12 +55,36 @@ def coadd_elev(old_map_split, old_rms_split):
    new_rms_split[where2] = w_sum[where2]**(-0.5)  
    return new_map_split, new_rms_split
 
+def coadd_sune(old_map_split, old_rms_split):
+   new_map_shape = (2,2,2,19,4,64,120,120)
+   new_map_split = np.zeros(new_map_shape)
+   new_rms_split = np.zeros(new_map_shape)
+   w_sum = np.zeros(new_map_shape)
+   print ('Coadding sune-split.')
+   for i in range(2):
+      mask = np.zeros(new_map_shape)
+      mask[(old_rms_split[:,:,i,:,:,:,:,:,:] != 0.0)] = 1.0
+      where = (mask == 1.0) 
+      weight = np.zeros(new_map_shape)
+      weight[where] = 1./old_rms_split[:,:,i,:,:,:,:,:,:][where]**2.
+      w_sum += weight
+      new_map_split += weight*old_map_split[:,:,i,:,:,:,:,:,:]
+   
+   mask2 =  np.zeros(new_map_shape)
+   mask2[(w_sum != 0.0)] = 1.0
+   where2 = (mask2 == 1.0)
+   new_map_split[where2] = new_map_split[where2]/w_sum[where2]
+   new_rms_split[where2] = w_sum[where2]**(-0.5)  
+   return new_map_split, new_rms_split
+
 map_split_coadded_elev, rms_split_coadded_elev = coadd_elev(map_split, rms_split) #cesc, snup, sune, feed, sideband, freq, x, y
+
+map_split_coadded_sune, rms_split_coadded_sune = coadd_sune(map_split, rms_split) #cesc, snup, elev, feed, sideband, freq, x, y
 
 mapnames_created = [] 
 def create_output_map(cesc, snup, field, map_out, rms_out):
     #create the name
-    part0 = field + '_map_'
+    part0 = field + '_elmap_' #cause I write El split as dayn
     my_map = map_out[cesc,snup,:,:,:,:,:,:]
     my_rms = rms_out[cesc,snup,:,:,:,:,:,:]
     if cesc == 0:
@@ -91,15 +115,12 @@ def create_output_map(cesc, snup, field, map_out, rms_out):
 
 
 
-create_output_map(0,1,field, map_split_coadded_elev, rms_split_coadded_elev)
-create_output_map(1,1,field, map_split_coadded_elev, rms_split_coadded_elev)
+create_output_map(0,1,field, map_split_coadded_sune, rms_split_coadded_sune)
+create_output_map(1,1,field, map_split_coadded_sune, rms_split_coadded_sune)
 
-create_output_map(0,0,field, map_split_coadded_elev, rms_split_coadded_elev)
-create_output_map(1,0,field, map_split_coadded_elev, rms_split_coadded_elev)
+#create_output_map(0,0,field, map_split_coadded_elev, rms_split_coadded_elev)
+#create_output_map(1,0,field, map_split_coadded_elev, rms_split_coadded_elev)
 
 print ('All the maps created: ', mapnames_created)
 
-'''
-All the maps created:  ['co2_map_day_liss.h5', 'co2_map_day_ces.h5']
-'''
 
