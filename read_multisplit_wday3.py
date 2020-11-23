@@ -1,8 +1,8 @@
 import h5py
 import numpy as np
 
-mapname = 'co7_map_complete_fullday.h5'
-field = 'co7'
+mapname = 'co6_map_complete_fullday.h5'
+field = 'co6'
 mappath = '/mn/stornext/d16/cmbco/comap/protodir/maps/' + mapname
 
 input_map = h5py.File(mappath, 'r')
@@ -61,8 +61,8 @@ def create_output_map(cesc, snup, field, map_out, rms_out):
     f.create_dataset('x', data=x)
     f.create_dataset('y', data=y)
     f.create_dataset('freq', data=freq)
-    f.create_dataset('/jackknives/map_dayn', data=my_map)
-    f.create_dataset('/jackknives/rms_dayn', data=my_rms)
+    f.create_dataset('/jackknives/map_elev', data=my_map)
+    f.create_dataset('/jackknives/rms_elev', data=my_rms)
     f.close()
 
 
