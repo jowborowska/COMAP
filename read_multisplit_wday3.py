@@ -1,8 +1,8 @@
 import h5py
 import numpy as np
 
-mapname = 'co6_map_complete_fullday.h5'
-field = 'co6'
+mapname = 'co7_map_complete_fullday.h5'
+field = 'co7'
 mappath = '/mn/stornext/d16/cmbco/comap/protodir/maps/' + mapname
 
 input_map = h5py.File(mappath, 'r')
@@ -77,5 +77,9 @@ create_output_map(1,0,field, map_split, rms_split)
 
 
 print ('All the maps created: ', mapnames_created)
+
+'''
+All the maps created:  ['co6_elmap_day_liss.h5', 'co6_elmap_day_ces.h5', 'co6_elmap_night_liss.h5', 'co6_elmap_night_ces.h5']
+'''
 
 
