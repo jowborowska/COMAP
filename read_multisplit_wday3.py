@@ -1,8 +1,8 @@
 import h5py
 import numpy as np
 
-mapname = 'co6_map_complete_fullday.h5'
-field = 'co6'
+mapname = 'co7_map_complete_fullday.h5'
+field = 'co7'
 mappath = '/mn/stornext/d16/cmbco/comap/protodir/maps/' + mapname
 
 input_map = h5py.File(mappath, 'r')
