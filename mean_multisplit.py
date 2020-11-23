@@ -59,11 +59,11 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               try:
                   filepath = path_to_xs %(i+1, j+1)
                   with h5py.File(filepath, mode="r") as my_file:
-                      print ("finds file", i, j)
+                      #print ("finds file", i, j)
                       xs[i, j] = np.array(my_file['xs'][:])
-                      print (xs[i,j])
+                      #print (xs[i,j])
                       rms_xs_std[i, j] = np.array(my_file['rms_xs_std'][:])
-                      print (rms_xs_std[i,j])
+                      #print (rms_xs_std[i,j])
                       k[:] = np.array(my_file['k'][:])
               except:
                   xs[i, j] = np.nan
@@ -80,7 +80,7 @@ def xs_feed_feed_grid(path_to_xs, figure_name, split1, split2):
               #if i != j and not np.isnan(chi2[i,j]): 
               if abs(chi2[i,j]) < 5. and not np.isnan(chi2[i,j]) and i != j:
                   xs_sum += xs[i,j] / rms_xs_std[i,j] ** 2
-                  print ("if test worked")
+                  #print ("if test worked")
                   xs_div += 1 / rms_xs_std[i,j] ** 2
                   n_sum += 1
 
@@ -215,10 +215,15 @@ def call_all_wday(mapname, split, scan_strategy):
    print (figurename)
    #return k, xs_mean, xs_sigma
 
-#call_all_wday('co2_elmap_day_liss','dayn', 'liss')
-#call_all_wday('co2_elmap_day_ces','dayn', 'ces')
-call_all_wday('co2_elmap_night_liss','dayn', 'liss')
-call_all_wday('co2_elmap_night_ces','dayn', 'ces')
+call_all_wday('co6_elmap_day_liss','elev', 'liss')
+call_all_wday('co6_elmap_day_ces','elev', 'ces')
+call_all_wday('co6_elmap_night_liss','elev', 'liss')
+call_all_wday('co6_elmap_night_ces','elev', 'ces')
+
+call_all_wday('co7_elmap_day_liss','elev', 'liss')
+call_all_wday('co7_elmap_day_ces','elev', 'ces')
+call_all_wday('co7_elmap_night_liss','elev', 'liss')
+call_all_wday('co7_elmap_night_ces','elev', 'ces')
 
 #call_all_wday('co2_map_day_liss', 'dayn','liss') #here scanning strategy should be correct, fixed that program version
 #call_all_wday('co2_map_day_ces','dayn', 'ces')
